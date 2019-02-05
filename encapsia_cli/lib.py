@@ -1,0 +1,113 @@
+import contextlib
+import datetime
+import io
+import json
+import os
+import shutil
+import subprocess
+import tarfile
+import tempfile
+import time
+
+import click
+import toml
+from encapsia_api import EncapsiaApi
+
+
+def error(message):
+    click.secho(message, fg="red")
+
+
+def log(message, nl=True):
+    click.secho(message, fg="yellow", nl=nl)
+
+
+def log_output(message):
+    click.secho(message, fg="green")
+
+
+def get_env_var(name):
+    try:
+        return os.environ[name]
+    except KeyError:
+        error("Environment variable {} does not exist!".format(name))
+        raise click.Abort()
+
+
+def get_utc_now_as_iso8601():
+    return str(datetime.datetime.utcnow())
+
+
+@contextlib.contextmanager
+def temp_directory():
+    """Context manager for creating a temporary directory.
+
+    Cleans up afterwards.
+
+    """
+    directory = tempfile.mkdtemp()
+    try:
+        yield directory
+    finally:
+        shutil.rmtree(directory)
+
+
+def run(*args, **kwargs):
+    """Run external command."""
+    return subprocess.check_output(args, stderr=subprocess.STDOUT, **kwargs)
+
+
+def create_targz(directory, filename):
+    with tarfile.open(filename, "w:gz") as tar:
+        tar.add(directory, arcname=os.path.basename(directory))
+
+
+def create_targz_as_bytes(directory):
+    data = io.BytesIO()
+    with tarfile.open(mode="w:gz", fileobj=data) as tar:
+        tar.add(directory, arcname=os.path.basename(directory))
+    return data.getvalue()
+
+
+def pretty_print(obj, format, output=None):
+    if format == "json":
+        formatted = json.dumps(obj, sort_keys=True, indent=4).strip()
+    elif format == "toml":
+        formatted = toml.dumps(obj)
+    if output is None:
+        click.echo(formatted)
+    else:
+        output.write(formatted)
+
+
+def parse(obj, format):
+    if format == "json":
+        return json.loads(obj)
+    elif format == "toml":
+        return toml.load(obj)
+
+
+def visual_poll(message, poll, NoTaskResultYet, wait=0.2):
+    log(message, nl=False)
+    result = poll()
+    count = 0
+    while result is NoTaskResultYet:
+        time.sleep(wait)
+        log(".", nl=False)
+        count += 1
+        result = poll()
+    if count < 3:
+        log("." * (3 - count), nl=False)
+    log("Done")
+    return result
+
+
+def run_plugins_task(host, token, name, params, message, data=None):
+    api = EncapsiaApi(host, token)
+    poll, NoTaskResultYet = api.run_task(
+        "pluginsmanager", "icepluginsmanager.{}".format(name), params, data
+    )
+    result = visual_poll(message, poll, NoTaskResultYet)
+    log_output(result["output"].strip())
+    if result["status"] != "ok":
+        raise click.Abort()

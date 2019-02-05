@@ -1,0 +1,37 @@
+[tool.poetry]
+name = "encapsia-cli"
+version = "0.1.0"
+description = "Client CLI for talking to an Encapsia system."
+readme = "README.md"
+authors = ["Timothy Corbett-Clark <timothy.corbettclark@gmail.com>"]
+license = "MIT"
+long_description_content_type = "text/markdown"
+keywords = ["encapsia", "eSource", "EDC", "Clinical Trials"]
+homepage = "https://github.com/tcorbettclark/encapsia-cli"
+
+[tool.poetry.scripts]
+encapsia-add-superuser = "encapsia_cli.add_superuser:main"
+encapsia-system-user = "encapsia_cli.system_user:main"
+encapsia-config = "encapsia_cli.config:main"
+encapsia-dbctl = "encapsia_cli.dbctl:main"
+encapsia-expire-token = "encapsia_cli.expire_token:main"
+encapsia-plugins = "encapsia_cli.plugins:main"
+encapsia-schedule = "encapsia_cli.schedule:main"
+encapsia-task = "encapsia_cli.task:main"
+encapsia-whoami = "encapsia_cli.whoami:main"
+
+[tool.poetry.dependencies]
+python = "^3.6"
+requests = {version = "^2.21",extras = ["security"]}
+click = "^7.0"
+toml = "^0.10.0"
+encapsia-api = "^0.1.3"
+
+[tool.poetry.dev-dependencies]
+black = {version = "^18.3-alpha.0",allows-prereleases = true}
+isort = "^4.3"
+flake8 = "^3.7"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
