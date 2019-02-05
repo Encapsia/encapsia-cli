@@ -223,7 +223,7 @@ class LastUploadedVsModifiedTracker:
             if possible_files:
                 if name in self.data:
                     last_changed_file = max(possible_files, key=os.path.getctime)
-                    last_modified = datetime.datetime.fromtimestamp(os.path.getctime(last_changed_file))
+                    last_modified = datetime.datetime.utcfromtimestamp(os.path.getctime(last_changed_file))
                     if last_modified > self.data[name]:
                         yield name
                         self.data[name] = datetime.datetime.utcnow()
