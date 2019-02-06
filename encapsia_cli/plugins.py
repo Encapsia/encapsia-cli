@@ -47,7 +47,7 @@ def dev_create_namespace(namespace, n_task_workers, host, token):
     help="Environment variable containing server token (default ENCAPSIA_TOKEN)",
 )
 def dev_destroy_namespace(namespace, host, token):
-    """Destory namespace of given name. Only useful during development"""
+    """Destroy namespace of given name. Only useful during development"""
     lib.run_plugins_task(
         host,
         lib.get_env_var(token),
