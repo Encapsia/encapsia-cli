@@ -1,6 +1,6 @@
 """Expire Encapsia token from a server."""
 import click
-from encapsia_api import EncapsiaApi
+from encapsia_api import EncapsiaApiError
 
 from encapsia_cli import lib
 

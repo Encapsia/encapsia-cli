@@ -1,6 +1,5 @@
 """Manage system users (create, list, delete etc)."""
 import click
-from encapsia_api import EncapsiaApi
 
 from encapsia_cli import lib
 

@@ -2,7 +2,6 @@
 import re
 
 import click
-from encapsia_api import EncapsiaApi
 
 from encapsia_cli import lib
 

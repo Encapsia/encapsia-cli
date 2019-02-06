@@ -19,7 +19,7 @@ from encapsia_cli import lib
     help="Environment variable containing server token (default ENCAPSIA_TOKEN)",
 )
 @click.pass_context
-def main(host, host_env_var, token_env_var):
+def main(ctx, host, host_env_var, token_env_var):
     """Manage task schedules."""
     host, token = lib.discover_credentials(host, host_env_var, token_env_var)
     ctx.obj = dict(host=host, token=token)

@@ -1,6 +1,5 @@
 """Run an arbitrary Encapsia task."""
 import click
-from encapsia_api import EncapsiaApi
 
 from encapsia_cli import lib
 
