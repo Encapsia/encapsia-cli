@@ -14,8 +14,14 @@ from encapsia_cli import lib
 
 
 @click.group()
-@click.option("--host", help="Name to use to lookup credentials in .encapsia/credentials.toml")
-@click.option("--host-env-var", default="ENCAPSIA_HOST", help="Environment variable containing DNS hostname (default ENCAPSIA_HOST)")
+@click.option(
+    "--host", help="Name to use to lookup credentials in .encapsia/credentials.toml"
+)
+@click.option(
+    "--host-env-var",
+    default="ENCAPSIA_HOST",
+    help="Environment variable containing DNS hostname (default ENCAPSIA_HOST)",
+)
 @click.option(
     "--token-env-var",
     default="ENCAPSIA_TOKEN",
@@ -55,7 +61,6 @@ def dev_destroy_namespace(ctx, namespace):
         dict(namespace=namespace),
         "Destroying namespace",
     )
-
 
 
 @main.command()
@@ -180,7 +185,9 @@ class LastUploadedVsModifiedTracker:
 
     def __init__(self, directory, reset=False):
         self.directory = directory
-        self.filename = os.path.join(self.directory, ".encapsia", "last_uploaded_plugin_parts.toml")
+        self.filename = os.path.join(
+            self.directory, ".encapsia", "last_uploaded_plugin_parts.toml"
+        )
         if reset:
             self.make_empty()
         else:
@@ -208,7 +215,9 @@ class LastUploadedVsModifiedTracker:
             if possible_files:
                 if name in self.data:
                     last_changed_file = max(possible_files, key=os.path.getctime)
-                    last_modified = datetime.datetime.utcfromtimestamp(os.path.getctime(last_changed_file))
+                    last_modified = datetime.datetime.utcfromtimestamp(
+                        os.path.getctime(last_changed_file)
+                    )
                     if last_modified > self.data[name]:
                         yield name
                         self.data[name] = datetime.datetime.utcnow()
@@ -219,12 +228,16 @@ class LastUploadedVsModifiedTracker:
 
 
 def get_modified_plugin_directories(directory, reset=False):
-    return list(LastUploadedVsModifiedTracker(directory, reset=reset).get_modified_directories())
+    return list(
+        LastUploadedVsModifiedTracker(directory, reset=reset).get_modified_directories()
+    )
 
 
 @main.command("dev-update")
 @click.argument("directory", default=".")
-@click.option("--force", is_flag=True, help="Force an update of all parts of the plugin")
+@click.option(
+    "--force", is_flag=True, help="Force an update of all parts of the plugin"
+)
 @click.pass_context
 def dev_update(ctx, directory, force):
     """Update plugin parts which have changed since previous update.
@@ -235,13 +248,18 @@ def dev_update(ctx, directory, force):
     if not os.path.exists(os.path.join(directory, "plugin.toml")):
         lib.error("Not in a plugin directory.")
         sys.exit(1)
-    modified_plugin_directories = get_modified_plugin_directories(directory, reset=force)
+    modified_plugin_directories = get_modified_plugin_directories(
+        directory, reset=force
+    )
     if modified_plugin_directories:
         with lib.temp_directory() as tmp_directory:
             shutil.copy(os.path.join(directory, "plugin.toml"), tmp_directory)
             for modified_directory in modified_plugin_directories:
                 lib.log(f"Including: {modified_directory}")
-                shutil.copytree(os.path.join(directory, modified_directory), os.path.join(tmp_directory, modified_directory))
+                shutil.copytree(
+                    os.path.join(directory, modified_directory),
+                    os.path.join(tmp_directory, modified_directory),
+                )
             lib.run_plugins_task(
                 ctx.obj["host"],
                 ctx.obj["token"],

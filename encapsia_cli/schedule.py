@@ -5,8 +5,14 @@ from encapsia_cli import lib
 
 
 @click.group()
-@click.option("--host", help="Name to use to lookup credentials in .encapsia/credentials.toml")
-@click.option("--host-env-var", default="ENCAPSIA_HOST", help="Environment variable containing DNS hostname (default ENCAPSIA_HOST)")
+@click.option(
+    "--host", help="Name to use to lookup credentials in .encapsia/credentials.toml"
+)
+@click.option(
+    "--host-env-var",
+    default="ENCAPSIA_HOST",
+    help="Environment variable containing DNS hostname (default ENCAPSIA_HOST)",
+)
 @click.option(
     "--token-env-var",
     default="ENCAPSIA_TOKEN",
@@ -47,15 +53,7 @@ def list_tasks(ctx):
 @click.option("--jitter", prompt="Jitter (int)", type=int, required=True)
 @click.pass_context
 def add_task(
-    ctx,
-    description,
-    task_host,
-    task_token,
-    namespace,
-    task,
-    params,
-    cron,
-    jitter,
+    ctx, description, task_host, task_token, namespace, task, params, cron, jitter
 ):
     """Add new scheduled task."""
     lib.run_plugins_task(

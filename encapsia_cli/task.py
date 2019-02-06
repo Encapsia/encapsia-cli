@@ -9,8 +9,14 @@ from encapsia_cli import lib
 @click.argument("namespace")
 @click.argument("function")
 @click.argument("args", nargs=-1)
-@click.option("--host", help="Name to use to lookup credentials in .encapsia/credentials.toml")
-@click.option("--host-env-var", default="ENCAPSIA_HOST", help="Environment variable containing DNS hostname (default ENCAPSIA_HOST)")
+@click.option(
+    "--host", help="Name to use to lookup credentials in .encapsia/credentials.toml"
+)
+@click.option(
+    "--host-env-var",
+    default="ENCAPSIA_HOST",
+    help="Environment variable containing DNS hostname (default ENCAPSIA_HOST)",
+)
 @click.option(
     "--token-env-var",
     default="ENCAPSIA_TOKEN",
