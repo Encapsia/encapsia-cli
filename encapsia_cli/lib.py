@@ -11,8 +11,7 @@ import time
 
 import click
 import toml
-from encapsia_api import EncapsiaApi
-
+from encapsia_api import EncapsiaApi, CredentialsStore
 
 def error(message):
     click.secho(message, fg="red")
@@ -34,29 +33,14 @@ def get_env_var(name):
         raise click.Abort()
 
 
-def find_credentials_file():
-    filename = os.path.join(os.path.expanduser("~"), ".encapsia", "credentials.toml")
-    if os.path.exists(filename):
-        return filename
-    else:
-        error("Cannot find .encapsia/credentials.toml file!")
-        raise click.Abort()
-
-
-def lookup_credentials(name):
-    filename = find_credentials_file()
-    with open(filename) as f:
-        credentials = toml.load(f)
-        try:
-            return credentials[name]["host"], credentials[name]["token"]
-        except KeyError:
-            error(f"Missing information in {filename} for entry: {name}!")
-            raise click.Abort()
-
-
 def discover_credentials(name, host_env_var, token_env_var):
     if name:
-        host, token = lookup_credentials(name)
+        store = CredentialsStore()
+        try:
+            host, token = store.get(name)
+        except KeyError:
+            error(f"Cannot find entry for '{name}' in encapsia credentials file.")
+            raise click.Abort()
     else:
         host, token = get_env_var(host_env_var), get_env_var(token_env_var)
     return host, token
