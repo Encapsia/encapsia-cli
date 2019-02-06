@@ -32,4 +32,3 @@ def main(host, host_env_var, token_env_var):
     if host:
         CredentialsStore().remove(host)
         lib.log("Removed entry from encapsia credentials file.")
-

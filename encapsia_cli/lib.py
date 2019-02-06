@@ -13,6 +13,7 @@ import click
 import toml
 from encapsia_api import EncapsiaApi, CredentialsStore
 
+
 def error(message):
     click.secho(message, fg="red")
 
