@@ -6,9 +6,10 @@ from encapsia_cli import lib
 
 
 @click.command()
-@click.option("--host", envvar="ENCAPSIA_HOST", help="DNS name of Encapsia host (or ENCAPSIA_HOST).")
+@click.option("--host", help="Name to use to lookup credentials in .encapsia/credentials.toml")
+@click.option("--host-env-var", default="ENCAPSIA_HOST", help="Environment variable containing DNS hostname (default ENCAPSIA_HOST)")
 @click.option(
-    "--token",
+    "--token-env-var",
     default="ENCAPSIA_TOKEN",
     help="Environment variable containing server token (default ENCAPSIA_TOKEN)",
 )
@@ -18,11 +19,7 @@ from encapsia_cli import lib
     default="json",
     help="Format as JSON or TOML (default JSON)",
 )
-def main(host, token, format):
-    """Print information about current owner of token.
-
-    The token itself should be in an environment variable (default ENCAPSIA_TOKEN).
-
-    """
-    api = EncapsiaApi(host, lib.get_env_var(token))
+def main(host, host_env_var, token_env_var, format):
+    """Print information about current owner of token."""
+    api = lib.get_api(host, host_env_var, token_env_var)
     lib.pretty_print(api.whoami(), format)

@@ -1,4 +1,4 @@
-"""Encapsia Database control actions e.g. backups, fixtures."""
+"""Encapsia Database control actions e.g. backups, restores, and fixtures."""
 import os
 import os.path
 import sys
@@ -35,16 +35,18 @@ def dbctl_action(host, token, name, params, message):
 
 
 @click.group()
-@click.option("--host", envvar="ENCAPSIA_HOST", help="DNS name of Encapsia host (or ENCAPSIA_HOST).")
+@click.option("--host", help="Name to use to lookup credentials in .encapsia/credentials.toml")
+@click.option("--host-env-var", default="ENCAPSIA_HOST", help="Environment variable containing DNS hostname (default ENCAPSIA_HOST)")
 @click.option(
-    "--token",
+    "--token-env-var",
     default="ENCAPSIA_TOKEN",
     help="Environment variable containing server token (default ENCAPSIA_TOKEN)",
 )
 @click.pass_context
-def main(ctx, host, token):
+def main(ctx, host, host_env_var, token_env_var):
     """Low-level Encapsia Database control."""
-    ctx.obj = dict(host=host, token=lib.get_env_var(token))
+    host, token = lib.discover_credentials(host, host_env_var, token_env_var)
+    ctx.obj = dict(host=host, token=token)
 
 
 @main.command()

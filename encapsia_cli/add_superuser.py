@@ -20,19 +20,20 @@ def validate_email(ctx, param, value):
 @click.argument("email", callback=validate_email)
 @click.argument("first_name")
 @click.argument("last_name")
-@click.option("--host", envvar="ENCAPSIA_HOST", help="DNS name of Encapsia host (or ENCAPSIA_HOST).")
+@click.option("--host", help="Name to use to lookup credentials in .encapsia/credentials.toml")
+@click.option("--host-env-var", default="ENCAPSIA_HOST", help="Environment variable containing DNS hostname (default ENCAPSIA_HOST)")
 @click.option(
-    "--token",
+    "--token-env-var",
     default="ENCAPSIA_TOKEN",
     help="Environment variable containing server token (default ENCAPSIA_TOKEN)",
 )
-def main(email, first_name, last_name, host, token):
+def main(email, first_name, last_name, host, host_env_var, token_env_var):
     """Create superuser with given name and email.
 
     In addition to adding the given user, this will also add a Superuser role.
 
     """
-    api = EncapsiaApi(host, lib.get_env_var(token))
+    api = lib.get_api(host, host_env_var, token_env_var)
     api.post(
         "roles",
         json=[

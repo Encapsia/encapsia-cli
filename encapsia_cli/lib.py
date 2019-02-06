@@ -34,6 +34,39 @@ def get_env_var(name):
         raise click.Abort()
 
 
+def find_credentials_file():
+    filename = os.path.join(os.getcwd(), ".encapsia", "credentials.toml")
+    if os.path.exists(filename):
+        return filename
+    else:
+        error("Cannot find .encapsia/credentials.toml file!")
+        raise click.Abort()
+
+
+def lookup_credentials(name):
+    filename = find_credentials_file()
+    with open(filename) as f:
+        credentials = toml.load(f)
+        try:
+            return credentials[name]["host"], credentials[name]["token"]
+        except KeyError:
+            error(f"Missing information in {filename} for entry: {name}!")
+            raise click.Abort()
+
+
+def discover_credentials(name, host_env_var, token_env_var):
+    if name:
+        host, token = lookup_credentials(name)
+    else:
+        host, token = get_env_var(host_env_var), get_env_var(token_env_var)
+    return host, token
+
+
+def get_api(name, host_env_var, token_env_var):
+    host, token = discover_credentials(name, host_env_var, token_env_var)
+    return EncapsiaApi(host, token)
+
+
 def get_utc_now_as_iso8601():
     return str(datetime.datetime.utcnow())
 
@@ -84,7 +117,7 @@ def parse(obj, format):
     if format == "json":
         return json.loads(obj)
     elif format == "toml":
-        return toml.load(obj)
+        return toml.loads(obj)
 
 
 def visual_poll(message, poll, NoTaskResultYet, wait=0.2):

@@ -5,22 +5,27 @@ from encapsia_cli import lib
 
 
 @click.group()
-def main():
-    """Manage task schedules."""
-
-
-@main.command("list")
-@click.option("--host", envvar="ENCAPSIA_HOST", help="DNS name of Encapsia host (or ENCAPSIA_HOST).")
+@click.option("--host", help="Name to use to lookup credentials in .encapsia/credentials.toml")
+@click.option("--host-env-var", default="ENCAPSIA_HOST", help="Environment variable containing DNS hostname (default ENCAPSIA_HOST)")
 @click.option(
-    "--token",
+    "--token-env-var",
     default="ENCAPSIA_TOKEN",
     help="Environment variable containing server token (default ENCAPSIA_TOKEN)",
 )
-def list_tasks(host, token):
+@click.pass_context
+def main(host, host_env_var, token_env_var):
+    """Manage task schedules."""
+    host, token = lib.discover_credentials(host, host_env_var, token_env_var)
+    ctx.obj = dict(host=host, token=token)
+
+
+@main.command("list")
+@click.pass_context
+def list_tasks(ctx):
     """List all scheduled tasks."""
     lib.run_plugins_task(
-        host,
-        lib.get_env_var(token),
+        ctx.obj["host"],
+        ctx.obj["token"],
         "list_scheduled_tasks",
         {},
         "Fetching list of scheduled tasks",
@@ -40,13 +45,9 @@ def list_tasks(host, token):
     required=True,
 )
 @click.option("--jitter", prompt="Jitter (int)", type=int, required=True)
-@click.option("--host", envvar="ENCAPSIA_HOST", help="DNS name of Encapsia host (or ENCAPSIA_HOST).")
-@click.option(
-    "--token",
-    default="ENCAPSIA_TOKEN",
-    help="Environment variable containing server token (default ENCAPSIA_TOKEN)",
-)
+@click.pass_context
 def add_task(
+    ctx,
     description,
     task_host,
     task_token,
@@ -55,13 +56,11 @@ def add_task(
     params,
     cron,
     jitter,
-    host,
-    token,
 ):
     """Add new scheduled task."""
     lib.run_plugins_task(
-        host,
-        lib.get_env_var(token),
+        ctx.obj["host"],
+        ctx.obj["token"],
         "add_scheduled_task",
         dict(
             description=description,
@@ -79,17 +78,12 @@ def add_task(
 
 @main.command("remove_in_namespace")
 @click.argument("namespace")
-@click.option("--host", envvar="ENCAPSIA_HOST", help="DNS name of Encapsia host (or ENCAPSIA_HOST).")
-@click.option(
-    "--token",
-    default="ENCAPSIA_TOKEN",
-    help="Environment variable containing server token (default ENCAPSIA_TOKEN)",
-)
-def remove_tasks_in_namespace(namespace, host, token):
+@click.pass_context
+def remove_tasks_in_namespace(ctx, namespace):
     """Remove all scheduled tasks in given namespace."""
     lib.run_plugins_task(
-        host,
-        lib.get_env_var(token),
+        ctx.obj["host"],
+        ctx.obj["token"],
         "remove_scheduled_tasks_in_namespace",
         dict(namespace=namespace),
         "Removing scheduled tasks",
@@ -98,17 +92,12 @@ def remove_tasks_in_namespace(namespace, host, token):
 
 @main.command("remove")
 @click.argument("scheduled_task_id")
-@click.option("--host", envvar="ENCAPSIA_HOST", help="DNS name of Encapsia host (or ENCAPSIA_HOST).")
-@click.option(
-    "--token",
-    default="ENCAPSIA_TOKEN",
-    help="Environment variable containing server token (default ENCAPSIA_TOKEN)",
-)
-def remove_task(scheduled_task_id, host, token):
+@click.pass_context
+def remove_task(ctx, scheduled_task_id):
     """Remove scheduled task by id."""
     lib.run_plugins_task(
-        host,
-        lib.get_env_var(token),
+        ctx.obj["host"],
+        ctx.obj["token"],
         "remove_scheduled_task",
         dict(scheduled_task_id=scheduled_task_id),
         "Removing scheduled tasks",

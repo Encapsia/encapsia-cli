@@ -10,3 +10,4 @@ dist/
 *.egg-info/
 .eggs/
 pip-wheel-metadata/
+.encapsia/
