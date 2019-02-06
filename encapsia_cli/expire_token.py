@@ -22,7 +22,7 @@ def main(host, host_env_var, token_env_var):
     api = lib.get_api(host, host_env_var, token_env_var)
     try:
         api.delete("logout")
-    except IceApiError as e:
+    except EncapsiaApiError as e:
         lib.error("Failed to expire given token!")
         lib.error(str(e))
         raise click.Abort()
