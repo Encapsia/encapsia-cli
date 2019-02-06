@@ -14,24 +14,29 @@ from encapsia_cli import lib
 
 
 @click.group()
-def main():
+@click.option("--host", help="Name to use to lookup credentials in .encapsia/credentials.toml")
+@click.option("--host-env-var", default="ENCAPSIA_HOST", help="Environment variable containing DNS hostname (default ENCAPSIA_HOST)")
+@click.option(
+    "--token-env-var",
+    default="ENCAPSIA_TOKEN",
+    help="Environment variable containing server token (default ENCAPSIA_TOKEN)",
+)
+@click.pass_context
+def main(ctx, host, host_env_var, token_env_var):
     """Create and install plugins."""
+    host, token = lib.discover_credentials(host, host_env_var, token_env_var)
+    ctx.obj = dict(host=host, token=token)
 
 
 @main.command("dev-create-namespace")
 @click.argument("namespace")
 @click.argument("n_task_workers", default=1)
-@click.option("--host", envvar="ENCAPSIA_HOST", help="DNS name of Encapsia host (or ENCAPSIA_HOST).")
-@click.option(
-    "--token",
-    default="ENCAPSIA_TOKEN",
-    help="Environment variable containing server token (default ENCAPSIA_TOKEN)",
-)
-def dev_create_namespace(namespace, n_task_workers, host, token):
+@click.pass_context
+def dev_create_namespace(ctx, namespace, n_task_workers):
     """Create namespace of given name. Only useful during developmment."""
     lib.run_plugins_task(
-        host,
-        lib.get_env_var(token),
+        ctx.obj["host"],
+        ctx.obj["token"],
         "dev_create_namespace",
         dict(namespace=namespace, n_task_workers=n_task_workers),
         "Creating namespace",
@@ -40,17 +45,12 @@ def dev_create_namespace(namespace, n_task_workers, host, token):
 
 @main.command("dev-destroy-namespace")
 @click.argument("namespace")
-@click.option("--host", envvar="ENCAPSIA_HOST", help="DNS name of Encapsia host (or ENCAPSIA_HOST).")
-@click.option(
-    "--token",
-    default="ENCAPSIA_TOKEN",
-    help="Environment variable containing server token (default ENCAPSIA_TOKEN)",
-)
-def dev_destroy_namespace(namespace, host, token):
+@click.pass_context
+def dev_destroy_namespace(ctx, namespace):
     """Destroy namespace of given name. Only useful during development"""
     lib.run_plugins_task(
-        host,
-        lib.get_env_var(token),
+        ctx.obj["host"],
+        ctx.obj["token"],
         "dev_destroy_namespace",
         dict(namespace=namespace),
         "Destroying namespace",
@@ -59,17 +59,12 @@ def dev_destroy_namespace(namespace, host, token):
 
 
 @main.command()
-@click.option("--host", envvar="ENCAPSIA_HOST", help="DNS name of Encapsia host (or ENCAPSIA_HOST).")
-@click.option(
-    "--token",
-    default="ENCAPSIA_TOKEN",
-    help="Environment variable containing server token (default ENCAPSIA_TOKEN)",
-)
-def info(host, token):
+@click.pass_context
+def info(ctx):
     """Provide some information about installed plugins."""
     lib.run_plugins_task(
-        host,
-        lib.get_env_var(token),
+        ctx.obj["host"],
+        ctx.obj["token"],
         "list_namespaces",
         dict(),
         "Fetching list of namespaces",
@@ -138,13 +133,8 @@ def create_from_webapp(webapp, version, email):
 
 @main.command()
 @click.argument("filename")
-@click.option("--host", envvar="ENCAPSIA_HOST", help="DNS name of Encapsia host (or ENCAPSIA_HOST).")
-@click.option(
-    "--token",
-    default="ENCAPSIA_TOKEN",
-    help="Environment variable containing server token (default ENCAPSIA_TOKEN)",
-)
-def install(filename, host, token):
+@click.pass_context
+def install(ctx, filename):
     """Install plugin from given tar.gz file or directory."""
     temp_filename = None
     if os.path.isdir(filename):
@@ -153,14 +143,14 @@ def install(filename, host, token):
         lib.create_targz(filename, temp_filename)
         filename = temp_filename
 
-    api = EncapsiaApi(host, lib.get_env_var(token))
+    api = EncapsiaApi(ctx.obj["host"], ctx.obj["token"])
     blob_id = api.upload_file_as_blob(filename)
     # TODO create plugin entity
     # TODO also assign a blobtag?
     lib.log(f"Uploaded {filename} to blob: {blob_id}")
     lib.run_plugins_task(
-        host,
-        lib.get_env_var(token),
+        ctx.obj["host"],
+        ctx.obj["token"],
         "install_plugin",
         dict(blob_id=blob_id),
         "Installing",
@@ -172,17 +162,12 @@ def install(filename, host, token):
 
 @main.command()
 @click.argument("namespace")
-@click.option("--host", envvar="ENCAPSIA_HOST", help="DNS name of Encapsia host (or ENCAPSIA_HOST).")
-@click.option(
-    "--token",
-    default="ENCAPSIA_TOKEN",
-    help="Environment variable containing server token (default ENCAPSIA_TOKEN)",
-)
-def uninstall(namespace, host, token):
+@click.pass_context
+def uninstall(ctx, namespace):
     """Uninstall named plugin."""
     lib.run_plugins_task(
-        host,
-        lib.get_env_var(token),
+        ctx.obj["host"],
+        ctx.obj["token"],
         "uninstall_plugin",
         dict(namespace=namespace),
         "Uninstalling {}".format(namespace),
@@ -240,13 +225,8 @@ def get_modified_plugin_directories(directory, reset=False):
 @main.command("dev-update")
 @click.argument("directory", default=".")
 @click.option("--force", is_flag=True, help="Force an update of all parts of the plugin")
-@click.option("--host", envvar="ENCAPSIA_HOST", help="DNS name of Encapsia host (or ENCAPSIA_HOST)")
-@click.option(
-    "--token",
-    default="ENCAPSIA_TOKEN",
-    help="Environment variable containing server token (default ENCAPSIA_TOKEN)",
-)
-def dev_update(directory, force, host, token):
+@click.pass_context
+def dev_update(ctx, directory, force):
     """Update plugin parts which have changed since previous update.
 
     Optionally pass in the DIRECTORY of the plugin (defaults to cwd).
@@ -263,8 +243,8 @@ def dev_update(directory, force, host, token):
                 lib.log(f"Including: {modified_directory}")
                 shutil.copytree(os.path.join(directory, modified_directory), os.path.join(tmp_directory, modified_directory))
             lib.run_plugins_task(
-                host,
-                lib.get_env_var(token),
+                ctx.obj["host"],
+                ctx.obj["token"],
                 "dev_update_plugin",
                 dict(),
                 "Uploading to server",
