@@ -35,7 +35,7 @@ def get_env_var(name):
 
 
 def find_credentials_file():
-    filename = os.path.join(os.path.expanduser('~'), ".encapsia", "credentials.toml")
+    filename = os.path.join(os.path.expanduser("~"), ".encapsia", "credentials.toml")
     if os.path.exists(filename):
         return filename
     else:
