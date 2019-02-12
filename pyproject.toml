@@ -22,7 +22,7 @@ encapsia-whoami = "encapsia_cli.whoami:main"
 
 [tool.poetry.dependencies]
 python = "^3.6"
-requests = {version = "^2.21",extras = ["security"]}
+requests = {version = "^2.20",extras = ["security"]}
 click = "^7.0"
 toml = "^0.10.0"
 encapsia-api = ">=0.1.7"
