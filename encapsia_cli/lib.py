@@ -8,10 +8,11 @@ import subprocess
 import tarfile
 import tempfile
 import time
+from pathlib import Path
 
 import click
 import toml
-from encapsia_api import EncapsiaApi, CredentialsStore
+from encapsia_api import CredentialsStore, EncapsiaApi
 
 
 def error(message):
@@ -65,9 +66,18 @@ def temp_directory():
     """
     directory = tempfile.mkdtemp()
     try:
-        yield directory
+        yield Path(directory)
     finally:
         shutil.rmtree(directory)
+
+
+def most_recently_modified(directory):
+    """Return datetime of most recently changed file in directory."""
+    files = directory.glob("**/*.py")
+    if files:
+        return datetime.datetime.utcfromtimestamp(max(t.stat().st_mtime for t in files))
+    else:
+        return None
 
 
 def run(*args, **kwargs):
@@ -77,13 +87,13 @@ def run(*args, **kwargs):
 
 def create_targz(directory, filename):
     with tarfile.open(filename, "w:gz") as tar:
-        tar.add(directory, arcname=os.path.basename(directory))
+        tar.add(directory, arcname=directory.name)
 
 
 def create_targz_as_bytes(directory):
     data = io.BytesIO()
     with tarfile.open(mode="w:gz", fileobj=data) as tar:
-        tar.add(directory, arcname=os.path.basename(directory))
+        tar.add(directory, arcname=directory.name)
     return data.getvalue()
 
 

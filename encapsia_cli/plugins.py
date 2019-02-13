@@ -2,9 +2,12 @@
 import datetime
 import glob
 import os
+import re
 import shutil
 import sys
 import tempfile
+import urllib.request
+from pathlib import Path
 
 import click
 import toml
@@ -76,6 +79,11 @@ def info(ctx):
     )
 
 
+def read_toml(filename):
+    with filename.open() as f:
+        return toml.load(f)
+
+
 def make_plugin_toml_file(filename, name, description, version, created_by):
     obj = dict(
         name=name,
@@ -85,84 +93,187 @@ def make_plugin_toml_file(filename, name, description, version, created_by):
         n_task_workers=1,
         reset_on_install=True,
     )
-    with open(filename, "w") as f:
+    with filename.open("w") as f:
         toml.dump(obj, f)
 
 
-@main.command("create-from-webapp")
-@click.argument("webapp")
-@click.argument("version")
-@click.option("--email", prompt="Your email")
-def create_from_webapp(webapp, version, email):
-    """Convert a webapp on S3 in to a plugin."""
-    lib.log("Fetching webapp {} version {}...".format(webapp, version))
+@main.command()
+@click.option("--versions", help="TOML file containing webapp names and versions")
+@click.option("--email", prompt="Your email", help="Email creator of the plugins")
+@click.option(
+    "--plugins-cache-dir",
+    default="~/.encapsia/plugins-cache",
+    help="Name of directory in which to cache plugins",
+)
+@click.option(
+    "--s3-directory", default="ice-webapp-builds", help="Base directory on S3"
+)
+@click.option(
+    "--force",
+    is_flag=True,
+    help="Always fetch and build even if already present in cache.",
+)
+def build_from_legacy_s3(versions, email, plugins_cache_dir, s3_directory, force):
+    """Build plugins from legacy webapps hosted on AWS S3."""
+    plugins_cache_dir = Path(plugins_cache_dir).expanduser()
+    plugins_cache_dir.mkdir(parents=True, exist_ok=True)
+    versions = Path(versions)
+    for name, version in read_toml(versions).items():
+        output_filename = Path(plugins_cache_dir, f"plugin-{name}-{version}.tar.gz")
+        if not force and output_filename.exists():
+            lib.log(f"Found: {output_filename} (Skipping)")
+        else:
+            _download_and_build_plugin_from_s3(
+                s3_directory, name, version, email, output_filename
+            )
+            lib.log(f"Created: {output_filename}")
+
+
+def _download_and_build_plugin_from_s3(
+    s3_directory, name, version, email, output_filename
+):
     with lib.temp_directory() as temp_directory:
-        base_name = "plugin-{}-{}".format(webapp, version)
-        base_dir = os.path.join(temp_directory, base_name)
-        os.makedirs(base_dir)
+        base_dir = temp_directory / f"plugin-{name}-{version}"
+        base_dir.mkdir()
 
         # Download everything from S3 into the webfiles folder.
-        files_directory = os.path.join(base_dir, "webfiles")
-        os.makedirs(files_directory)
+        # (we will move out the views and tasks if present).
+        files_directory = base_dir / "webfiles"
+        files_directory.mkdir()
         lib.run(
             "aws",
             "s3",
             "cp",
-            "s3://ice-webapp-builds/{}/{}".format(webapp, version),
-            files_directory,
+            f"s3://{s3_directory}/{name}/{version}",
+            files_directory.as_posix(),
             "--recursive",
         )
 
         # Move out the views if they exist.
-        views_directory = os.path.join(files_directory, "views")
-        if os.path.exists(views_directory):
-            shutil.move(views_directory, base_dir)
+        views_directory = files_directory / "views"
+        if views_directory.exists():
+            views_directory.rename(base_dir / "views")
 
         # Move out the tasks if they exist.
-        tasks_directory = os.path.join(files_directory, "tasks")
-        if os.path.exists(tasks_directory):
-            shutil.move(tasks_directory, base_dir)
+        tasks_directory = files_directory / "tasks"
+        if tasks_directory.exists():
+            tasks_directory.rename(base_dir / "tasks")
 
-        # Create plugin.toml
-        plugin_filename = os.path.join(base_dir, "plugin.toml")
+        # Create a plugin.toml manifest.
         make_plugin_toml_file(
-            plugin_filename, webapp, "Webapp {}".format(webapp), version, email
+            base_dir / "plugin.toml", name, f"Webapp {name}", version, email
         )
 
         # Convert all into tar.gz
-        filename = base_name + ".tar.gz"
-        lib.create_targz(base_dir, filename)
-        lib.log("Created plugin: {}".format(filename))
-        return filename
+        lib.create_targz(base_dir, output_filename)
 
 
 @main.command()
-@click.argument("filename")
+@click.argument("sources", nargs=-1)
+@click.option(
+    "--plugins-cache-dir",
+    default="~/.encapsia/plugins-cache",
+    help="Name of directory in which to cache plugins",
+)
+@click.option(
+    "--force", is_flag=True, help="Always build even if already present in cache."
+)
+def build_from_src(sources, plugins_cache_dir, force):
+    """Build plugins from given source directories."""
+    plugins_cache_dir = Path(plugins_cache_dir).expanduser()
+    plugins_cache_dir.mkdir(parents=True, exist_ok=True)
+    for source_directory in sources:
+        source_directory = Path(source_directory)
+        manifest = read_toml(source_directory / "plugin.toml")
+        name = manifest["name"]
+        version = manifest["version"]
+        output_filename = plugins_cache_dir / f"plugin-{name}-{version}.tar.gz"
+        if not force and output_filename.exists():
+            lib.log(f"Found: {output_filename} (Skipping)")
+        else:
+            with lib.temp_directory() as temp_directory:
+                base_dir = temp_directory / f"plugin-{name}-{version}"
+                base_dir.mkdir()
+                for t in (
+                    "webfiles",
+                    "views",
+                    "tasks",
+                    "wheels",
+                    "schedules",
+                    "plugin.toml",
+                ):
+                    source_t = source_directory / t
+                    if source_t.exists():
+                        if source_t.is_file():
+                            shutil.copy(source_t, base_dir / t)
+                        else:
+                            shutil.copytree(source_t, base_dir / t)
+                lib.create_targz(base_dir, output_filename)
+                lib.log(f"Created: {output_filename}")
+
+
+@main.command()
+@click.argument("url")
+@click.option(
+    "--plugins-cache-dir",
+    default="~/.encapsia/plugins-cache",
+    help="Name of directory in which to cache plugins",
+)
+@click.option(
+    "--force", is_flag=True, help="Always fetch even if already present in cache."
+)
+def fetch_from_url(url, plugins_cache_dir, force):
+    """Fetch a plugin from given URL in to the plugin cache."""
+    full_name = url.rsplit("/", 1)[-1]
+    m = re.match(r"plugin-([^-]*)-([^-]*).tar.gz", full_name)
+    if m:
+        plugins_cache_dir = Path(plugins_cache_dir).expanduser()
+        plugins_cache_dir.mkdir(parents=True, exist_ok=True)
+        output_filename = plugins_cache_dir / full_name
+        if not force and output_filename.exists():
+            lib.log(f"Found: {output_filename} (Skipping)")
+        else:
+            filename, headers = urllib.request.urlretrieve(url)
+            shutil.move(filename, output_filename)
+            lib.log(f"Created: {output_filename}")
+    else:
+        print("That doesn't look like a plugin. Aborting!")
+        raise click.Abort()
+
+
+@main.command()
+@click.option("--versions", help="TOML file containing webapp names and versions")
+@click.option(
+    "--plugins-cache-dir",
+    default="~/.encapsia/plugins-cache",
+    help="Name of directory in which to cache plugins",
+)
+@click.option("--force", is_flag=True, help="Always install even if already installed.")
 @click.pass_context
-def install(ctx, filename):
-    """Install plugin from given tar.gz file or directory."""
-    temp_filename = None
-    if os.path.isdir(filename):
-        fd, temp_filename = tempfile.mkstemp(suffix=".tar.gz")
-        os.close(fd)
-        lib.create_targz(filename, temp_filename)
-        filename = temp_filename
-
+def install(ctx, versions, plugins_cache_dir, force):
+    """Install plugins of particular versions."""
+    plugins_cache_dir = Path(plugins_cache_dir).expanduser()
+    versions = Path(versions)
     api = EncapsiaApi(ctx.obj["host"], ctx.obj["token"])
-    blob_id = api.upload_file_as_blob(filename)
-    # TODO create plugin entity
-    # TODO also assign a blobtag?
-    lib.log(f"Uploaded {filename} to blob: {blob_id}")
-    lib.run_plugins_task(
-        ctx.obj["host"],
-        ctx.obj["token"],
-        "install_plugin",
-        dict(blob_id=blob_id),
-        "Installing",
-    )
+    for name, version in read_toml(versions).items():
+        plugin_filename = plugins_cache_dir / f"plugin-{name}-{version}.tar.gz"
+        if not plugin_filename.exists():
+            print(
+                f"Unable to find plugin {name} version {name} in cache ({plugins_cache_dir})"
+            )
+            raise click.abort()
 
-    if temp_filename:
-        os.remove(temp_filename)
+        # TODO only upload if not already installed? (unless --force)
+        blob_id = api.upload_file_as_blob(plugin_filename.as_posix())
+        # TODO create plugin entity and pass that in (the pluginsmanager creates the pluginlogs entity)
+        lib.log(f"Uploaded {plugin_filename} to blob: {blob_id}")
+        lib.run_plugins_task(
+            ctx.obj["host"],
+            ctx.obj["token"],
+            "install_plugin",
+            dict(blob_id=blob_id),
+            "Installing",
+        )
 
 
 @main.command()
@@ -175,7 +286,7 @@ def uninstall(ctx, namespace):
         ctx.obj["token"],
         "uninstall_plugin",
         dict(namespace=namespace),
-        "Uninstalling {}".format(namespace),
+        f"Uninstalling {namespace}",
     )
 
 
@@ -185,44 +296,39 @@ class LastUploadedVsModifiedTracker:
 
     def __init__(self, directory, reset=False):
         self.directory = directory
-        self.filename = os.path.join(
-            self.directory, ".encapsia", "last_uploaded_plugin_parts.toml"
-        )
+        encapsia_directory = directory / ".encapsia"
+        encapsia_directory.mkdir(parents=True, exist_ok=True)
+        self.filename = encapsia_directory / "last_uploaded_plugin_parts.toml"
         if reset:
             self.make_empty()
         else:
             self.load()
 
     def make_empty(self):
-        os.makedirs(os.path.join(self.directory, ".encapsia"), exist_ok=True)
         self.data = {}
         self.save()
 
     def load(self):
-        if not os.path.exists(self.filename):
+        if not self.filename.exists():
             self.make_empty()
         else:
-            with open(self.filename) as f:
+            with self.filename.open() as f:
                 self.data = toml.load(f)
 
     def save(self):
-        with open(self.filename, "w") as f:
+        with self.filename.open("w") as f:
             toml.dump(self.data, f)
 
     def get_modified_directories(self):
         for name in self.DIRECTORIES:
-            possible_files = glob.glob(os.path.join(self.directory, name, "**"))
-            if possible_files:
+            last_modified = lib.most_recently_modified(self.directory / name)
+            if last_modified is not None:
                 if name in self.data:
-                    last_changed_file = max(possible_files, key=os.path.getctime)
-                    last_modified = datetime.datetime.utcfromtimestamp(
-                        os.path.getctime(last_changed_file)
-                    )
                     if last_modified > self.data[name]:
-                        yield name
+                        yield Path(name)
                         self.data[name] = datetime.datetime.utcnow()
                 else:
-                    yield name
+                    yield Path(name)
                     self.data[name] = datetime.datetime.utcnow()
         self.save()
 
@@ -245,20 +351,21 @@ def dev_update(ctx, directory, force):
     Optionally pass in the DIRECTORY of the plugin (defaults to cwd).
 
     """
-    if not os.path.exists(os.path.join(directory, "plugin.toml")):
+    directory = Path(directory)
+    plugin_toml_path = directory / "plugin.toml"
+    if not plugin_toml_path.exists():
         lib.error("Not in a plugin directory.")
         sys.exit(1)
     modified_plugin_directories = get_modified_plugin_directories(
         directory, reset=force
     )
     if modified_plugin_directories:
-        with lib.temp_directory() as tmp_directory:
-            shutil.copy(os.path.join(directory, "plugin.toml"), tmp_directory)
+        with lib.temp_directory() as temp_directory:
+            shutil.copy(plugin_toml_path, temp_directory)
             for modified_directory in modified_plugin_directories:
                 lib.log(f"Including: {modified_directory}")
                 shutil.copytree(
-                    os.path.join(directory, modified_directory),
-                    os.path.join(tmp_directory, modified_directory),
+                    directory / modified_directory, temp_directory / modified_directory
                 )
             lib.run_plugins_task(
                 ctx.obj["host"],
@@ -266,7 +373,7 @@ def dev_update(ctx, directory, force):
                 "dev_update_plugin",
                 dict(),
                 "Uploading to server",
-                data=lib.create_targz_as_bytes(tmp_directory),
+                data=lib.create_targz_as_bytes(temp_directory),
             )
     else:
         lib.log("Nothing to do.")
