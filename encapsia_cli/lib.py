@@ -73,7 +73,7 @@ def temp_directory():
 
 def most_recently_modified(directory):
     """Return datetime of most recently changed file in directory."""
-    files = directory.glob("**/*.py")
+    files = list(directory.glob("**/*.*"))
     if files:
         return datetime.datetime.utcfromtimestamp(max(t.stat().st_mtime for t in files))
     else:
