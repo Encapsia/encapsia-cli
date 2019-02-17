@@ -179,9 +179,7 @@ def get_modified_plugin_directories(directory, reset=False):
 
 @main.command("dev-update")
 @click.argument("directory", default=".")
-@click.option(
-    "--reset", is_flag=True, help="Always update everything."
-)
+@click.option("--reset", is_flag=True, help="Always update everything.")
 @click.pass_context
 def dev_update(ctx, directory, reset):
     """Update plugin parts which have changed since previous update.
