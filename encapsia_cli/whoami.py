@@ -18,13 +18,7 @@ from encapsia_cli import lib
     default="ENCAPSIA_TOKEN",
     help="Environment variable containing server token (default ENCAPSIA_TOKEN)",
 )
-@click.option(
-    "--format",
-    type=click.Choice(["json", "toml"]),
-    default="json",
-    help="Format as JSON or TOML (default JSON)",
-)
-def main(host, host_env_var, token_env_var, format):
+def main(host, host_env_var, token_env_var):
     """Print information about current owner of token."""
     api = lib.get_api(host, host_env_var, token_env_var)
-    lib.pretty_print(api.whoami(), format)
+    lib.pretty_print(api.whoami())

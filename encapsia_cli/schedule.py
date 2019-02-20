@@ -74,10 +74,10 @@ def add_task(
     )
 
 
-@main.command("remove_in_namespace")
+@main.command()
 @click.argument("namespace")
 @click.pass_context
-def remove_tasks_in_namespace(ctx, namespace):
+def remove_all_from_namespace(ctx, namespace):
     """Remove all scheduled tasks in given namespace."""
     lib.run_plugins_task(
         ctx.obj["host"],
@@ -88,10 +88,10 @@ def remove_tasks_in_namespace(ctx, namespace):
     )
 
 
-@main.command("remove")
+@main.command()
 @click.argument("scheduled_task_id")
 @click.pass_context
-def remove_task(ctx, scheduled_task_id):
+def remove_by_id(ctx, scheduled_task_id):
     """Remove scheduled task by id."""
     lib.run_plugins_task(
         ctx.obj["host"],

@@ -97,7 +97,7 @@ def create_targz_as_bytes(directory):
     return data.getvalue()
 
 
-def pretty_print(obj, format, output=None):
+def pretty_print(obj, format="toml", output=None):
     if format == "json":
         formatted = json.dumps(obj, sort_keys=True, indent=4).strip()
     elif format == "toml":
