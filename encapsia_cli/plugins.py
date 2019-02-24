@@ -11,25 +11,7 @@ from encapsia_api import EncapsiaApi
 from encapsia_cli import lib
 
 
-@click.group()
-@click.option(
-    "--host", help="Name to use to lookup credentials in ~/.encapsia/credentials.toml."
-)
-@click.option(
-    "--host-env-var",
-    default="ENCAPSIA_HOST",
-    help="Environment variable containing DNS hostname (default ENCAPSIA_HOST).",
-)
-@click.option(
-    "--token-env-var",
-    default="ENCAPSIA_TOKEN",
-    help="Environment variable containing server token (default ENCAPSIA_TOKEN).",
-)
-@click.pass_context
-def main(ctx, host, host_env_var, token_env_var):
-    """Install / uninstall plugins."""
-    host, token = lib.discover_credentials(host, host_env_var, token_env_var)
-    ctx.obj = dict(host=host, token=token)
+main = lib.make_main(__doc__)
 
 
 @main.command("dev-create-namespace")
@@ -119,6 +101,7 @@ def install(ctx, versions, plugins_cache_dir, force):
 @click.pass_context
 def uninstall(ctx, namespace):
     """Uninstall named plugin."""
+    click.confirm(f'Are you sure you want to uninstall the plugin (delete all!) from namespace "{namespace}"?', abort=True)
     lib.run_plugins_task(
         ctx.obj["host"],
         ctx.obj["token"],

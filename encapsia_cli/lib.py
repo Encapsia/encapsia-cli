@@ -3,6 +3,7 @@ import datetime
 import io
 import json
 import os
+import re
 import shutil
 import subprocess
 import tarfile
@@ -35,22 +36,65 @@ def get_env_var(name):
         raise click.Abort()
 
 
-def discover_credentials(name, host_env_var, token_env_var):
+def discover_credentials(name, hostname_env_var, token_env_var):
     if name:
         store = CredentialsStore()
         try:
-            host, token = store.get(name)
+            hostname, token = store.get(name)
         except KeyError:
             error(f"Cannot find entry for '{name}' in encapsia credentials file.")
             raise click.Abort()
     else:
-        host, token = get_env_var(host_env_var), get_env_var(token_env_var)
-    return host, token
+        hostname, token = get_env_var(hostname_env_var), get_env_var(token_env_var)
+    return hostname, token
 
 
-def get_api(name, host_env_var, token_env_var):
-    host, token = discover_credentials(name, host_env_var, token_env_var)
-    return EncapsiaApi(host, token)
+def get_api(host=None, hostname_env_var=None, token_env_var=None):
+    hostname, token = discover_credentials(host, hostname_env_var, token_env_var)
+    return EncapsiaApi(hostname, token)
+
+
+def make_main(docstring):
+
+    def add_doc(value):
+        def _doc(func):
+            func.__doc__ = value
+            return func
+        return _doc
+
+    @click.group()
+    @click.option(
+        "--host", help="Name to use to lookup credentials in .encapsia/credentials.toml"
+    )
+    @click.option(
+        "--hostname-env-var",
+        default="ENCAPSIA_HOSTNAME",
+        show_default=True,
+        help="Environment variable containing DNS hostname",
+    )
+    @click.option(
+        "--token-env-var",
+        default="ENCAPSIA_TOKEN",
+        show_default=True,
+        help="Environment variable containing server token",
+    )
+    @click.pass_context
+    @add_doc(docstring)
+    def main(ctx, host, hostname_env_var, token_env_var):
+        ctx.obj = dict(host=host, hostname_env_var=hostname_env_var, token_env_var=token_env_var)
+
+    return main
+
+
+
+# See http://www.regular-expressions.info/email.html
+EMAIL_REGEX = re.compile(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
+
+
+def validate_email(ctx, param, value):
+    if not EMAIL_REGEX.match(value):
+        raise click.BadParameter("Not a valid email address")
+    return value
 
 
 def get_utc_now_as_iso8601():
@@ -130,8 +174,8 @@ def visual_poll(message, poll, NoTaskResultYet, wait=0.2):
     return result
 
 
-def run_plugins_task(host, token, name, params, message, data=None):
-    api = EncapsiaApi(host, token)
+def run_plugins_task(hostname, token, name, params, message, data=None):
+    api = EncapsiaApi(hostname, token)
     poll, NoTaskResultYet = api.run_task(
         "pluginsmanager", "icepluginsmanager.{}".format(name), params, data
     )
@@ -139,3 +183,11 @@ def run_plugins_task(host, token, name, params, message, data=None):
     log_output(result["output"].strip())
     if result["status"] != "ok":
         raise click.Abort()
+
+
+def dbctl_action(api, name, params, message):
+    poll, NoTaskResultYet = api.dbctl_action(name, params)
+    result = visual_poll(message, poll, NoTaskResultYet)
+    if result["status"] != "ok":
+        raise click.Abort()
+    return result["result"]
