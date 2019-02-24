@@ -70,6 +70,6 @@ def list_users(obj, superusers, systemusers, all_users):
 @click.argument("email", callback=lib.validate_email)
 @click.pass_obj
 def delete_user(obj, email):
-    """Delete user (but *not* deleting any related role)."""
+    """Delete user (but *do not* delete any related role)."""
     api = lib.get_api(**obj)
     api.delete_user(email)

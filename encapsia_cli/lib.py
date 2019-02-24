@@ -36,13 +36,13 @@ def get_env_var(name):
         raise click.Abort()
 
 
-def discover_credentials(name, hostname_env_var, token_env_var):
-    if name:
+def discover_credentials(host, hostname_env_var, token_env_var):
+    if host:
         store = CredentialsStore()
         try:
-            hostname, token = store.get(name)
+            hostname, token = store.get(host)
         except KeyError:
-            error(f"Cannot find entry for '{name}' in encapsia credentials file.")
+            error(f"Cannot find entry for '{host}' in encapsia credentials file.")
             raise click.Abort()
     else:
         hostname, token = get_env_var(hostname_env_var), get_env_var(token_env_var)
@@ -174,15 +174,18 @@ def visual_poll(message, poll, NoTaskResultYet, wait=0.2):
     return result
 
 
-def run_plugins_task(hostname, token, name, params, message, data=None):
-    api = EncapsiaApi(hostname, token)
+def run_task(api, namespace, name, params, message, data=None):
     poll, NoTaskResultYet = api.run_task(
-        "pluginsmanager", "icepluginsmanager.{}".format(name), params, data
+        namespace, name, params, data
     )
     result = visual_poll(message, poll, NoTaskResultYet)
     log_output(result["output"].strip())
     if result["status"] != "ok":
         raise click.Abort()
+
+
+def run_plugins_task(api, name, params, message, data=None):
+    run_task(api, "pluginsmanager", "icepluginsmanager.{}".format(name), params, message, data)
 
 
 def dbctl_action(api, name, params, message):
