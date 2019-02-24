@@ -9,6 +9,7 @@ import encapsia_cli.fixtures
 import encapsia_cli.help
 import encapsia_cli.httpie
 import encapsia_cli.run
+import encapsia_cli.plugins
 import encapsia_cli.schedule
 import encapsia_cli.shell
 import encapsia_cli.token
@@ -26,6 +27,7 @@ COMMANDS = {
     "fixtures": encapsia_cli.fixtures.main,
     "help": encapsia_cli.help.main,
     "httpie": encapsia_cli.httpie.main,
+    "plugins": encapsia_cli.plugins.main,
     "run": encapsia_cli.run.main,
     "schedule": encapsia_cli.schedule.main,
     "shell": encapsia_cli.shell.main,

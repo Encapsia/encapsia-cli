@@ -30,15 +30,18 @@ def add_superuser(obj, email, first_name, last_name):
 
 
 @main.command("list")
-@click.option("--superusers/--no-superusers", default=False)
+@click.option("--super-users/--no-super-users", default=False)
 @click.option("--system-users/--no-system-users", default=False)
-@click.option("--all-users/--no-all-users", default=True)
+@click.option("--all-users/--no-all-users", default=False)
 @click.pass_obj
-def list_users(obj, superusers, systemusers, all_users):
+def list_users(obj, super_users, system_users, all_users):
     """List out information about users."""
     api = lib.get_api(**obj)
-    if superusers:
-        click.echo("[Superusers]")
+    if not (super_users or system_users or all_users):
+        # If no specific type of user specified then assume all-users was intended.
+        all_users = True
+    if super_users:
+        click.echo("[Super users]")
         users = api.get_super_users()
         headers = ["email", "first_name", "last_name"]
         click.echo(tabulate.tabulate(

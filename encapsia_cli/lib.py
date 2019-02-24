@@ -49,19 +49,20 @@ def discover_credentials(host, hostname_env_var, token_env_var):
     return hostname, token
 
 
-def get_api(host=None, hostname_env_var=None, token_env_var=None):
-    hostname, token = discover_credentials(host, hostname_env_var, token_env_var)
+def get_api(**obj):
+    hostname, token = discover_credentials(obj["host"], obj["hostname_env_var"], obj["token_env_var"])
     return EncapsiaApi(hostname, token)
 
 
+def add_docstring(value):
+    """Decorator to add a docstring to a function."""
+    def _doc(func):
+        func.__doc__ = value
+        return func
+    return _doc
+
+
 def make_main(docstring):
-
-    def add_doc(value):
-        def _doc(func):
-            func.__doc__ = value
-            return func
-        return _doc
-
     @click.group()
     @click.option(
         "--host", help="Name to use to lookup credentials in .encapsia/credentials.toml"
@@ -79,7 +80,7 @@ def make_main(docstring):
         help="Environment variable containing server token",
     )
     @click.pass_context
-    @add_doc(docstring)
+    @add_docstring(docstring)
     def main(ctx, host, hostname_env_var, token_env_var):
         ctx.obj = dict(host=host, hostname_env_var=hostname_env_var, token_env_var=token_env_var)
 
@@ -127,6 +128,16 @@ def most_recently_modified(directory):
 def run(*args, **kwargs):
     """Run external command."""
     return subprocess.check_output(args, stderr=subprocess.STDOUT, **kwargs)
+
+
+def read_toml(filename):
+    with filename.open() as f:
+        return toml.load(f)
+
+
+def write_toml(filename, obj):
+    with filename.open("w") as f:
+        toml.dump(obj, f)
 
 
 def create_targz(directory, filename):
