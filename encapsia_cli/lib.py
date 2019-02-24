@@ -50,15 +50,19 @@ def discover_credentials(host, hostname_env_var, token_env_var):
 
 
 def get_api(**obj):
-    hostname, token = discover_credentials(obj["host"], obj["hostname_env_var"], obj["token_env_var"])
+    hostname, token = discover_credentials(
+        obj["host"], obj["hostname_env_var"], obj["token_env_var"]
+    )
     return EncapsiaApi(hostname, token)
 
 
 def add_docstring(value):
     """Decorator to add a docstring to a function."""
+
     def _doc(func):
         func.__doc__ = value
         return func
+
     return _doc
 
 
@@ -82,10 +86,11 @@ def make_main(docstring):
     @click.pass_context
     @add_docstring(docstring)
     def main(ctx, host, hostname_env_var, token_env_var):
-        ctx.obj = dict(host=host, hostname_env_var=hostname_env_var, token_env_var=token_env_var)
+        ctx.obj = dict(
+            host=host, hostname_env_var=hostname_env_var, token_env_var=token_env_var
+        )
 
     return main
-
 
 
 # See http://www.regular-expressions.info/email.html
@@ -186,9 +191,7 @@ def visual_poll(message, poll, NoTaskResultYet, wait=0.2):
 
 
 def run_task(api, namespace, name, params, message, data=None):
-    poll, NoTaskResultYet = api.run_task(
-        namespace, name, params, data
-    )
+    poll, NoTaskResultYet = api.run_task(namespace, name, params, data)
     result = visual_poll(message, poll, NoTaskResultYet)
     log_output(result["output"].strip())
     if result["status"] != "ok":
@@ -196,7 +199,14 @@ def run_task(api, namespace, name, params, message, data=None):
 
 
 def run_plugins_task(api, name, params, message, data=None):
-    run_task(api, "pluginsmanager", "icepluginsmanager.{}".format(name), params, message, data)
+    run_task(
+        api,
+        "pluginsmanager",
+        "icepluginsmanager.{}".format(name),
+        params,
+        message,
+        data,
+    )
 
 
 def dbctl_action(api, name, params, message):

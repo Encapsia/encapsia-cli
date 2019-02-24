@@ -1,14 +1,13 @@
 """Install, uninstall, create, and update plugins."""
 import datetime
+import re
 import shutil
 import sys
-from pathlib import Path
-import re
 import urllib.request
+from pathlib import Path
 
 import click
 import toml
-from encapsia_api import EncapsiaApi
 
 from encapsia_cli import lib
 
@@ -35,15 +34,19 @@ from encapsia_cli import lib
     default="~/.encapsia/plugins-cache",
     help="Name of directory used to cache plugins.",
 )
-@click.option(
-    "--force", is_flag=True, help="Always fetch/build/etc again."
-)
+@click.option("--force", is_flag=True, help="Always fetch/build/etc again.")
 @click.pass_obj
 @lib.add_docstring(__doc__)
 def main(ctx, host, hostname_env_var, token_env_var, plugins_cache_dir, force):
     plugins_cache_dir = Path(plugins_cache_dir).expanduser()
     plugins_cache_dir.mkdir(parents=True, exist_ok=True)
-    ctx.obj = dict(host=host, hostname_env_var=hostname_env_var, token_env_var=token_env_var, plugins_cache_dir=plugins_cache_dir, force=force)
+    ctx.obj = dict(
+        host=host,
+        hostname_env_var=hostname_env_var,
+        token_env_var=token_env_var,
+        plugins_cache_dir=plugins_cache_dir,
+        force=force,
+    )
 
 
 @main.command()
@@ -51,12 +54,7 @@ def main(ctx, host, hostname_env_var, token_env_var, plugins_cache_dir, force):
 def info(obj):
     """Provide some information about installed plugins."""
     api = lib.get_api(**obj)
-    lib.run_plugins_task(
-        api,
-        "list_namespaces",
-        dict(),
-        "Fetching list of namespaces",
-    )
+    lib.run_plugins_task(api, "list_namespaces", dict(), "Fetching list of namespaces")
 
 
 def read_toml(filename):
@@ -84,12 +82,7 @@ def install(obj, versions, plugins_cache_dir, force):
         blob_id = api.upload_file_as_blob(plugin_filename.as_posix())
         # TODO create plugin entity and pass that in (the pluginsmanager creates the pluginlogs entity)
         lib.log(f"Uploaded {plugin_filename} to blob: {blob_id}")
-        lib.run_plugins_task(
-            api,
-            "install_plugin",
-            dict(blob_id=blob_id),
-            "Installing",
-        )
+        lib.run_plugins_task(api, "install_plugin", dict(blob_id=blob_id), "Installing")
 
 
 @main.command()
@@ -97,13 +90,13 @@ def install(obj, versions, plugins_cache_dir, force):
 @click.pass_obj
 def uninstall(obj, namespace):
     """Uninstall named plugin."""
-    click.confirm(f'Are you sure you want to uninstall the plugin (delete all!) from namespace "{namespace}"?', abort=True)
+    click.confirm(
+        f'Are you sure you want to uninstall the plugin (delete all!) from namespace "{namespace}"?',
+        abort=True,
+    )
     api = lib.get_api(**obj)
     lib.run_plugins_task(
-        api,
-        "uninstall_plugin",
-        dict(namespace=namespace),
-        f"Uninstalling {namespace}",
+        api, "uninstall_plugin", dict(namespace=namespace), f"Uninstalling {namespace}"
     )
 
 
@@ -216,12 +209,8 @@ def dev_destroy_namespace(obj, namespace):
     """Destroy namespace of given name. Only useful during development"""
     api = lib.get_api(**obj)
     lib.run_plugins_task(
-        api,
-        "dev_destroy_namespace",
-        dict(namespace=namespace),
-        "Destroying namespace",
+        api, "dev_destroy_namespace", dict(namespace=namespace), "Destroying namespace"
     )
-
 
 
 def make_plugin_toml_file(filename, name, description, version, created_by):
@@ -237,7 +226,11 @@ def make_plugin_toml_file(filename, name, description, version, created_by):
 
 
 @main.command()
-@click.option("--versions", type=click.Path(exists=True), help="TOML file containing webapp names and versions.")
+@click.option(
+    "--versions",
+    type=click.Path(exists=True),
+    help="TOML file containing webapp names and versions.",
+)
 @click.option("--email", prompt="Your email", help="Email creator of the plugins.")
 @click.option(
     "--s3-directory", default="ice-webapp-builds", help="Base directory on S3."

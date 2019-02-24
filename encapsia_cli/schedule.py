@@ -3,7 +3,6 @@ import click
 
 from encapsia_cli import lib
 
-
 main = lib.make_main(__doc__)
 
 
@@ -13,10 +12,7 @@ def list_tasks(obj):
     """List all scheduled tasks."""
     api = lib.get_api(**obj)
     lib.run_plugins_task(
-        api,
-        "list_scheduled_tasks",
-        {},
-        "Fetching list of scheduled tasks",
+        api, "list_scheduled_tasks", {}, "Fetching list of scheduled tasks"
     )
 
 

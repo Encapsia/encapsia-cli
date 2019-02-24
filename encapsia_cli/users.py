@@ -4,7 +4,6 @@ import tabulate
 
 from encapsia_cli import lib
 
-
 main = lib.make_main(__doc__)
 
 
@@ -44,28 +43,40 @@ def list_users(obj, super_users, system_users, all_users):
         click.echo("[Super users]")
         users = api.get_super_users()
         headers = ["email", "first_name", "last_name"]
-        click.echo(tabulate.tabulate(
-            [[getattr(row, header) for header in headers] for row in users],
-            headers=headers
-        ))
+        click.echo(
+            tabulate.tabulate(
+                [[getattr(row, header) for header in headers] for row in users],
+                headers=headers,
+            )
+        )
         click.echo()
     if system_users:
         click.echo("[System users]")
         users = api.get_system_users()
         headers = ["email", "description", "capabilities"]
-        click.echo(tabulate.tabulate(
-            [[getattr(row, header) for header in headers] for row in users],
-            headers=headers
-        ))
+        click.echo(
+            tabulate.tabulate(
+                [[getattr(row, header) for header in headers] for row in users],
+                headers=headers,
+            )
+        )
         click.echo()
     if all_users:
         click.echo("[All users]")
         users = api.get_all_users()
-        headers = ["email", "first_name", "last_name", "role", "enabled", "is_site_user"]
-        click.echo(tabulate.tabulate(
-            [[row[header] for header in headers] for row in users],
-            headers=headers
-        ))
+        headers = [
+            "email",
+            "first_name",
+            "last_name",
+            "role",
+            "enabled",
+            "is_site_user",
+        ]
+        click.echo(
+            tabulate.tabulate(
+                [[row[header] for header in headers] for row in users], headers=headers
+            )
+        )
         click.echo()
 
 

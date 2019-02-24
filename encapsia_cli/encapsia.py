@@ -8,14 +8,13 @@ import encapsia_cli.database
 import encapsia_cli.fixtures
 import encapsia_cli.help
 import encapsia_cli.httpie
-import encapsia_cli.run
 import encapsia_cli.plugins
+import encapsia_cli.run
 import encapsia_cli.schedule
 import encapsia_cli.shell
 import encapsia_cli.token
 import encapsia_cli.users
 import encapsia_cli.version
-
 
 #: Initialise click completion.
 click_completion.init()
@@ -38,7 +37,6 @@ COMMANDS = {
 
 
 class EncapsiaCli(click.MultiCommand):
-
     def list_commands(self, ctx):
         return sorted(COMMANDS.keys())
 

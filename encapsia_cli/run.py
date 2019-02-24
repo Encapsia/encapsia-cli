@@ -3,7 +3,6 @@ import click
 
 from encapsia_cli import lib
 
-
 main = lib.make_main(__doc__)
 
 
@@ -13,11 +12,11 @@ main = lib.make_main(__doc__)
 @click.argument("args", nargs=-1)
 @click.pass_obj
 def run_task(obj, namespace, function, args):
-    """Run an task in given plugin NAMESPACE and FUNCTION with ARGS.
+    """Run a task in given plugin NAMESPACE and FUNCTION with ARGS.
 
     E.g.
 
-    example_namespace test_module.test_function x=3 y=tim "z=hello stranger"
+    ... example_namespace test_module.test_function x=3 y=tim "z=hello stranger"
 
     Note that all args must be named and the values are all considered strings (not
     least because arguments are encoded over a URL string).
@@ -41,7 +40,7 @@ def run_view(obj, namespace, function, args):
 
     e.g.
 
-    example_namespace test_view 3 tim
+    ... example_namespace test_view 3 tim
 
     Note that ARGS will be passed in as URL path segments.
 

@@ -1,7 +1,7 @@
 import click
+import encapsia_api
 
 import encapsia_cli
-import encapsia_api
 
 
 @click.command("version")

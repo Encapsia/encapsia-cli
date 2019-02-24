@@ -3,7 +3,6 @@ import click
 
 from encapsia_cli import lib
 
-
 main = lib.make_main(__doc__)
 
 
