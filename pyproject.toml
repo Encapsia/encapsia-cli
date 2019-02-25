@@ -10,24 +10,20 @@ keywords = ["encapsia", "eSource", "EDC", "Clinical Trials"]
 homepage = "https://github.com/tcorbettclark/encapsia-cli"
 
 [tool.poetry.scripts]
-encapsia-add-superuser = "encapsia_cli.add_superuser:main"
-encapsia-system-user = "encapsia_cli.system_user:main"
-encapsia-config = "encapsia_cli.config:main"
-encapsia-dbctl = "encapsia_cli.dbctl:main"
-encapsia-expire-token = "encapsia_cli.expire_token:main"
-encapsia-plugins = "encapsia_cli.plugins:main"
-encapsia-plugins-maker = "encapsia_cli.plugins_maker:main"
-encapsia-schedule = "encapsia_cli.schedule:main"
-encapsia-task = "encapsia_cli.task:main"
-encapsia-whoami = "encapsia_cli.whoami:main"
+encapsia = "encapsia_cli.encapsia:main"
 
 [tool.poetry.dependencies]
 python = "^3.6"
 requests = {version = "^2.20",extras = ["security"]}
 click = "^7.0"
 toml = "^0.10.0"
-encapsia-api = ">=0.1.7"
+encapsia-api = ">=0.1.14"
 awscli = "^1.16"
+click-completion = "^0.5.0"
+click-shell = "^1.0"
+tabulate = "^0.8.3"
+httpie = "^1.0"
+http-prompt = "^1.0"
 
 [tool.poetry.dev-dependencies]
 black = {version = "^18.3-alpha.0",allows-prereleases = true}

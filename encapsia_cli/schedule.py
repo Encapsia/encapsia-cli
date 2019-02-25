@@ -3,38 +3,16 @@ import click
 
 from encapsia_cli import lib
 
-
-@click.group()
-@click.option(
-    "--host", help="Name to use to lookup credentials in .encapsia/credentials.toml"
-)
-@click.option(
-    "--host-env-var",
-    default="ENCAPSIA_HOST",
-    help="Environment variable containing DNS hostname (default ENCAPSIA_HOST)",
-)
-@click.option(
-    "--token-env-var",
-    default="ENCAPSIA_TOKEN",
-    help="Environment variable containing server token (default ENCAPSIA_TOKEN)",
-)
-@click.pass_context
-def main(ctx, host, host_env_var, token_env_var):
-    """Manage task schedules."""
-    host, token = lib.discover_credentials(host, host_env_var, token_env_var)
-    ctx.obj = dict(host=host, token=token)
+main = lib.make_main(__doc__)
 
 
 @main.command("list")
-@click.pass_context
-def list_tasks(ctx):
+@click.pass_obj
+def list_tasks(obj):
     """List all scheduled tasks."""
+    api = lib.get_api(**obj)
     lib.run_plugins_task(
-        ctx.obj["host"],
-        ctx.obj["token"],
-        "list_scheduled_tasks",
-        {},
-        "Fetching list of scheduled tasks",
+        api, "list_scheduled_tasks", {}, "Fetching list of scheduled tasks"
     )
 
 
@@ -51,14 +29,14 @@ def list_tasks(ctx):
     required=True,
 )
 @click.option("--jitter", prompt="Jitter (int)", type=int, required=True)
-@click.pass_context
+@click.pass_obj
 def add_task(
-    ctx, description, task_host, task_token, namespace, task, params, cron, jitter
+    obj, description, task_host, task_token, namespace, task, params, cron, jitter
 ):
     """Add new scheduled task."""
+    api = lib.get_api(**obj)
     lib.run_plugins_task(
-        ctx.obj["host"],
-        ctx.obj["token"],
+        api,
         "add_scheduled_task",
         dict(
             description=description,
@@ -76,12 +54,12 @@ def add_task(
 
 @main.command()
 @click.argument("namespace")
-@click.pass_context
-def remove_all_from_namespace(ctx, namespace):
+@click.pass_obj
+def remove_tasks_in_namespace(obj, namespace):
     """Remove all scheduled tasks in given namespace."""
+    api = lib.get_api(**obj)
     lib.run_plugins_task(
-        ctx.obj["host"],
-        ctx.obj["token"],
+        api,
         "remove_scheduled_tasks_in_namespace",
         dict(namespace=namespace),
         "Removing scheduled tasks",
@@ -90,12 +68,12 @@ def remove_all_from_namespace(ctx, namespace):
 
 @main.command()
 @click.argument("scheduled_task_id")
-@click.pass_context
-def remove_by_id(ctx, scheduled_task_id):
+@click.pass_obj
+def remove_task(obj, scheduled_task_id):
     """Remove scheduled task by id."""
+    api = lib.get_api(**obj)
     lib.run_plugins_task(
-        ctx.obj["host"],
-        ctx.obj["token"],
+        api,
         "remove_scheduled_task",
         dict(scheduled_task_id=scheduled_task_id),
         "Removing scheduled tasks",

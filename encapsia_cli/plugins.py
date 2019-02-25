@@ -1,77 +1,26 @@
-"""Install / uninstall plugins."""
+"""Install, uninstall, create, and update plugins."""
 import datetime
+import re
 import shutil
 import sys
+import urllib.request
 from pathlib import Path
 
 import click
 import toml
-from encapsia_api import EncapsiaApi
 
 from encapsia_cli import lib
 
 
-@click.group()
-@click.option(
-    "--host", help="Name to use to lookup credentials in ~/.encapsia/credentials.toml."
-)
-@click.option(
-    "--host-env-var",
-    default="ENCAPSIA_HOST",
-    help="Environment variable containing DNS hostname (default ENCAPSIA_HOST).",
-)
-@click.option(
-    "--token-env-var",
-    default="ENCAPSIA_TOKEN",
-    help="Environment variable containing server token (default ENCAPSIA_TOKEN).",
-)
-@click.pass_context
-def main(ctx, host, host_env_var, token_env_var):
-    """Install / uninstall plugins."""
-    host, token = lib.discover_credentials(host, host_env_var, token_env_var)
-    ctx.obj = dict(host=host, token=token)
-
-
-@main.command("dev-create-namespace")
-@click.argument("namespace")
-@click.argument("n_task_workers", default=1)
-@click.pass_context
-def dev_create_namespace(ctx, namespace, n_task_workers):
-    """Create namespace of given name. Only useful during developmment."""
-    lib.run_plugins_task(
-        ctx.obj["host"],
-        ctx.obj["token"],
-        "dev_create_namespace",
-        dict(namespace=namespace, n_task_workers=n_task_workers),
-        "Creating namespace",
-    )
-
-
-@main.command("dev-destroy-namespace")
-@click.argument("namespace")
-@click.pass_context
-def dev_destroy_namespace(ctx, namespace):
-    """Destroy namespace of given name. Only useful during development"""
-    lib.run_plugins_task(
-        ctx.obj["host"],
-        ctx.obj["token"],
-        "dev_destroy_namespace",
-        dict(namespace=namespace),
-        "Destroying namespace",
-    )
+main = lib.make_main(__doc__, for_plugins=True)
 
 
 @main.command()
-@click.pass_context
-def info(ctx):
+@click.pass_obj
+def info(obj):
     """Provide some information about installed plugins."""
-    lib.run_plugins_task(
-        ctx.obj["host"],
-        ctx.obj["token"],
-        "list_namespaces",
-        dict(),
-        "Fetching list of namespaces",
-    )
+    api = lib.get_api(**obj)
+    lib.run_plugins_task(api, "list_namespaces", dict(), "Fetching list of namespaces")
 
 
 def read_toml(filename):
@@ -81,50 +30,40 @@ def read_toml(filename):
 
 @main.command()
 @click.option("--versions", help="TOML file containing webapp names and versions.")
-@click.option(
-    "--plugins-cache-dir",
-    default="~/.encapsia/plugins-cache",
-    help="Name of directory in which to cache plugins.",
-)
-@click.option("--force", is_flag=True, help="Always install even if already installed.")
-@click.pass_context
-def install(ctx, versions, plugins_cache_dir, force):
-    """Install plugins of particular versions."""
-    plugins_cache_dir = Path(plugins_cache_dir).expanduser()
+@click.pass_obj
+def install(obj, versions):
+    """Install plugins from version.toml file."""
+    plugins_cache_dir = obj["plugins_cache_dir"]
     versions = Path(versions)
-    api = EncapsiaApi(ctx.obj["host"], ctx.obj["token"])
+    api = lib.get_api(**obj)
     for name, version in read_toml(versions).items():
         plugin_filename = plugins_cache_dir / f"plugin-{name}-{version}.tar.gz"
         if not plugin_filename.exists():
-            print(
-                f"Unable to find plugin {name} version {name} in cache ({plugins_cache_dir})"
+            lib.log_error(
+                f"Unable to find plugin {name} version {name} in cache ({plugins_cache_dir})",
+                abort=True
             )
-            raise click.abort()
 
         # TODO only upload if not already installed? (unless --force)
         blob_id = api.upload_file_as_blob(plugin_filename.as_posix())
         # TODO create plugin entity and pass that in (the pluginsmanager creates the pluginlogs entity)
         lib.log(f"Uploaded {plugin_filename} to blob: {blob_id}")
-        lib.run_plugins_task(
-            ctx.obj["host"],
-            ctx.obj["token"],
-            "install_plugin",
-            dict(blob_id=blob_id),
-            "Installing",
-        )
+        lib.run_plugins_task(api, "install_plugin", dict(blob_id=blob_id), "Installing")
 
 
 @main.command()
 @click.argument("namespace")
-@click.pass_context
-def uninstall(ctx, namespace):
+@click.pass_obj
+def uninstall(obj, namespace):
     """Uninstall named plugin."""
+    if not obj["force"]:
+        click.confirm(
+            f'Are you sure you want to uninstall the plugin (delete all!) from namespace "{namespace}"?',
+            abort=True,
+        )
+    api = lib.get_api(**obj)
     lib.run_plugins_task(
-        ctx.obj["host"],
-        ctx.obj["token"],
-        "uninstall_plugin",
-        dict(namespace=namespace),
-        f"Uninstalling {namespace}",
+        api, "uninstall_plugin", dict(namespace=namespace), f"Uninstalling {namespace}"
     )
 
 
@@ -180,8 +119,8 @@ def get_modified_plugin_directories(directory, reset=False):
 @main.command("dev-update")
 @click.argument("directory", default=".")
 @click.option("--reset", is_flag=True, help="Always update everything.")
-@click.pass_context
-def dev_update(ctx, directory, reset):
+@click.pass_obj
+def dev_update(obj, directory, reset):
     """Update plugin parts which have changed since previous update.
 
     Optionally pass in the DIRECTORY of the plugin (defaults to cwd).
@@ -190,7 +129,7 @@ def dev_update(ctx, directory, reset):
     directory = Path(directory)
     plugin_toml_path = directory / "plugin.toml"
     if not plugin_toml_path.exists():
-        lib.error("Not in a plugin directory.")
+        lib.log_error("Not in a plugin directory.")
         sys.exit(1)
     modified_plugin_directories = get_modified_plugin_directories(
         directory, reset=reset
@@ -203,9 +142,9 @@ def dev_update(ctx, directory, reset):
                 shutil.copytree(
                     directory / modified_directory, temp_directory / modified_directory
                 )
+            api = lib.get_api(**obj)
             lib.run_plugins_task(
-                ctx.obj["host"],
-                ctx.obj["token"],
+                api,
                 "dev_update_plugin",
                 dict(),
                 "Uploading to server",
@@ -213,3 +152,165 @@ def dev_update(ctx, directory, reset):
             )
     else:
         lib.log("Nothing to do.")
+
+
+@main.command("dev-create-namespace")
+@click.argument("namespace")
+@click.argument("n_task_workers", default=1)
+@click.pass_obj
+def dev_create_namespace(obj, namespace, n_task_workers):
+    """Create namespace of given name. Only useful during developmment."""
+    api = lib.get_api(**obj)
+    lib.run_plugins_task(
+        api,
+        "dev_create_namespace",
+        dict(namespace=namespace, n_task_workers=n_task_workers),
+        "Creating namespace",
+    )
+
+
+@main.command("dev-destroy-namespace")
+@click.argument("namespace")
+@click.pass_obj
+def dev_destroy_namespace(obj, namespace):
+    """Destroy namespace of given name. Only useful during development"""
+    api = lib.get_api(**obj)
+    lib.run_plugins_task(
+        api, "dev_destroy_namespace", dict(namespace=namespace), "Destroying namespace"
+    )
+
+
+def make_plugin_toml_file(filename, name, description, version, created_by):
+    obj = dict(
+        name=name,
+        description=description,
+        version=version,
+        created_by=created_by,
+        n_task_workers=1,
+        reset_on_install=True,
+    )
+    lib.write_toml(filename, obj)
+
+
+@main.command()
+@click.option(
+    "--versions",
+    type=click.Path(exists=True),
+    help="TOML file containing webapp names and versions.",
+)
+@click.option("--email", prompt="Your email", help="Email creator of the plugins.")
+@click.option(
+    "--s3-directory", default="ice-webapp-builds", help="Base directory on S3."
+)
+@click.pass_obj
+def build_from_legacy_s3(obj, versions, email, s3_directory):
+    """Build plugins from legacy webapps hosted on AWS S3."""
+    plugins_cache_dir = obj["plugins_cache_dir"]
+    force = obj["force"]
+    versions = Path(versions)
+    for name, version in lib.read_toml(versions).items():
+        output_filename = Path(plugins_cache_dir, f"plugin-{name}-{version}.tar.gz")
+        if not force and output_filename.exists():
+            lib.log(f"Found: {output_filename} (Skipping)")
+        else:
+            _download_and_build_plugin_from_s3(
+                s3_directory, name, version, email, output_filename
+            )
+            lib.log(f"Created: {output_filename}")
+
+
+def _download_and_build_plugin_from_s3(
+    s3_directory, name, version, email, output_filename
+):
+    with lib.temp_directory() as temp_directory:
+        base_dir = temp_directory / f"plugin-{name}-{version}"
+        base_dir.mkdir()
+
+        # Download everything from S3 into the webfiles folder.
+        # (we will move out the views and tasks if present).
+        files_directory = base_dir / "webfiles"
+        files_directory.mkdir()
+        lib.run(
+            "aws",
+            "s3",
+            "cp",
+            f"s3://{s3_directory}/{name}/{version}",
+            files_directory.as_posix(),
+            "--recursive",
+        )
+
+        # Move out the views if they exist.
+        views_directory = files_directory / "views"
+        if views_directory.exists():
+            views_directory.rename(base_dir / "views")
+
+        # Move out the tasks if they exist.
+        tasks_directory = files_directory / "tasks"
+        if tasks_directory.exists():
+            tasks_directory.rename(base_dir / "tasks")
+
+        # Create a plugin.toml manifest.
+        make_plugin_toml_file(
+            base_dir / "plugin.toml", name, f"Webapp {name}", version, email
+        )
+
+        # Convert all into tar.gz
+        lib.create_targz(base_dir, output_filename)
+
+
+@main.command()
+@click.argument("sources", nargs=-1)
+@click.pass_obj
+def build_from_src(obj, sources):
+    """Build plugins from given source directories."""
+    plugins_cache_dir = obj["plugins_cache_dir"]
+    force = obj["force"]
+    for source_directory in sources:
+        source_directory = Path(source_directory)
+        manifest = read_toml(source_directory / "plugin.toml")
+        name = manifest["name"]
+        version = manifest["version"]
+        output_filename = plugins_cache_dir / f"plugin-{name}-{version}.tar.gz"
+        if not force and output_filename.exists():
+            lib.log(f"Found: {output_filename} (Skipping)")
+        else:
+            with lib.temp_directory() as temp_directory:
+                base_dir = temp_directory / f"plugin-{name}-{version}"
+                base_dir.mkdir()
+                for t in (
+                    "webfiles",
+                    "views",
+                    "tasks",
+                    "wheels",
+                    "schedules",
+                    "plugin.toml",
+                ):
+                    source_t = source_directory / t
+                    if source_t.exists():
+                        if source_t.is_file():
+                            shutil.copy(source_t, base_dir / t)
+                        else:
+                            shutil.copytree(source_t, base_dir / t)
+                lib.create_targz(base_dir, output_filename)
+                lib.log(f"Created: {output_filename}")
+
+
+@main.command()
+@click.argument("url")
+@click.pass_obj
+def fetch_from_url(obj, url):
+    """Copy a plugin from given URL into the plugin cache."""
+    plugins_cache_dir = obj["plugins_cache_dir"]
+    force = obj["force"]
+    full_name = url.rsplit("/", 1)[-1]
+    m = re.match(r"plugin-([^-]*)-([^-]*).tar.gz", full_name)
+    if m:
+        output_filename = plugins_cache_dir / full_name
+        if not force and output_filename.exists():
+            lib.log(f"Found: {output_filename} (Skipping)")
+        else:
+            filename, headers = urllib.request.urlretrieve(url)
+            shutil.move(filename, output_filename)
+            lib.log(f"Created: {output_filename}")
+    else:
+        lib.log_error("That doesn't look like a plugin. Aborting!", abort=True)

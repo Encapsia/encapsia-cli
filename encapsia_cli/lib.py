@@ -2,7 +2,7 @@ import contextlib
 import datetime
 import io
 import json
-import os
+import re
 import shutil
 import subprocess
 import tarfile
@@ -12,45 +12,96 @@ from pathlib import Path
 
 import click
 import toml
-from encapsia_api import CredentialsStore, EncapsiaApi
+import encapsia_api
 
 
-def error(message):
-    click.secho(message, fg="red")
-
-
-def log(message, nl=True):
+def log(message="", nl=True):
     click.secho(message, fg="yellow", nl=nl)
 
 
-def log_output(message):
+def log_output(message=""):
     click.secho(message, fg="green")
 
 
-def get_env_var(name):
-    try:
-        return os.environ[name]
-    except KeyError:
-        error("Environment variable {} does not exist!".format(name))
+def log_error(message="", abort=False):
+    click.secho(message, fg="red", err=True)
+    if abort:
         raise click.Abort()
 
 
-def discover_credentials(name, host_env_var, token_env_var):
-    if name:
-        store = CredentialsStore()
-        try:
-            host, token = store.get(name)
-        except KeyError:
-            error(f"Cannot find entry for '{name}' in encapsia credentials file.")
-            raise click.Abort()
+def pretty_print(obj, format, output=None):
+    if format == "json":
+        formatted = json.dumps(obj, sort_keys=True, indent=4).strip()
+    elif format == "toml":
+        formatted = toml.dumps(obj)
+    if output is None:
+        log_output(formatted)
     else:
-        host, token = get_env_var(host_env_var), get_env_var(token_env_var)
-    return host, token
+        output.write(formatted)
 
 
-def get_api(name, host_env_var, token_env_var):
-    host, token = discover_credentials(name, host_env_var, token_env_var)
-    return EncapsiaApi(host, token)
+def get_api(**obj):
+    try:
+        url, token = encapsia_api.discover_credentials(obj["host"])
+    except encapsia_api.EncapsiaApiError as e:
+        log_error(str(e), abort=True)
+    return encapsia_api.EncapsiaApi(url, token)
+
+
+def add_docstring(value):
+    """Decorator to add a docstring to a function."""
+
+    def _doc(func):
+        func.__doc__ = value
+        return func
+
+    return _doc
+
+
+def make_main(docstring, for_plugins=False):
+    if for_plugins:
+        @click.group()
+        @click.option(
+            "--host", help="Name to use to lookup credentials in .encapsia/credentials.toml"
+        )
+        @click.option(
+            "--plugins-cache-dir",
+            type=click.Path(),
+            default="~/.encapsia/plugins-cache",
+            help="Name of directory used to cache plugins.",
+        )
+        @click.option("--force/--no-force", default=False, help="Always fetch/build/etc again.")
+        @click.pass_context
+        @add_docstring(docstring)
+        def main(ctx, host, plugins_cache_dir, force):
+            plugins_cache_dir = Path(plugins_cache_dir).expanduser()
+            plugins_cache_dir.mkdir(parents=True, exist_ok=True)
+            ctx.obj = dict(
+                host=host,
+                plugins_cache_dir=plugins_cache_dir,
+                force=force,
+            )
+    else:
+        @click.group()
+        @click.option(
+            "--host", help="Name to use to lookup credentials in .encapsia/credentials.toml"
+        )
+        @click.pass_context
+        @add_docstring(docstring)
+        def main(ctx, host):
+            ctx.obj = dict(host=host)
+
+    return main
+
+
+# See http://www.regular-expressions.info/email.html
+EMAIL_REGEX = re.compile(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
+
+
+def validate_email(ctx, param, value):
+    if not EMAIL_REGEX.match(value):
+        raise click.BadParameter("Not a valid email address")
+    return value
 
 
 def get_utc_now_as_iso8601():
@@ -85,6 +136,16 @@ def run(*args, **kwargs):
     return subprocess.check_output(args, stderr=subprocess.STDOUT, **kwargs)
 
 
+def read_toml(filename):
+    with filename.open() as f:
+        return toml.load(f)
+
+
+def write_toml(filename, obj):
+    with filename.open("w") as f:
+        toml.dump(obj, f)
+
+
 def create_targz(directory, filename):
     with tarfile.open(filename, "w:gz") as tar:
         tar.add(directory, arcname=directory.name)
@@ -95,17 +156,6 @@ def create_targz_as_bytes(directory):
     with tarfile.open(mode="w:gz", fileobj=data) as tar:
         tar.add(directory, arcname=directory.name)
     return data.getvalue()
-
-
-def pretty_print(obj, format="toml", output=None):
-    if format == "json":
-        formatted = json.dumps(obj, sort_keys=True, indent=4).strip()
-    elif format == "toml":
-        formatted = toml.dumps(obj)
-    if output is None:
-        click.echo(formatted)
-    else:
-        output.write(formatted)
 
 
 def parse(obj, format):
@@ -130,12 +180,28 @@ def visual_poll(message, poll, NoTaskResultYet, wait=0.2):
     return result
 
 
-def run_plugins_task(host, token, name, params, message, data=None):
-    api = EncapsiaApi(host, token)
-    poll, NoTaskResultYet = api.run_task(
-        "pluginsmanager", "icepluginsmanager.{}".format(name), params, data
-    )
+def run_task(api, namespace, name, params, message, data=None):
+    poll, NoTaskResultYet = api.run_task(namespace, name, params, data)
     result = visual_poll(message, poll, NoTaskResultYet)
     log_output(result["output"].strip())
     if result["status"] != "ok":
         raise click.Abort()
+
+
+def run_plugins_task(api, name, params, message, data=None):
+    run_task(
+        api,
+        "pluginsmanager",
+        "icepluginsmanager.{}".format(name),
+        params,
+        message,
+        data,
+    )
+
+
+def dbctl_action(api, name, params, message):
+    poll, NoTaskResultYet = api.dbctl_action(name, params)
+    result = visual_poll(message, poll, NoTaskResultYet)
+    if result["status"] != "ok":
+        raise click.Abort()
+    return result["result"]
