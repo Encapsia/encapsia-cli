@@ -12,41 +12,7 @@ import toml
 from encapsia_cli import lib
 
 
-@click.group()
-@click.option(
-    "--host", help="Name to use to lookup credentials in .encapsia/credentials.toml"
-)
-@click.option(
-    "--hostname-env-var",
-    default="ENCAPSIA_HOSTNAME",
-    show_default=True,
-    help="Environment variable containing DNS hostname",
-)
-@click.option(
-    "--token-env-var",
-    default="ENCAPSIA_TOKEN",
-    show_default=True,
-    help="Environment variable containing server token",
-)
-@click.option(
-    "--plugins-cache-dir",
-    type=click.Path(),
-    default="~/.encapsia/plugins-cache",
-    help="Name of directory used to cache plugins.",
-)
-@click.option("--force", is_flag=True, help="Always fetch/build/etc again.")
-@click.pass_obj
-@lib.add_docstring(__doc__)
-def main(ctx, host, hostname_env_var, token_env_var, plugins_cache_dir, force):
-    plugins_cache_dir = Path(plugins_cache_dir).expanduser()
-    plugins_cache_dir.mkdir(parents=True, exist_ok=True)
-    ctx.obj = dict(
-        host=host,
-        hostname_env_var=hostname_env_var,
-        token_env_var=token_env_var,
-        plugins_cache_dir=plugins_cache_dir,
-        force=force,
-    )
+main = lib.make_main(__doc__, for_plugins=True)
 
 
 @main.command()
@@ -65,7 +31,7 @@ def read_toml(filename):
 @main.command()
 @click.option("--versions", help="TOML file containing webapp names and versions.")
 @click.pass_obj
-def install(obj, versions, plugins_cache_dir, force):
+def install(obj, versions):
     """Install plugins from version.toml file."""
     plugins_cache_dir = obj["plugins_cache_dir"]
     versions = Path(versions)
@@ -73,10 +39,10 @@ def install(obj, versions, plugins_cache_dir, force):
     for name, version in read_toml(versions).items():
         plugin_filename = plugins_cache_dir / f"plugin-{name}-{version}.tar.gz"
         if not plugin_filename.exists():
-            print(
-                f"Unable to find plugin {name} version {name} in cache ({plugins_cache_dir})"
+            lib.log_error(
+                f"Unable to find plugin {name} version {name} in cache ({plugins_cache_dir})",
+                abort=True
             )
-            raise click.abort()
 
         # TODO only upload if not already installed? (unless --force)
         blob_id = api.upload_file_as_blob(plugin_filename.as_posix())
@@ -90,10 +56,11 @@ def install(obj, versions, plugins_cache_dir, force):
 @click.pass_obj
 def uninstall(obj, namespace):
     """Uninstall named plugin."""
-    click.confirm(
-        f'Are you sure you want to uninstall the plugin (delete all!) from namespace "{namespace}"?',
-        abort=True,
-    )
+    if not obj["force"]:
+        click.confirm(
+            f'Are you sure you want to uninstall the plugin (delete all!) from namespace "{namespace}"?',
+            abort=True,
+        )
     api = lib.get_api(**obj)
     lib.run_plugins_task(
         api, "uninstall_plugin", dict(namespace=namespace), f"Uninstalling {namespace}"
@@ -162,7 +129,7 @@ def dev_update(obj, directory, reset):
     directory = Path(directory)
     plugin_toml_path = directory / "plugin.toml"
     if not plugin_toml_path.exists():
-        lib.error("Not in a plugin directory.")
+        lib.log_error("Not in a plugin directory.")
         sys.exit(1)
     modified_plugin_directories = get_modified_plugin_directories(
         directory, reset=reset
@@ -346,5 +313,4 @@ def fetch_from_url(obj, url):
             shutil.move(filename, output_filename)
             lib.log(f"Created: {output_filename}")
     else:
-        print("That doesn't look like a plugin. Aborting!")
-        raise click.Abort()
+        lib.log_error("That doesn't look like a plugin. Aborting!", abort=True)

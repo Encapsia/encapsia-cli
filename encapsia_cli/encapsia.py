@@ -1,8 +1,20 @@
-"""CLI to talk to an encapsia host."""
+"""CLI to talk to an encapsia host.
+
+The following steps are used to determine the server URL and token:
+
+\b
+  If provided, use the --host option to reference an entry in ~/.encapsia/credentials.toml
+  Else if set, use ENCAPSIA_HOST to reference an entry in ~/.encapsia/credentials.toml
+  Else if set, use ENCAPSIA_URL and ENCAPSIA_TOKEN directly.
+  Else abort.
+
+The tool will also abort if instructed to lookup in ~/.encapsia/credentials.toml
+but cannot find a correct entry.
+
+"""
 import click
 import click_completion
 
-import encapsia_cli
 import encapsia_cli.config
 import encapsia_cli.database
 import encapsia_cli.fixtures
@@ -15,6 +27,8 @@ import encapsia_cli.shell
 import encapsia_cli.token
 import encapsia_cli.users
 import encapsia_cli.version
+
+from encapsia_cli import lib
 
 #: Initialise click completion.
 click_completion.init()
@@ -44,8 +58,8 @@ class EncapsiaCli(click.MultiCommand):
         try:
             return COMMANDS[name]
         except KeyError:
-            click.echo(ctx.get_help(), err=True)
-            click.echo(err=True)
+            lib.log_error(ctx.get_help())
+            lib.log_error()
             raise click.UsageError(f"Unknown command {name}")
 
 

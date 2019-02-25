@@ -16,44 +16,55 @@ import toml
 from encapsia_api import CredentialsStore, EncapsiaApi
 
 
-def error(message):
-    click.secho(message, fg="red")
-
-
-def log(message, nl=True):
+def log(message="", nl=True):
     click.secho(message, fg="yellow", nl=nl)
 
 
-def log_output(message):
+def log_output(message=""):
     click.secho(message, fg="green")
+
+
+def log_error(message="", abort=False):
+    click.secho(message, fg="red", err=True)
+    if abort:
+        raise click.Abort()
+
+
+def pretty_print(obj, format, output=None):
+    if format == "json":
+        formatted = json.dumps(obj, sort_keys=True, indent=4).strip()
+    elif format == "toml":
+        formatted = toml.dumps(obj)
+    if output is None:
+        log_output(formatted)
+    else:
+        output.write(formatted)
 
 
 def get_env_var(name):
     try:
         return os.environ[name]
     except KeyError:
-        error("Environment variable {} does not exist!".format(name))
-        raise click.Abort()
+        log_error(f"Environment variable {name} does not exist!", abort=True)
 
 
-def discover_credentials(host, hostname_env_var, token_env_var):
+def discover_credentials(host=None):
+    if not host:
+        host = os.environ.get("ENCAPSIA_HOST")
     if host:
         store = CredentialsStore()
         try:
-            hostname, token = store.get(host)
+            url, token = store.get(host)
         except KeyError:
-            error(f"Cannot find entry for '{host}' in encapsia credentials file.")
-            raise click.Abort()
+            log_error(f"Cannot find entry for '{host}' in encapsia credentials file.", abort=True)
     else:
-        hostname, token = get_env_var(hostname_env_var), get_env_var(token_env_var)
-    return hostname, token
+        url, token = get_env_var("ENCAPSIA_URL"), get_env_var("ENCAPSIA_TOKEN")
+    return url, token
 
 
 def get_api(**obj):
-    hostname, token = discover_credentials(
-        obj["host"], obj["hostname_env_var"], obj["token_env_var"]
-    )
-    return EncapsiaApi(hostname, token)
+    url, token = discover_credentials(obj["host"])
+    return EncapsiaApi(url, token)
 
 
 def add_docstring(value):
@@ -66,29 +77,38 @@ def add_docstring(value):
     return _doc
 
 
-def make_main(docstring):
-    @click.group()
-    @click.option(
-        "--host", help="Name to use to lookup credentials in .encapsia/credentials.toml"
-    )
-    @click.option(
-        "--hostname-env-var",
-        default="ENCAPSIA_HOSTNAME",
-        show_default=True,
-        help="Environment variable containing DNS hostname",
-    )
-    @click.option(
-        "--token-env-var",
-        default="ENCAPSIA_TOKEN",
-        show_default=True,
-        help="Environment variable containing server token",
-    )
-    @click.pass_context
-    @add_docstring(docstring)
-    def main(ctx, host, hostname_env_var, token_env_var):
-        ctx.obj = dict(
-            host=host, hostname_env_var=hostname_env_var, token_env_var=token_env_var
+def make_main(docstring, for_plugins=False):
+    if for_plugins:
+        @click.group()
+        @click.option(
+            "--host", help="Name to use to lookup credentials in .encapsia/credentials.toml"
         )
+        @click.option(
+            "--plugins-cache-dir",
+            type=click.Path(),
+            default="~/.encapsia/plugins-cache",
+            help="Name of directory used to cache plugins.",
+        )
+        @click.option("--force/--no-force", default=False, help="Always fetch/build/etc again.")
+        @click.pass_context
+        @add_docstring(docstring)
+        def main(ctx, host, plugins_cache_dir, force):
+            plugins_cache_dir = Path(plugins_cache_dir).expanduser()
+            plugins_cache_dir.mkdir(parents=True, exist_ok=True)
+            ctx.obj = dict(
+                host=host,
+                plugins_cache_dir=plugins_cache_dir,
+                force=force,
+            )
+    else:
+        @click.group()
+        @click.option(
+            "--host", help="Name to use to lookup credentials in .encapsia/credentials.toml"
+        )
+        @click.pass_context
+        @add_docstring(docstring)
+        def main(ctx, host):
+            ctx.obj = dict(host=host)
 
     return main
 
@@ -155,17 +175,6 @@ def create_targz_as_bytes(directory):
     with tarfile.open(mode="w:gz", fileobj=data) as tar:
         tar.add(directory, arcname=directory.name)
     return data.getvalue()
-
-
-def pretty_print(obj, format, output=None):
-    if format == "json":
-        formatted = json.dumps(obj, sort_keys=True, indent=4).strip()
-    elif format == "toml":
-        formatted = toml.dumps(obj)
-    if output is None:
-        click.echo(formatted)
-    else:
-        output.write(formatted)
 
 
 def parse(obj, format):

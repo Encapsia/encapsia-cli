@@ -16,7 +16,8 @@ def run_task(obj, namespace, function, args):
 
     E.g.
 
-    ... example_namespace test_module.test_function x=3 y=tim "z=hello stranger"
+    \b
+    encapsia run task example_namespace test_module.test_function x=3 y=tim "z=hello stranger"
 
     Note that all args must be named and the values are all considered strings (not
     least because arguments are encoded over a URL string).
@@ -40,11 +41,12 @@ def run_view(obj, namespace, function, args):
 
     e.g.
 
-    ... example_namespace test_view 3 tim
+    \b
+    encapsia run view example_namespace test_view 3 tim
 
     Note that ARGS will be passed in as URL path segments.
 
     """
     api = lib.get_api(**obj)
     result = api.get(["view", namespace, function] + list(args))
-    lib.log_output(lib.pretty_print(result, "json"))
+    lib.pretty_print(result, "json")

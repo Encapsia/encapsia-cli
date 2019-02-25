@@ -17,7 +17,7 @@ python = "^3.6"
 requests = {version = "^2.20",extras = ["security"]}
 click = "^7.0"
 toml = "^0.10.0"
-encapsia-api = ">=0.1.11"
+encapsia-api = ">=0.1.12"
 awscli = "^1.16"
 click-completion = "^0.5.0"
 click-shell = "^1.0"

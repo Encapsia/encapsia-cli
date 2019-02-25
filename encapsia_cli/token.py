@@ -16,9 +16,8 @@ def expire(obj):
         api.delete("logout")
         lib.log("Expired token on server.")
     except EncapsiaApiError as e:
-        lib.error("Failed to expire given token!")
-        lib.error(str(e))
-        raise click.Abort()
+        lib.log_error("Failed to expire given token!")
+        lib.log_error(str(e), abort=True)
     if obj["host"]:
         CredentialsStore().remove(obj["host"])
         lib.log("Removed entry from encapsia credentials file.")

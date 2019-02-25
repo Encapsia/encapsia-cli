@@ -40,29 +40,29 @@ def list_users(obj, super_users, system_users, all_users):
         # If no specific type of user specified then assume all-users was intended.
         all_users = True
     if super_users:
-        click.echo("[Super users]")
+        lib.log_output("[Super users]")
         users = api.get_super_users()
         headers = ["email", "first_name", "last_name"]
-        click.echo(
+        lib.log_output(
             tabulate.tabulate(
                 [[getattr(row, header) for header in headers] for row in users],
                 headers=headers,
             )
         )
-        click.echo()
+        lib.log_output()
     if system_users:
-        click.echo("[System users]")
+        lib.log_output("[System users]")
         users = api.get_system_users()
         headers = ["email", "description", "capabilities"]
-        click.echo(
+        lib.log_output(
             tabulate.tabulate(
                 [[getattr(row, header) for header in headers] for row in users],
                 headers=headers,
             )
         )
-        click.echo()
+        lib.log_output()
     if all_users:
-        click.echo("[All users]")
+        lib.log_output("[All users]")
         users = api.get_all_users()
         headers = [
             "email",
@@ -72,12 +72,12 @@ def list_users(obj, super_users, system_users, all_users):
             "enabled",
             "is_site_user",
         ]
-        click.echo(
+        lib.log_output(
             tabulate.tabulate(
                 [[row[header] for header in headers] for row in users], headers=headers
             )
         )
-        click.echo()
+        lib.log_output()
 
 
 @main.command("delete")
