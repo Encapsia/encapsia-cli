@@ -11,7 +11,6 @@ import toml
 
 from encapsia_cli import lib
 
-
 main = lib.make_main(__doc__, for_plugins=True)
 
 
@@ -41,7 +40,7 @@ def install(obj, versions):
         if not plugin_filename.exists():
             lib.log_error(
                 f"Unable to find plugin {name} version {name} in cache ({plugins_cache_dir})",
-                abort=True
+                abort=True,
             )
 
         # TODO only upload if not already installed? (unless --force)

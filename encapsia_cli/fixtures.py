@@ -37,7 +37,8 @@ def use_fixture(obj, name, yes):
     """Switch to fixture with given name."""
     if not yes:
         click.confirm(
-            f'Are you sure you want to change the database to fixture "{name}"?', abort=True
+            f'Are you sure you want to change the database to fixture "{name}"?',
+            abort=True,
         )
     api = lib.get_api(**obj)
     poll, NoTaskResultYet = api.dbctl_action("use_fixture", dict(name=name))
