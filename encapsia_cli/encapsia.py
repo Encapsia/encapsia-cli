@@ -27,7 +27,6 @@ import encapsia_cli.shell
 import encapsia_cli.token
 import encapsia_cli.users
 import encapsia_cli.version
-
 from encapsia_cli import lib
 
 #: Initialise click completion.

@@ -21,9 +21,9 @@ Note that these tests are *not* self-verifying; they just provide helpful covera
 # Release checklist
 
 * Ensure "tests" run ok (see above).
-* Run: flake8 --ignore=E501 .
-* Run: black .
-* Run: isort --multi-line=3 --trailing-comma --force-grid-wrap=0 --combine-as --line-width=88 -y
+* Run: `black .`
+* Run: `isort --multi-line=3 --trailing-comma --force-grid-wrap=0 --combine-as --line-width=88 -y`
+* Run: `flake8 --ignore=E501 .`
 * Ensure git tag, package version, and `enacpsia_cli.__version__` are all equal.
 
 # TODO

@@ -11,8 +11,8 @@ import time
 from pathlib import Path
 
 import click
-import toml
 import encapsia_api
+import toml
 
 
 def log(message="", nl=True):
@@ -60,9 +60,11 @@ def add_docstring(value):
 
 def make_main(docstring, for_plugins=False):
     if for_plugins:
+
         @click.group()
         @click.option(
-            "--host", help="Name to use to lookup credentials in .encapsia/credentials.toml"
+            "--host",
+            help="Name to use to lookup credentials in .encapsia/credentials.toml",
         )
         @click.option(
             "--plugins-cache-dir",
@@ -70,21 +72,22 @@ def make_main(docstring, for_plugins=False):
             default="~/.encapsia/plugins-cache",
             help="Name of directory used to cache plugins.",
         )
-        @click.option("--force/--no-force", default=False, help="Always fetch/build/etc again.")
+        @click.option(
+            "--force/--no-force", default=False, help="Always fetch/build/etc again."
+        )
         @click.pass_context
         @add_docstring(docstring)
         def main(ctx, host, plugins_cache_dir, force):
             plugins_cache_dir = Path(plugins_cache_dir).expanduser()
             plugins_cache_dir.mkdir(parents=True, exist_ok=True)
-            ctx.obj = dict(
-                host=host,
-                plugins_cache_dir=plugins_cache_dir,
-                force=force,
-            )
+            ctx.obj = dict(host=host, plugins_cache_dir=plugins_cache_dir, force=force)
+
     else:
+
         @click.group()
         @click.option(
-            "--host", help="Name to use to lookup credentials in .encapsia/credentials.toml"
+            "--host",
+            help="Name to use to lookup credentials in .encapsia/credentials.toml",
         )
         @click.pass_context
         @add_docstring(docstring)

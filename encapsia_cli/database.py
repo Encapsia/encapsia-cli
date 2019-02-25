@@ -38,7 +38,8 @@ def restore(obj, filename, yes):
     filename = Path(filename)
     if not yes:
         click.confirm(
-            f'Are you sure you want to restore the database from "{filename}"?', abort=True
+            f'Are you sure you want to restore the database from "{filename}"?',
+            abort=True,
         )
     api = lib.get_api(**obj)
     handle = api.dbctl_upload_data(filename)
