@@ -52,7 +52,7 @@ def add_task(
     )
 
 
-@main.command("remove_in_namespace")
+@main.command()
 @click.argument("namespace")
 @click.pass_obj
 def remove_tasks_in_namespace(obj, namespace):
@@ -66,7 +66,7 @@ def remove_tasks_in_namespace(obj, namespace):
     )
 
 
-@main.command("remove")
+@main.command()
 @click.argument("scheduled_task_id")
 @click.pass_obj
 def remove_task(obj, scheduled_task_id):
