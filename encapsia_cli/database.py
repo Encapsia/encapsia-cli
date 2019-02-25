@@ -31,13 +31,15 @@ def backup(obj, filename):
 
 @main.command()
 @click.argument("filename", type=click.Path(exists=True))
+@click.option("--yes", is_flag=True, help="Don't prompt the user for confirmation.")
 @click.pass_obj
-def restore(obj, filename):
+def restore(obj, filename, yes):
     """Restore database from given backup file."""
     filename = Path(filename)
-    click.confirm(
-        f'Are you sure you want to restore the database from "{filename}"?', abort=True
-    )
+    if not yes:
+        click.confirm(
+            f'Are you sure you want to restore the database from "{filename}"?', abort=True
+        )
     api = lib.get_api(**obj)
     handle = api.dbctl_upload_data(filename)
     # On a restore, the server is temporarily stopped.

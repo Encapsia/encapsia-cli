@@ -31,12 +31,14 @@ def create_fixture(obj, name):
 
 @main.command("use")
 @click.argument("name")
+@click.option("--yes", is_flag=True, help="Don't prompt the user for confirmation.")
 @click.pass_obj
-def use_fixture(obj, name):
+def use_fixture(obj, name, yes):
     """Switch to fixture with given name."""
-    click.confirm(
-        f'Are you sure you want to change the database to fixture "{name}"?', abort=True
-    )
+    if not yes:
+        click.confirm(
+            f'Are you sure you want to change the database to fixture "{name}"?', abort=True
+        )
     api = lib.get_api(**obj)
     poll, NoTaskResultYet = api.dbctl_action("use_fixture", dict(name=name))
     lib.log(f"Requested change to fixture {name}.")
@@ -45,10 +47,12 @@ def use_fixture(obj, name):
 
 @main.command("delete")
 @click.argument("name")
+@click.option("--yes", is_flag=True, help="Don't prompt the user for confirmation.")
 @click.pass_obj
-def delete_fixture(obj, name):
+def delete_fixture(obj, name, yes):
     """Delete fixture with given name."""
-    click.confirm(f'Are you sure you want to delete fixture "{name}"?', abort=True)
+    if not yes:
+        click.confirm(f'Are you sure you want to delete fixture "{name}"?', abort=True)
     api = lib.get_api(**obj)
     lib.log_output(
         lib.dbctl_action(

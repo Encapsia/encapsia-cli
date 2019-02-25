@@ -1,58 +1,16 @@
 #/usr/bin/env bash
 
-# Quick-and-dirty parse arguments.
-while [[ $# -gt 0 ]]
-do
-    key="$1"
-
-    case $key in
-        --host)
-        export ENCAPSIA_HOST="$2"
-        shift # past argument
-        shift # past value
-        ;;
-        --example-plugin-src)
-        EXAMPLE_PLUGIN_SRC="$2"
-        shift # past argument
-        shift # past value
-        ;;
-        *)
-        echo "Please provide --host and --example-plugin-src arguments."
-        exit 1
-        ;;
-    esac
-done
+# Load "library" code
+source $(dirname "$0")/lib.sh
 
 # Validate input arguments.
 [ -z "$ENCAPSIA_HOST" ] && echo "Please provide host using --host argument" && exit 1
 [ -z "$EXAMPLE_PLUGIN_SRC" ] && echo "Please provide example plugin src directory --example-plugin-src argument" && exit 1
 
-# Make plugin path absolute because we will change directory later.
-EXAMPLE_PLUGIN_SRC=$(realpath $EXAMPLE_PLUGIN_SRC)
-
-# Tell the user what variables are being used.
-echo "Exercise encapsia plugins command."
-echo "These are *not* self-verifying tests, so check the output for reasonableness!"
-echo
-echo "Using host: $ENCAPSIA_HOST"
-echo "Using example src plugin code: $EXAMPLE_PLUGIN_SRC"
-
 # Change directory to this test directory for relative paths.
 cd $(dirname "$0")
 
-# Pretty print the test descriptions.
-function test() {
-    echo -e "\n\e[92m\e[1m=== $1 ===\e[0m"
-}
-
-# Always fail on error.
-set -e
-
-# Log commands except for echo because they are used to explain what is being done.
-trap '[[ $BASH_COMMAND != test* ]] && echo -e ">${BASH_COMMAND}"' DEBUG
-
-
-# WALKTHROUGH STARTS HERE...
+start_tests
 
 test "Build the example plugin from src"
 encapsia plugins --force build-from-src $EXAMPLE_PLUGIN_SRC
