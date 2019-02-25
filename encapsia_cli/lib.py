@@ -2,7 +2,6 @@ import contextlib
 import datetime
 import io
 import json
-import os
 import re
 import shutil
 import subprocess
@@ -13,7 +12,7 @@ from pathlib import Path
 
 import click
 import toml
-from encapsia_api import CredentialsStore, EncapsiaApi
+import encapsia_api
 
 
 def log(message="", nl=True):
@@ -41,30 +40,12 @@ def pretty_print(obj, format, output=None):
         output.write(formatted)
 
 
-def get_env_var(name):
-    try:
-        return os.environ[name]
-    except KeyError:
-        log_error(f"Environment variable {name} does not exist!", abort=True)
-
-
-def discover_credentials(host=None):
-    if not host:
-        host = os.environ.get("ENCAPSIA_HOST")
-    if host:
-        store = CredentialsStore()
-        try:
-            url, token = store.get(host)
-        except KeyError:
-            log_error(f"Cannot find entry for '{host}' in encapsia credentials file.", abort=True)
-    else:
-        url, token = get_env_var("ENCAPSIA_URL"), get_env_var("ENCAPSIA_TOKEN")
-    return url, token
-
-
 def get_api(**obj):
-    url, token = discover_credentials(obj["host"])
-    return EncapsiaApi(url, token)
+    try:
+        url, token = encapsia_api.discover_credentials(obj["host"])
+    except encapsia_api.EncapsiaApiError as e:
+        log_error(str(e), abort=True)
+    return encapsia_api.EncapsiaApi(url, token)
 
 
 def add_docstring(value):

@@ -12,13 +12,11 @@ main = lib.make_main(__doc__)
 @click.pass_obj
 def shell(obj):
     """Launch an httpie interactive shell with passed-in credentials."""
-    url, token = lib.discover_credentials(
-        host=obj["host"],
-    )
+    api = lib.get_api(**obj)
     argv = [
         "http-prompt",
-        url,
-        f"Authorization: Bearer {token}",
+        api.url,
+        f"Authorization: Bearer {api.token}",
         "Accept: application/json",
     ]
     subprocess.run(argv)

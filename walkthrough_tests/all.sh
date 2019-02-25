@@ -11,5 +11,5 @@ bash $THIS_DIR/config.sh "$@"
 bash $THIS_DIR/plugins.sh "$@"
 bash $THIS_DIR/database.sh "$@"
 bash $THIS_DIR/fixtures.sh "$@"
-
-# NB No walkthrough tests for httpie or shell because those are both interactive.
+# NB No walkthrough tests for httpie because it is interactive
+# NB No walkthrough tests for shell because it is interactive

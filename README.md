@@ -10,18 +10,23 @@ Setup autocomplete using the instructions found on https://github.com/click-cont
 
 # Tests
 
-See the `walkthrough_tests` directoy for bash scripts which exercise the CLI.
+See the `walkthrough_tests` directory for bash scripts which exercise the CLI.
 
-They are not self-verifying, but still provide helpful coverage (and working documentation).
+Run them e.g. with:
+
+    bash walkthrough_tests/all.sh --host tcc24 --example-plugin-src ../inf-ice-example-plugin/
+
+Note that these tests are *not* self-verifying; they just provide helpful coverage, assurance, and working documentation.
 
 # Release checklist
 
-* Ensure "tests" run ok.
+* Ensure "tests" run ok (see above).
+* Run: flake8 --ignore=E501 .
+* Run: black .
+* Run: isort --multi-line=3 --trailing-comma --force-grid-wrap=0 --combine-as --line-width=88 -y
 * Ensure git tag, package version, and `enacpsia_cli.__version__` are all equal.
 
 # TODO
-
-* Update the "walkthrough tests" to include everything.
 
 * Add sending files to views and tasks.
 * Add saving output from views and tasks to a file.
