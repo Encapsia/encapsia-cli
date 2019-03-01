@@ -243,6 +243,11 @@ def _download_and_build_plugin_from_s3(
         if views_directory.exists():
             views_directory.rename(base_dir / "views")
 
+        # Move out the wheels if they exist.
+        wheels_directory = files_directory / "tasks/wheels"
+        if wheels_directory.exists():
+            wheels_directory.rename(base_dir / "wheels")
+
         # Move out the tasks if they exist.
         tasks_directory = files_directory / "tasks"
         if tasks_directory.exists():
