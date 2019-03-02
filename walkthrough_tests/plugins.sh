@@ -29,7 +29,7 @@ encapsia plugins build-from-legacy-s3 --versions=s3_plugins.toml --email=test_us
 test "Second time should be skipped over because it is already in the cache"
 encapsia plugins build-from-legacy-s3 --versions=s3_plugins.toml --email=test_user@encapsia.com
 
-test "Install the example plugin form the cache, then uninstall it"
+test "Install the example plugin from the cache, then uninstall it"
 encapsia plugins install --versions=example.toml
 encapsia plugins --force uninstall example
 

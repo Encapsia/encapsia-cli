@@ -185,14 +185,17 @@ def visual_poll(message, poll, NoTaskResultYet, wait=0.2):
 
 def run_task(api, namespace, name, params, message, data=None):
     poll, NoTaskResultYet = api.run_task(namespace, name, params, data)
-    result = visual_poll(message, poll, NoTaskResultYet)
-    log_output(result["output"].strip())
-    if result["status"] != "ok":
-        raise click.Abort()
+    try:
+        result = visual_poll(message, poll, NoTaskResultYet)
+        return result
+    except encapsia_api.EncapsiaApiError as e:
+        result = e.args[0]
+        log_error(f"\nStatus: {result['status']}")
+        log_error(result.get("exc_info"), abort=True)
 
 
 def run_plugins_task(api, name, params, message, data=None):
-    run_task(
+    result = run_task(
         api,
         "pluginsmanager",
         "icepluginsmanager.{}".format(name),
@@ -200,6 +203,11 @@ def run_plugins_task(api, name, params, message, data=None):
         message,
         data,
     )
+    if result["status"] == "ok":
+        log(f"Status: {result['status']}")
+        log_output(result["output"].strip())
+    else:
+        log_error(str(result), abort=True)
 
 
 def dbctl_action(api, name, params, message):
