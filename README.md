@@ -28,9 +28,7 @@ Note that these tests are *not* self-verifying; they just provide helpful covera
 
 # TODO
 
-* Make encapsia run task and run view work properly with all arguments, plus add to walkthrough_tests
-* Add sending files to views and tasks.
-* Add saving output from views and tasks to a file.
+* Add sending files to views (once PR accepted)
 * Add "encapsia run job" command
 * Use click-web to create an encapsia webserve command?? Put in a plugin?
 * Validate input to plugins uninstall
