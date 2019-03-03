@@ -184,10 +184,10 @@ def visual_poll(message, poll, NoTaskResultYet, wait=0.2):
 
 
 def run_task(api, namespace, name, params, message, data=None):
+    """Return the raw json result or log (HTTP) error and abort."""
     poll, NoTaskResultYet = api.run_task(namespace, name, params, data)
     try:
-        result = visual_poll(message, poll, NoTaskResultYet)
-        return result
+        return visual_poll(message, poll, NoTaskResultYet)
     except encapsia_api.EncapsiaApiError as e:
         result = e.args[0]
         log_error(f"\nStatus: {result['status']}")
@@ -195,7 +195,8 @@ def run_task(api, namespace, name, params, message, data=None):
 
 
 def run_plugins_task(api, name, params, message, data=None):
-    result = run_task(
+    """Log the result from pluginmanager, which will either be successful or not."""
+    reply = run_task(
         api,
         "pluginsmanager",
         "icepluginsmanager.{}".format(name),
@@ -203,11 +204,44 @@ def run_plugins_task(api, name, params, message, data=None):
         message,
         data,
     )
-    if result["status"] == "ok":
-        log(f"Status: {result['status']}")
-        log_output(result["output"].strip())
+    if reply["status"] == "ok":
+        log(f"Status: {reply['status']}")
+        log_output(reply["output"].strip())
     else:
-        log_error(str(result), abort=True)
+        log_error(str(reply), abort=True)
+
+
+def run_job(api, namespace, function, params, data=None):
+    """Run job, wait for it to complete, and log all joblogs; or log error from the task."""
+    extra_headers = {"Content-type": "application/octet-stream"} if data else None
+    reply = api.post(
+        ("jobs", namespace, function),
+        params=params,
+        data=data,
+        extra_headers=extra_headers,
+    )
+    task_id = reply["result"]["task_id"]
+    job_id = reply["result"]["job_id"]
+
+    class NoResultYet:
+        pass
+
+    def get_task_result():
+        reply = api.get(("tasks", namespace, task_id))
+        rest_api_result = reply["result"]
+        task_status = rest_api_result["status"]
+        task_result = rest_api_result["result"]
+        if task_status == "finished":
+            return task_result
+        elif task_status == "failed":
+            log_error(f"\nStatus: {task_status}")
+            log_error(rest_api_result.get("exc_info"), abort=True)
+        else:
+            return NoResultYet
+
+    visual_poll("Running job", get_task_result, NoResultYet)
+    reply = api.get(("jobs", namespace, job_id))
+    return reply["result"]
 
 
 def dbctl_action(api, name, params, message):

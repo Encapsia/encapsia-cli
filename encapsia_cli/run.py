@@ -1,6 +1,7 @@
 """Run an Encapsia task or view."""
-import click
 import json
+
+import click
 
 from encapsia_cli import lib
 
@@ -64,6 +65,43 @@ def run_task(obj, namespace, function, args, upload, save_as):
     result = lib.run_task(
         api, namespace, function, params, f"Running task {namespace}", data=data
     )
+    _output(result, save_as)
+
+
+@main.command("job")
+@click.argument("namespace")
+@click.argument("function")
+@click.argument("args", nargs=-1)
+@click.option(
+    "--upload",
+    type=click.File("rb"),
+    help="Name of file to upload and hence pass to the task",
+)
+@click.option(
+    "--save-as", type=click.File("w"), help="Name of file in which to save result"
+)
+@click.pass_obj
+def run_job(obj, namespace, function, args, upload, save_as):
+    """Run a job in given plugin NAMESPACE and FUNCTION with ARGS.
+
+    E.g.
+
+    \b
+    encapsia run job example_namespace test_module.test_function x=3 y=tim "z=hello stranger"
+
+    Note that all args must be named and the values are all considered strings (not
+    least because arguments are encoded over a URL string).
+
+    """
+    api = lib.get_api(**obj)
+    params = {}
+    for arg in args:
+        left, right = arg.split("=", 1)
+        params[left.strip()] = right.strip()
+    data = None
+    if upload:
+        data = upload.read()
+    result = lib.run_job(api, namespace, function, params, data=data)
     _output(result, save_as)
 
 

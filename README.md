@@ -29,9 +29,9 @@ Note that these tests are *not* self-verifying; they just provide helpful covera
 # TODO
 
 * Add sending files to views (once PR accepted)
-* Add "encapsia run job" command
 * Use click-web to create an encapsia webserve command?? Put in a plugin?
 * Validate input to plugins uninstall
+* Add an "encapsia plugins dev-server" command to forward calls to localhost to remote, thus allowing easier dev without installing anything except the SQL.
 
 * Sync with https://bitbucket.org/cmedtechnology/icetools/src/6f7008db6133?at=refactor_tools
 * Check out https://bitbucket.org/cmedtechnology/iceapi/src/6a1093e0ae91/iceapi/?at=add_api

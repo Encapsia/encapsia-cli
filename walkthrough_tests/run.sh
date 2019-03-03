@@ -85,3 +85,8 @@ encapsia run task example test_module.test_function_with_single_kwarg name=tim |
 
 test "Run task function expecting uploaded data but without any data. This *should* fail!!!"
 encapsia run task example test_module.test_function_for_posted_data || true
+
+# The jobs
+
+test "Run job function, showing 2 joblog entries with status queued and success"""
+encapsia run job example test_module.test_function_for_a_job name=tim
