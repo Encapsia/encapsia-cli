@@ -1,0 +1,864 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title></title>
+<style type="text/css">
+.ansi2html-content { display: inline; white-space: pre-wrap; word-wrap: break-word; }
+.body_foreground { color: #AAAAAA; }
+.body_background { background-color: #000000; }
+.body_foreground > .bold,.bold > .body_foreground, body.body_foreground > pre > .bold { color: #FFFFFF; font-weight: normal; }
+.inv_foreground { color: #000000; }
+.inv_background { background-color: #AAAAAA; }
+.ansi1 { font-weight: bold; }
+.ansi31 { color: #aa0000; }
+.ansi32 { color: #00aa00; }
+.ansi33 { color: #aa5500; }
+.ansi93 { color: #ea9540; }
+</style>
+</head>
+<body class="body_foreground body_background" style="font-size: 80%;" >
+<pre class="ansi2html-content">
+Exercise encapsia commands.
+These are *not* self-verifying tests, so check the output for reasonableness!
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Print out overall help ===</span>
+&gt;encapsia help
+<span class="ansi33">Usage: encapsia help [OPTIONS] COMMAND [ARGS]...
+
+  CLI to talk to an encapsia host.
+
+  The following steps are used to determine the server URL and token:
+
+    If provided, use the --host option to reference an entry in ~/.encapsia/credentials.toml
+    Else if set, use ENCAPSIA_HOST to reference an entry in ~/.encapsia/credentials.toml
+    Else if set, use ENCAPSIA_URL and ENCAPSIA_TOKEN directly.
+    Else abort.
+
+  The tool will also abort if instructed to lookup in
+  ~/.encapsia/credentials.toml but cannot find a correct entry.
+
+Options:
+  --help  Show this message and exit.
+
+Commands:
+  config    Get/set server configuration.
+  database  Backups and Restore encapsia databases.
+  fixtures  Manage database fixtures.
+  help      Print longer help information about the CLI.
+  httpie    Helper to use httpie with the URL and credentials passed in.
+  plugins   Install, uninstall, create, and update plugins.
+  run       Run an Encapsia task or view.
+  schedule  Manage task schedules.
+  shell     Start an interactive shell for running the encapsia commands.
+  token     Do things with an encapsia token.
+  users     Manage users, including superuser and system users.
+  version   Print version information about the CLI.</span>
+<span class="ansi33"></span>
+<span class="ansi33">Subcommands:</span>
+<span class="ansi33">  config delete                       Delete value against given key.</span>
+<span class="ansi33">  config get                          Retrieve value against given key.</span>
+<span class="ansi33">  config load                         Load (merge) configuration from given file.</span>
+<span class="ansi33">  config save                         Save entire configuration to given file.</span>
+<span class="ansi33">  config set                          Store value against given key.</span>
+<span class="ansi33">  config show                         Show entire configuration.</span>
+<span class="ansi33">  database backup                     Backup database to given filename.</span>
+<span class="ansi33">  database restore                    Restore database from given backup file.</span>
+<span class="ansi33">  fixtures create                     Create new fixture with given name.</span>
+<span class="ansi33">  fixtures delete                     Delete fixture with given name.</span>
+<span class="ansi33">  fixtures list                       List available fixtures.</span>
+<span class="ansi33">  fixtures use                        Switch to fixture with given name.</span>
+<span class="ansi33">  httpie shell                        Launch an httpie interactive shell with...</span>
+<span class="ansi33">  plugins build-from-legacy-s3        Build plugins from legacy webapps hosted on...</span>
+<span class="ansi33">  plugins build-from-src              Build plugins from given source directories.</span>
+<span class="ansi33">  plugins dev-create-namespace        Create namespace of given name.</span>
+<span class="ansi33">  plugins dev-destroy-namespace       Destroy namespace of given name.</span>
+<span class="ansi33">  plugins dev-update                  Update plugin parts which have changed since...</span>
+<span class="ansi33">  plugins fetch-from-url              Copy a plugin from given URL into the plugin...</span>
+<span class="ansi33">  plugins info                        Provide some information about installed...</span>
+<span class="ansi33">  plugins install                     Install plugins from version.toml file.</span>
+<span class="ansi33">  plugins uninstall                   Uninstall named plugin.</span>
+<span class="ansi33">  run job                             Run a job in given plugin NAMESPACE and...</span>
+<span class="ansi33">  run task                            Run a task in given plugin NAMESPACE and...</span>
+<span class="ansi33">  run view                            Run a view in given plugin NAMESPACE and...</span>
+<span class="ansi33">  schedule add                        Add new scheduled task.</span>
+<span class="ansi33">  schedule list                       List all scheduled tasks.</span>
+<span class="ansi33">  schedule remove-task                Remove scheduled task by id.</span>
+<span class="ansi33">  schedule remove-tasks-in-namespace  Remove all scheduled tasks in given...</span>
+<span class="ansi33">  token expire                        Expire token from server, and update encapsia...</span>
+<span class="ansi33">  token whoami                        Print information about current owner of...</span>
+<span class="ansi33">  users add-superuser                 Create superuser with suitable user and role.</span>
+<span class="ansi33">  users add-systemuser                Create system user with suitable user and...</span>
+<span class="ansi33">  users delete                        Delete user (but *do not* delete any related...</span>
+<span class="ansi33">  users list                          List out information about users.</span>
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Print out help on help ===</span>
+&gt;encapsia help help
+<span class="ansi33">Usage: encapsia help [OPTIONS] [COMMAND]
+
+  Print longer help information about the CLI.
+
+Options:
+  --help  Show this message and exit.</span>
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Print out help on users ===</span>
+&gt;encapsia help users
+<span class="ansi33">Usage: encapsia help [OPTIONS] COMMAND [ARGS]...
+
+  Manage users, including superuser and system users.
+
+Options:
+  --host TEXT  Name to use to lookup credentials in .encapsia/credentials.toml
+  --help       Show this message and exit.
+
+Commands:
+  add-superuser   Create superuser with suitable user and role.
+  add-systemuser  Create system user with suitable user and role.
+  delete          Delete user (but *do not* delete any related role).
+  list            List out information about users.</span>
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Print out the version ===</span>
+&gt;encapsia version
+<span class="ansi33">Encapsia CLI version: 0.1.9</span>
+<span class="ansi33">Encapsia API version: 0.1.14</span>
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Get whoami info about current token ===</span>
+&gt;encapsia token whoami
+<span class="ansi32">id = 2
+name = "Root Superuser"
+email = "system@root.encapsia.com"
+capabilities = [ "superuser",]
+expires_at = "2019-03-15T04:54:40.436272+00:00"
+issued_at = "2019-03-03T15:08:00.436272+00:00"
+site_id = ""
+token = "329fc7cdf81a486db0414c59e40dbe00"
+</span>
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Set a config value to a string ===</span>
+&gt;encapsia config set test_string \"a_string\"
+&gt;encapsia config get test_string
+<span class="ansi32">"a_string"</span>
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Set a config value to a number ===</span>
+&gt;encapsia config set test_number 123
+&gt;encapsia config get test_number
+<span class="ansi32">123</span>
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Set a config value to a list ===</span>
+&gt;encapsia config set test_list '["a", 1]'
+&gt;encapsia config get test_list
+<span class="ansi32">[
+    "a",
+    1
+]</span>
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Delete config values ===</span>
+&gt;encapsia config delete test_string
+&gt;encapsia config delete test_number
+&gt;encapsia config delete test_list
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Save config to a file and load it again ===</span>
+&gt;encapsia config save /tmp/test_encapsia_config.json
+&gt;cat /tmp/test_encapsia_config.json
+{
+    "blob_lifespan": 604800,
+    "blob_path": "/v1/blobs/{id}",
+    "job_timeout": 3600,
+    "node": "tcc24",
+    "root_token": "&lt;hidden&gt;",
+    "session_lifespan": 600,
+    "task_timeout": 600,
+    "trial": "tcc24",
+    "url": "https://tcc24.icethree.com",
+    "view_lifespan": 600
+}&gt;cat /tmp/test_encapsia_config.json
+&gt;python -c "import json, sys; c=json.load(sys.stdin); del c['root_token']; print(json.dumps(c))" &gt; /tmp/test_encapsia_config2.json
+&gt;encapsia config load /tmp/test_encapsia_config2.json
+&gt;rm /tmp/test_encapsia_config*.json
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Show the entire config ===</span>
+&gt;encapsia config show
+<span class="ansi32">{
+    "blob_lifespan": 604800,
+    "blob_path": "/v1/blobs/{id}",
+    "job_timeout": 3600,
+    "node": "tcc24",
+    "root_token": "&lt;hidden&gt;",
+    "session_lifespan": 600,
+    "task_timeout": 600,
+    "trial": "tcc24",
+    "url": "https://tcc24.icethree.com",
+    "view_lifespan": 600
+}</span>
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Build the example plugin from src ===</span>
+&gt;encapsia plugins --force build-from-src $EXAMPLE_PLUGIN_SRC
+<span class="ansi33">Created: /home/tcorbettclark/.encapsia/plugins-cache/plugin-example-0.0.1.tar.gz</span>
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Requst a build again, but this time it should be skipped over because it already exists in the cache ===</span>
+&gt;encapsia plugins build-from-src $EXAMPLE_PLUGIN_SRC
+<span class="ansi33">Found: /home/tcorbettclark/.encapsia/plugins-cache/plugin-example-0.0.1.tar.gz (Skipping)</span>
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Move the example plugin out of the cache and then add it back in directly ===</span>
+&gt;mv ~/.encapsia/plugins-cache/plugin-example-0.0.1.tar.gz /tmp/
+&gt;encapsia plugins fetch-from-url file:///tmp/plugin-example-0.0.1.tar.gz
+<span class="ansi33">Created: /home/tcorbettclark/.encapsia/plugins-cache/plugin-example-0.0.1.tar.gz</span>
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Build the launch plugin from legacy S3 (after first removing from the cache) ===</span>
+&gt;rm -f ~/.encapsia/plugins-cache/plugin-launch-*.tar.gz
+&gt;encapsia plugins build-from-legacy-s3 --versions=s3_plugins.toml --email=test_user@encapsia.com
+<span class="ansi33">Created: /home/tcorbettclark/.encapsia/plugins-cache/plugin-launch-1.2.2.tar.gz</span>
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Second time should be skipped over because it is already in the cache ===</span>
+&gt;encapsia plugins build-from-legacy-s3 --versions=s3_plugins.toml --email=test_user@encapsia.com
+<span class="ansi33">Found: /home/tcorbettclark/.encapsia/plugins-cache/plugin-launch-1.2.2.tar.gz (Skipping)</span>
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Install the example plugin from the cache, then uninstall it ===</span>
+&gt;encapsia plugins install --versions=example.toml
+<span class="ansi33">Uploaded /home/tcorbettclark/.encapsia/plugins-cache/plugin-example-0.0.1.tar.gz to blob: 1bb4275bd11e420d954ed186a9e57bce</span>
+<span class="ansi33">Installing</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
+<span class="ansi33">Status: ok</span>
+<span class="ansi32">Destroying plugin namespace: example
+Stopped all task workers for namespace: example
+Destroyed virtualenv: example
+Removed tasks directory: /home/ice/example
+Webfiles directory does not exist: /var/share/nginx/iceplugins/example
+Destroying views namespace example
+Deleted PostgreSQL schema: example
+Removing all/any schedules from plugin namespace: example
+Installing plugin example (0.0.1)
+pew new -d example
+Using real prefix '/home/ice/.pyenv/versions/3.6.7'
+New python executable in /home/ice/.local/share/virtualenvs/example/bin/python3.6
+Also creating executable in /home/ice/.local/share/virtualenvs/example/bin/python
+Installing setuptools, pip, wheel...
+done.
+pew in example pip install redis==2.10.6 rq==0.12.0
+Collecting redis==2.10.6
+  Using cached https://files.pythonhosted.org/packages/3b/f6/7a76333cf0b9251ecf49efff635015171843d9b977e4ffcf59f9c4428052/redis-2.10.6-py2.py3-none-any.whl
+Collecting rq==0.12.0
+  Using cached https://files.pythonhosted.org/packages/1d/3f/e05539962949aecd83496736f73abd36bd811884a20f68f691b59805125e/rq-0.12.0-py2.py3-none-any.whl
+Collecting click&gt;=5.0 (from rq==0.12.0)
+  Using cached https://files.pythonhosted.org/packages/fa/37/45185cb5abbc30d7257104c434fe0b07e5a195a6847506c074527aa599ec/Click-7.0-py2.py3-none-any.whl
+Installing collected packages: redis, click, rq
+Successfully installed click-7.0 redis-2.10.6 rq-0.12.0
+Made virtualenv: example
+Installing wheels in to namespace example
+pew in example pip install --find-links /tmp/tmp1y4xu85j/plugin-example-0.0.1/wheels --requirement /tmp/tmp1y4xu85j/plugin-example-0.0.1/wheels/requirements.txt
+Looking in links: /tmp/tmp1y4xu85j/plugin-example-0.0.1/wheels
+Collecting encapsia-api (from -r /tmp/tmp1y4xu85j/plugin-example-0.0.1/wheels/requirements.txt (line 1))
+Collecting requests[security]&lt;3.0,&gt;=2.20 (from encapsia-api-&gt;-r /tmp/tmp1y4xu85j/plugin-example-0.0.1/wheels/requirements.txt (line 1))
+  Using cached https://files.pythonhosted.org/packages/7d/e3/20f3d364d6c8e5d2353c72a67778eb189176f08e873c9900e10c0287b84b/requests-2.21.0-py2.py3-none-any.whl
+Collecting toml&lt;0.11.0,&gt;=0.10.0 (from encapsia-api-&gt;-r /tmp/tmp1y4xu85j/plugin-example-0.0.1/wheels/requirements.txt (line 1))
+  Using cached https://files.pythonhosted.org/packages/a2/12/ced7105d2de62fa7c8fb5fce92cc4ce66b57c95fb875e9318dba7f8c5db0/toml-0.10.0-py2.py3-none-any.whl
+Collecting chardet&lt;3.1.0,&gt;=3.0.2 (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp1y4xu85j/plugin-example-0.0.1/wheels/requirements.txt (line 1))
+  Using cached https://files.pythonhosted.org/packages/bc/a9/01ffebfb562e4274b6487b4bb1ddec7ca55ec7510b22e4c51f14098443b8/chardet-3.0.4-py2.py3-none-any.whl
+Collecting certifi&gt;=2017.4.17 (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp1y4xu85j/plugin-example-0.0.1/wheels/requirements.txt (line 1))
+  Using cached https://files.pythonhosted.org/packages/9f/e0/accfc1b56b57e9750eba272e24c4dddeac86852c2bebd1236674d7887e8a/certifi-2018.11.29-py2.py3-none-any.whl
+Collecting urllib3&lt;1.25,&gt;=1.21.1 (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp1y4xu85j/plugin-example-0.0.1/wheels/requirements.txt (line 1))
+  Using cached https://files.pythonhosted.org/packages/62/00/ee1d7de624db8ba7090d1226aebefab96a2c71cd5cfa7629d6ad3f61b79e/urllib3-1.24.1-py2.py3-none-any.whl
+Collecting idna&lt;2.9,&gt;=2.5 (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp1y4xu85j/plugin-example-0.0.1/wheels/requirements.txt (line 1))
+  Using cached https://files.pythonhosted.org/packages/14/2c/cd551d81dbe15200be1cf41cd03869a46fe7226e7450af7a6545bfc474c9/idna-2.8-py2.py3-none-any.whl
+Collecting cryptography&gt;=1.3.4; extra == "security" (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp1y4xu85j/plugin-example-0.0.1/wheels/requirements.txt (line 1))
+Collecting pyOpenSSL&gt;=0.14; extra == "security" (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp1y4xu85j/plugin-example-0.0.1/wheels/requirements.txt (line 1))
+  Using cached https://files.pythonhosted.org/packages/01/c8/ceb170d81bd3941cbeb9940fc6cc2ef2ca4288d0ca8929ea4db5905d904d/pyOpenSSL-19.0.0-py2.py3-none-any.whl
+Collecting six&gt;=1.4.1 (from cryptography&gt;=1.3.4; extra == "security"-&gt;requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp1y4xu85j/plugin-example-0.0.1/wheels/requirements.txt (line 1))
+  Using cached https://files.pythonhosted.org/packages/73/fb/00a976f728d0d1fecfe898238ce23f502a721c0ac0ecfedb80e0d88c64e9/six-1.12.0-py2.py3-none-any.whl
+Collecting asn1crypto&gt;=0.21.0 (from cryptography&gt;=1.3.4; extra == "security"-&gt;requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp1y4xu85j/plugin-example-0.0.1/wheels/requirements.txt (line 1))
+  Using cached https://files.pythonhosted.org/packages/ea/cd/35485615f45f30a510576f1a56d1e0a7ad7bd8ab5ed7cdc600ef7cd06222/asn1crypto-0.24.0-py2.py3-none-any.whl
+Collecting cffi!=1.11.3,&gt;=1.8 (from cryptography&gt;=1.3.4; extra == "security"-&gt;requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp1y4xu85j/plugin-example-0.0.1/wheels/requirements.txt (line 1))
+Collecting pycparser (from cffi!=1.11.3,&gt;=1.8-&gt;cryptography&gt;=1.3.4; extra == "security"-&gt;requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp1y4xu85j/plugin-example-0.0.1/wheels/requirements.txt (line 1))
+Installing collected packages: chardet, certifi, urllib3, idna, six, asn1crypto, pycparser, cffi, cryptography, pyOpenSSL, requests, toml, encapsia-api
+Successfully installed asn1crypto-0.24.0 certifi-2018.11.29 cffi-1.12.2 chardet-3.0.4 cryptography-2.6.1 encapsia-api-0.1.14 idna-2.8 pyOpenSSL-19.0.0 pycparser-2.19 requests-2.21.0 six-1.12.0 toml-0.10.0 urllib3-1.24.1
+Installing tasks in to namespace example
+Installed task file /home/ice/example/test_module.py
+Configuring 1 task workers for namespace example
+Creating views namespace example
+Created PostgreSQL schema: example
+Installing views in to namespace example
+Installing view permissions.sql
+Installing view test_views.sql
+Creating views namespace example
+Created PostgreSQL schema: example
+Installing schedules in to namespace example</span>
+&gt;encapsia plugins --force uninstall example
+<span class="ansi33">Uninstalling example</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
+<span class="ansi33">Status: ok</span>
+<span class="ansi32">Destroying plugin namespace: example
+Stopped all task workers for namespace: example
+Destroyed virtualenv: example
+Removed tasks directory: /home/ice/example
+Webfiles directory does not exist: /var/share/nginx/iceplugins/example
+Destroying views namespace example
+Deleted PostgreSQL schema: example
+Removing all/any schedules from plugin namespace: example</span>
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Dev update the example plugin from scratch ===</span>
+&gt;encapsia plugins dev-update $EXAMPLE_PLUGIN_SRC --reset
+<span class="ansi33">Including: tasks</span>
+<span class="ansi33">Including: views</span>
+<span class="ansi33">Including: wheels</span>
+<span class="ansi33">Including: schedules</span>
+<span class="ansi33">Uploading to server</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
+<span class="ansi33">Status: ok</span>
+<span class="ansi32">Installing plugin example (0.0.1)
+pew new -d example
+Using real prefix '/home/ice/.pyenv/versions/3.6.7'
+New python executable in /home/ice/.local/share/virtualenvs/example/bin/python3.6
+Also creating executable in /home/ice/.local/share/virtualenvs/example/bin/python
+Installing setuptools, pip, wheel...
+done.
+pew in example pip install redis==2.10.6 rq==0.12.0
+Collecting redis==2.10.6
+  Using cached https://files.pythonhosted.org/packages/3b/f6/7a76333cf0b9251ecf49efff635015171843d9b977e4ffcf59f9c4428052/redis-2.10.6-py2.py3-none-any.whl
+Collecting rq==0.12.0
+  Using cached https://files.pythonhosted.org/packages/1d/3f/e05539962949aecd83496736f73abd36bd811884a20f68f691b59805125e/rq-0.12.0-py2.py3-none-any.whl
+Collecting click&gt;=5.0 (from rq==0.12.0)
+  Using cached https://files.pythonhosted.org/packages/fa/37/45185cb5abbc30d7257104c434fe0b07e5a195a6847506c074527aa599ec/Click-7.0-py2.py3-none-any.whl
+Installing collected packages: redis, click, rq
+Successfully installed click-7.0 redis-2.10.6 rq-0.12.0
+Made virtualenv: example
+Installing wheels in to namespace example
+pew in example pip install --find-links /tmp/tmp_ft5792e/tmpry2ehh_0/wheels --requirement /tmp/tmp_ft5792e/tmpry2ehh_0/wheels/requirements.txt
+Looking in links: /tmp/tmp_ft5792e/tmpry2ehh_0/wheels
+Collecting encapsia-api (from -r /tmp/tmp_ft5792e/tmpry2ehh_0/wheels/requirements.txt (line 1))
+Collecting toml&lt;0.11.0,&gt;=0.10.0 (from encapsia-api-&gt;-r /tmp/tmp_ft5792e/tmpry2ehh_0/wheels/requirements.txt (line 1))
+  Using cached https://files.pythonhosted.org/packages/a2/12/ced7105d2de62fa7c8fb5fce92cc4ce66b57c95fb875e9318dba7f8c5db0/toml-0.10.0-py2.py3-none-any.whl
+Collecting requests[security]&lt;3.0,&gt;=2.20 (from encapsia-api-&gt;-r /tmp/tmp_ft5792e/tmpry2ehh_0/wheels/requirements.txt (line 1))
+  Using cached https://files.pythonhosted.org/packages/7d/e3/20f3d364d6c8e5d2353c72a67778eb189176f08e873c9900e10c0287b84b/requests-2.21.0-py2.py3-none-any.whl
+Collecting chardet&lt;3.1.0,&gt;=3.0.2 (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp_ft5792e/tmpry2ehh_0/wheels/requirements.txt (line 1))
+  Using cached https://files.pythonhosted.org/packages/bc/a9/01ffebfb562e4274b6487b4bb1ddec7ca55ec7510b22e4c51f14098443b8/chardet-3.0.4-py2.py3-none-any.whl
+Collecting idna&lt;2.9,&gt;=2.5 (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp_ft5792e/tmpry2ehh_0/wheels/requirements.txt (line 1))
+  Using cached https://files.pythonhosted.org/packages/14/2c/cd551d81dbe15200be1cf41cd03869a46fe7226e7450af7a6545bfc474c9/idna-2.8-py2.py3-none-any.whl
+Collecting certifi&gt;=2017.4.17 (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp_ft5792e/tmpry2ehh_0/wheels/requirements.txt (line 1))
+  Using cached https://files.pythonhosted.org/packages/9f/e0/accfc1b56b57e9750eba272e24c4dddeac86852c2bebd1236674d7887e8a/certifi-2018.11.29-py2.py3-none-any.whl
+Collecting urllib3&lt;1.25,&gt;=1.21.1 (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp_ft5792e/tmpry2ehh_0/wheels/requirements.txt (line 1))
+  Using cached https://files.pythonhosted.org/packages/62/00/ee1d7de624db8ba7090d1226aebefab96a2c71cd5cfa7629d6ad3f61b79e/urllib3-1.24.1-py2.py3-none-any.whl
+Collecting pyOpenSSL&gt;=0.14; extra == "security" (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp_ft5792e/tmpry2ehh_0/wheels/requirements.txt (line 1))
+  Using cached https://files.pythonhosted.org/packages/01/c8/ceb170d81bd3941cbeb9940fc6cc2ef2ca4288d0ca8929ea4db5905d904d/pyOpenSSL-19.0.0-py2.py3-none-any.whl
+Collecting cryptography&gt;=1.3.4; extra == "security" (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp_ft5792e/tmpry2ehh_0/wheels/requirements.txt (line 1))
+Collecting six&gt;=1.5.2 (from pyOpenSSL&gt;=0.14; extra == "security"-&gt;requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp_ft5792e/tmpry2ehh_0/wheels/requirements.txt (line 1))
+  Using cached https://files.pythonhosted.org/packages/73/fb/00a976f728d0d1fecfe898238ce23f502a721c0ac0ecfedb80e0d88c64e9/six-1.12.0-py2.py3-none-any.whl
+Collecting asn1crypto&gt;=0.21.0 (from cryptography&gt;=1.3.4; extra == "security"-&gt;requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp_ft5792e/tmpry2ehh_0/wheels/requirements.txt (line 1))
+  Using cached https://files.pythonhosted.org/packages/ea/cd/35485615f45f30a510576f1a56d1e0a7ad7bd8ab5ed7cdc600ef7cd06222/asn1crypto-0.24.0-py2.py3-none-any.whl
+Collecting cffi!=1.11.3,&gt;=1.8 (from cryptography&gt;=1.3.4; extra == "security"-&gt;requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp_ft5792e/tmpry2ehh_0/wheels/requirements.txt (line 1))
+Collecting pycparser (from cffi!=1.11.3,&gt;=1.8-&gt;cryptography&gt;=1.3.4; extra == "security"-&gt;requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp_ft5792e/tmpry2ehh_0/wheels/requirements.txt (line 1))
+Installing collected packages: toml, chardet, idna, certifi, urllib3, six, asn1crypto, pycparser, cffi, cryptography, pyOpenSSL, requests, encapsia-api
+Successfully installed asn1crypto-0.24.0 certifi-2018.11.29 cffi-1.12.2 chardet-3.0.4 cryptography-2.6.1 encapsia-api-0.1.14 idna-2.8 pyOpenSSL-19.0.0 pycparser-2.19 requests-2.21.0 six-1.12.0 toml-0.10.0 urllib3-1.24.1
+Installing tasks in to namespace example
+Installed task file /home/ice/example/test_module.py
+Configuring 1 task workers for namespace example
+Creating views namespace example
+Created PostgreSQL schema: example
+Installing views in to namespace example
+Installing view permissions.sql
+Installing view test_views.sql
+Creating views namespace example
+Created PostgreSQL schema: example
+Installing schedules in to namespace example</span>
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Second time round there is nothing to do because nothing has changed ===</span>
+&gt;encapsia plugins dev-update $EXAMPLE_PLUGIN_SRC
+<span class="ansi33">Nothing to do.</span>
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Modify the example plugin and update again. This time only the tasks should be updated ===</span>
+&gt;touch $EXAMPLE_PLUGIN_SRC/tasks/test_new_module.py
+&gt;encapsia plugins dev-update $EXAMPLE_PLUGIN_SRC
+<span class="ansi33">Including: tasks</span>
+<span class="ansi33">Uploading to server</span><span class="ansi33">.</span><span class="ansi33">..</span><span class="ansi33">Done</span>
+<span class="ansi33">Status: ok</span>
+<span class="ansi32">Installing plugin example (0.0.1)
+Virtualenv already exists: example
+Installing tasks in to namespace example
+Installed task file /home/ice/example/test_module.py
+Installed task file /home/ice/example/test_new_module.py
+Configuring 1 task workers for namespace example</span>
+&gt;rm $EXAMPLE_PLUGIN_SRC/tasks/test_new_module.py
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Uninstall the example plugin ===</span>
+&gt;encapsia plugins --force uninstall example
+<span class="ansi33">Uninstalling example</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
+<span class="ansi33">Status: ok</span>
+<span class="ansi32">Destroying plugin namespace: example
+Stopped all task workers for namespace: example
+Destroyed virtualenv: example
+Removed tasks directory: /home/ice/example
+Webfiles directory does not exist: /var/share/nginx/iceplugins/example
+Destroying views namespace example
+Deleted PostgreSQL schema: example
+Removing all/any schedules from plugin namespace: example</span>
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Create and destroy new namespace ===</span>
+&gt;encapsia plugins dev-create-namespace testing123
+<span class="ansi33">Creating namespace</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
+<span class="ansi33">Status: ok</span>
+<span class="ansi32">Made webfiles directory: /var/share/nginx/iceplugins/testing123
+Made tasks directory: /home/ice/testing123
+pew new -d testing123
+Using real prefix '/home/ice/.pyenv/versions/3.6.7'
+New python executable in /home/ice/.local/share/virtualenvs/testing123/bin/python3.6
+Also creating executable in /home/ice/.local/share/virtualenvs/testing123/bin/python
+Installing setuptools, pip, wheel...
+done.
+pew in testing123 pip install redis==2.10.6 rq==0.12.0
+Collecting redis==2.10.6
+  Using cached https://files.pythonhosted.org/packages/3b/f6/7a76333cf0b9251ecf49efff635015171843d9b977e4ffcf59f9c4428052/redis-2.10.6-py2.py3-none-any.whl
+Collecting rq==0.12.0
+  Using cached https://files.pythonhosted.org/packages/1d/3f/e05539962949aecd83496736f73abd36bd811884a20f68f691b59805125e/rq-0.12.0-py2.py3-none-any.whl
+Collecting click&gt;=5.0 (from rq==0.12.0)
+  Using cached https://files.pythonhosted.org/packages/fa/37/45185cb5abbc30d7257104c434fe0b07e5a195a6847506c074527aa599ec/Click-7.0-py2.py3-none-any.whl
+Installing collected packages: redis, click, rq
+Successfully installed click-7.0 redis-2.10.6 rq-0.12.0
+Made virtualenv: testing123
+Configuring 1 task workers for namespace testing123
+Creating views namespace testing123
+Created PostgreSQL schema: testing123</span>
+&gt;encapsia plugins dev-destroy-namespace testing123
+<span class="ansi33">Destroying namespace</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
+<span class="ansi33">Status: ok</span>
+<span class="ansi32">Stopped all task workers for namespace: testing123
+Destroyed virtualenv: testing123
+Removed tasks directory: /home/ice/testing123
+Removed webfiles directory: /var/share/nginx/iceplugins/testing123
+Destroying views namespace testing123
+Deleted PostgreSQL schema: testing123</span>
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Get info on all plugins ===</span>
+&gt;encapsia plugins info
+<span class="ansi33">Fetching list of namespaces</span><span class="ansi33">.</span><span class="ansi33">..</span><span class="ansi33">Done</span>
+<span class="ansi33">Status: ok</span>
+<span class="ansi32">analytics (tasks)
+analytics (webfiles)
+archiver (tasks)
+archiver (webfiles)
+chat (webfiles)
+conduct (tasks)
+conduct (webfiles)
+entry (tasks)
+entry (webfiles)
+esourcetraining (webfiles)
+insights (webfiles)
+launch (webfiles)
+loader (tasks)
+loader (webfiles)
+loaderreview (webfiles)
+manager (tasks)
+manager (webfiles)
+overview (webfiles)
+tags (webfiles)
+tutor (webfiles)</span>
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Create a backup ===</span>
+&gt;encapsia database backup /tmp/test_encapsia_backup
+<span class="ansi33">Backing up database</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
+<span class="ansi33">Downloaded 538069 bytes to /tmp/test_encapsia_backup</span>
+&gt;ls -l /tmp/test_encapsia_backup
+-rw------- 1 tcorbettclark tcorbettclark 538069 Mar  3 16:17 /tmp/test_encapsia_backup
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Restore from the backup ===</span>
+&gt;encapsia database restore --yes /tmp/test_encapsia_backup
+<span class="ansi33">Database restore requested.</span>
+<span class="ansi33">Please verify by other means (e.g. look at the logs).</span>
+&gt;sleep 5
+&gt;rm /tmp/test_encapsia_backup
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Create a fixture ===</span>
+&gt;encapsia fixtures create test_fixture
+<span class="ansi33">Creating fixture test_fixture</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
+<span class="ansi32">Fixture "test_fixture" created on Sun Mar  3 16:17:15 2019</span>
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Use a fixture ===</span>
+&gt;encapsia fixtures use --yes test_fixture
+<span class="ansi33">Requested change to fixture test_fixture.</span>
+<span class="ansi33">Please verify by other means (e.g. look at the logs).</span>
+&gt;sleep 5
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Delete a fixture ===</span>
+&gt;encapsia fixtures delete --yes test_fixture
+<span class="ansi33">Deleting fixture test_fixture</span><span class="ansi33">...</span><span class="ansi33">Done</span>
+<span class="ansi32">Deleted fixture: test_fixture</span>
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== List all fixtures ===</span>
+&gt;encapsia fixtures list
+<span class="ansi33">Fetching list of fixtures</span><span class="ansi33">...</span><span class="ansi33">Done</span>
+<span class="ansi32">empty
+foobar
+google
+onesubject
+ready
+smalldata</span>
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== (Setup for running views or tasks etc) Install the example plugin from src ===</span>
+&gt;encapsia plugins dev-update --reset $EXAMPLE_PLUGIN_SRC
+<span class="ansi33">Including: tasks</span>
+<span class="ansi33">Including: views</span>
+<span class="ansi33">Including: wheels</span>
+<span class="ansi33">Including: schedules</span>
+<span class="ansi33">Uploading to server</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
+<span class="ansi33">Status: ok</span>
+<span class="ansi32">Installing plugin example (0.0.1)
+pew new -d example
+Using real prefix '/home/ice/.pyenv/versions/3.6.7'
+New python executable in /home/ice/.local/share/virtualenvs/example/bin/python3.6
+Also creating executable in /home/ice/.local/share/virtualenvs/example/bin/python
+Installing setuptools, pip, wheel...
+done.
+pew in example pip install redis==2.10.6 rq==0.12.0
+Collecting redis==2.10.6
+  Using cached https://files.pythonhosted.org/packages/3b/f6/7a76333cf0b9251ecf49efff635015171843d9b977e4ffcf59f9c4428052/redis-2.10.6-py2.py3-none-any.whl
+Collecting rq==0.12.0
+  Using cached https://files.pythonhosted.org/packages/1d/3f/e05539962949aecd83496736f73abd36bd811884a20f68f691b59805125e/rq-0.12.0-py2.py3-none-any.whl
+Collecting click&gt;=5.0 (from rq==0.12.0)
+  Using cached https://files.pythonhosted.org/packages/fa/37/45185cb5abbc30d7257104c434fe0b07e5a195a6847506c074527aa599ec/Click-7.0-py2.py3-none-any.whl
+Installing collected packages: redis, click, rq
+Successfully installed click-7.0 redis-2.10.6 rq-0.12.0
+Made virtualenv: example
+Installing wheels in to namespace example
+pew in example pip install --find-links /tmp/tmp9hyasdty/tmp9zrsc_v8/wheels --requirement /tmp/tmp9hyasdty/tmp9zrsc_v8/wheels/requirements.txt
+Looking in links: /tmp/tmp9hyasdty/tmp9zrsc_v8/wheels
+Collecting encapsia-api (from -r /tmp/tmp9hyasdty/tmp9zrsc_v8/wheels/requirements.txt (line 1))
+Collecting toml&lt;0.11.0,&gt;=0.10.0 (from encapsia-api-&gt;-r /tmp/tmp9hyasdty/tmp9zrsc_v8/wheels/requirements.txt (line 1))
+  Using cached https://files.pythonhosted.org/packages/a2/12/ced7105d2de62fa7c8fb5fce92cc4ce66b57c95fb875e9318dba7f8c5db0/toml-0.10.0-py2.py3-none-any.whl
+Collecting requests[security]&lt;3.0,&gt;=2.20 (from encapsia-api-&gt;-r /tmp/tmp9hyasdty/tmp9zrsc_v8/wheels/requirements.txt (line 1))
+  Using cached https://files.pythonhosted.org/packages/7d/e3/20f3d364d6c8e5d2353c72a67778eb189176f08e873c9900e10c0287b84b/requests-2.21.0-py2.py3-none-any.whl
+Collecting urllib3&lt;1.25,&gt;=1.21.1 (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp9hyasdty/tmp9zrsc_v8/wheels/requirements.txt (line 1))
+  Using cached https://files.pythonhosted.org/packages/62/00/ee1d7de624db8ba7090d1226aebefab96a2c71cd5cfa7629d6ad3f61b79e/urllib3-1.24.1-py2.py3-none-any.whl
+Collecting certifi&gt;=2017.4.17 (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp9hyasdty/tmp9zrsc_v8/wheels/requirements.txt (line 1))
+  Using cached https://files.pythonhosted.org/packages/9f/e0/accfc1b56b57e9750eba272e24c4dddeac86852c2bebd1236674d7887e8a/certifi-2018.11.29-py2.py3-none-any.whl
+Collecting idna&lt;2.9,&gt;=2.5 (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp9hyasdty/tmp9zrsc_v8/wheels/requirements.txt (line 1))
+  Using cached https://files.pythonhosted.org/packages/14/2c/cd551d81dbe15200be1cf41cd03869a46fe7226e7450af7a6545bfc474c9/idna-2.8-py2.py3-none-any.whl
+Collecting chardet&lt;3.1.0,&gt;=3.0.2 (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp9hyasdty/tmp9zrsc_v8/wheels/requirements.txt (line 1))
+  Using cached https://files.pythonhosted.org/packages/bc/a9/01ffebfb562e4274b6487b4bb1ddec7ca55ec7510b22e4c51f14098443b8/chardet-3.0.4-py2.py3-none-any.whl
+Collecting pyOpenSSL&gt;=0.14; extra == "security" (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp9hyasdty/tmp9zrsc_v8/wheels/requirements.txt (line 1))
+  Using cached https://files.pythonhosted.org/packages/01/c8/ceb170d81bd3941cbeb9940fc6cc2ef2ca4288d0ca8929ea4db5905d904d/pyOpenSSL-19.0.0-py2.py3-none-any.whl
+Collecting cryptography&gt;=1.3.4; extra == "security" (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp9hyasdty/tmp9zrsc_v8/wheels/requirements.txt (line 1))
+Collecting six&gt;=1.5.2 (from pyOpenSSL&gt;=0.14; extra == "security"-&gt;requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp9hyasdty/tmp9zrsc_v8/wheels/requirements.txt (line 1))
+  Using cached https://files.pythonhosted.org/packages/73/fb/00a976f728d0d1fecfe898238ce23f502a721c0ac0ecfedb80e0d88c64e9/six-1.12.0-py2.py3-none-any.whl
+Collecting asn1crypto&gt;=0.21.0 (from cryptography&gt;=1.3.4; extra == "security"-&gt;requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp9hyasdty/tmp9zrsc_v8/wheels/requirements.txt (line 1))
+  Using cached https://files.pythonhosted.org/packages/ea/cd/35485615f45f30a510576f1a56d1e0a7ad7bd8ab5ed7cdc600ef7cd06222/asn1crypto-0.24.0-py2.py3-none-any.whl
+Collecting cffi!=1.11.3,&gt;=1.8 (from cryptography&gt;=1.3.4; extra == "security"-&gt;requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp9hyasdty/tmp9zrsc_v8/wheels/requirements.txt (line 1))
+Collecting pycparser (from cffi!=1.11.3,&gt;=1.8-&gt;cryptography&gt;=1.3.4; extra == "security"-&gt;requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp9hyasdty/tmp9zrsc_v8/wheels/requirements.txt (line 1))
+Installing collected packages: toml, urllib3, certifi, idna, chardet, six, asn1crypto, pycparser, cffi, cryptography, pyOpenSSL, requests, encapsia-api
+Successfully installed asn1crypto-0.24.0 certifi-2018.11.29 cffi-1.12.2 chardet-3.0.4 cryptography-2.6.1 encapsia-api-0.1.14 idna-2.8 pyOpenSSL-19.0.0 pycparser-2.19 requests-2.21.0 six-1.12.0 toml-0.10.0 urllib3-1.24.1
+Installing tasks in to namespace example
+Installed task file /home/ice/example/test_module.py
+Configuring 1 task workers for namespace example
+Creating views namespace example
+Created PostgreSQL schema: example
+Installing views in to namespace example
+Installing view permissions.sql
+Installing view test_views.sql
+Creating views namespace example
+Created PostgreSQL schema: example
+Installing schedules in to namespace example</span>
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Run view with no arguments ===</span>
+&gt;encapsia run view example test_no_args
+<span class="ansi32">[
+    {
+        "test_no_args": "function with no arguments"
+    }
+]</span>
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Run view and save result to file ===</span>
+&gt;encapsia run view example test_no_args --save-as /tmp/encapsia_test_save_from_view.txt
+<span class="ansi33">Saved result to /tmp/encapsia_test_save_from_view.txt</span>
+&gt;echo $(cat /tmp/encapsia_test_save_from_view.txt)
+[{"test_no_args": "function with no arguments"}]
+&gt;rm /tmp/encapsia_test_save_from_view.txt
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Run view with one argument ===</span>
+&gt;encapsia run view example test_one_arg hello
+<span class="ansi32">[
+    {
+        "test_one_arg": "hello"
+    }
+]</span>
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Run view with two arguments ===</span>
+&gt;encapsia run view example test_two_args "hello" " world"
+<span class="ansi32">[
+    {
+        "test_two_args": "hello world"
+    }
+]</span>
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Run view with no arguments to return meta ===</span>
+&gt;encapsia run view example test_only_meta
+<span class="ansi32">[
+    {
+        "test_only_meta": {
+            "capabilities": [
+                "superuser"
+            ],
+            "device": null,
+            "email": "system@root.encapsia.com",
+            "expires_at": "2019-03-15T04:54:40.436272+00:00",
+            "id": 2,
+            "issued_at": "2019-03-03T15:08:00.436272+00:00",
+            "name": "Root Superuser",
+            "namespace": "example",
+            "notification_token": null,
+            "role": null,
+            "role_alias": null,
+            "site_id": "",
+            "token": "329fc7cdf81a486db0414c59e40dbe00",
+            "url": "https://tcc24.icethree.com/v1/views/example/test_only_meta"
+        }
+    }
+]</span>
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Run view with one optional argument ===</span>
+&gt;encapsia run view example test_one_optional_arg
+<span class="ansi32">[
+    {
+        "test_one_optional_arg": 1000
+    }
+]</span>
+&gt;encapsia run view example test_one_optional_arg limit=999
+<span class="ansi32">[
+    {
+        "test_one_optional_arg": 999
+    }
+]</span>
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Run view with mixture of argument types ===</span>
+&gt;encapsia run view example test_mixture hello limit=123
+<span class="ansi32">[
+    {
+        "test_mixture": {
+            "arg1": "hello",
+            "limit": 123,
+            "meta": {
+                "capabilities": [
+                    "superuser"
+                ],
+                "device": null,
+                "email": "system@root.encapsia.com",
+                "expires_at": "2019-03-15T04:54:40.436272+00:00",
+                "id": 2,
+                "issued_at": "2019-03-03T15:08:00.436272+00:00",
+                "name": "Root Superuser",
+                "namespace": "example",
+                "notification_token": null,
+                "role": null,
+                "role_alias": null,
+                "site_id": "",
+                "token": "329fc7cdf81a486db0414c59e40dbe00",
+                "url": "https://tcc24.icethree.com/v1/views/example/test_mixture/hello?limit=123"
+            }
+        }
+    }
+]</span>
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Run view which returns CSV directly ===</span>
+&gt;encapsia run view example example_view_function_as_csv_file
+<span class="ansi32">x,y
+"1","2"
+"3","4"
+</span>
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Run view which returns JSON directly ===</span>
+&gt;encapsia run view example example_view_function_as_json_file
+<span class="ansi32">[
+    {
+        "x": 1,
+        "y": 2
+    },
+    {
+        "x": 3,
+        "y": 4
+    }
+]</span>
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Run basic test task function ===</span>
+&gt;encapsia run task example test_module.test_function name=tim
+<span class="ansi33">Running task example</span><span class="ansi33">...</span><span class="ansi33">Done</span>
+<span class="ansi32">hello tim</span>
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Run basic test task function and save result to file ===</span>
+&gt;encapsia run task example test_module.test_function --save-as /tmp/encapsia_test_save_from_task.txt name=tim
+<span class="ansi33">Running task example</span><span class="ansi33">...</span><span class="ansi33">Done</span>
+<span class="ansi33">Saved result to /tmp/encapsia_test_save_from_task.txt</span>
+&gt;echo $(cat /tmp/encapsia_test_save_from_task.txt)
+hello tim
+&gt;rm /tmp/encapsia_test_save_from_task.txt
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Run basic test task function with blank argument ===</span>
+&gt;encapsia run task example test_module.test_function name=
+<span class="ansi33">Running task example</span><span class="ansi33">...</span><span class="ansi33">Done</span>
+<span class="ansi32">hello </span>
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Run test task function written with fixed arguments ===</span>
+&gt;encapsia run task example test_module.test_function_with_fixed_args name=tim
+<span class="ansi33">Running task example</span><span class="ansi33">...</span><span class="ansi33">Done</span>
+<span class="ansi32">hello tim</span>
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Run test task function accepting any arguments ===</span>
+&gt;encapsia run task example test_module.test_function_with_any_args a=1 b=2 c=3
+<span class="ansi33">Running task example</span><span class="ansi33">...</span><span class="ansi33">Done</span>
+<span class="ansi32">{
+    "a": "1",
+    "b": "2",
+    "c": "3",
+    "meta": {
+        "capabilities": [
+            "superuser"
+        ],
+        "device": null,
+        "email": "system@root.encapsia.com",
+        "expires_at": "2019-03-03T16:27:57.326614+00:00",
+        "id": 2,
+        "issued_at": "2019-03-03T16:17:57.326614+00:00",
+        "name": "Root Superuser",
+        "namespace": "example",
+        "notification_token": null,
+        "role": null,
+        "role_alias": null,
+        "site_id": "",
+        "token": "610606f783ff47f08cd8f91c2d6ec3a5",
+        "url": "https://tcc24.icethree.com/v1/tasks/example/test_module.test_function_with_any_args?a=1&amp;b=2&amp;c=3"
+    }
+}</span>
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Run test task function which only takes meta as a fixed argument ===</span>
+&gt;encapsia run task example test_module.test_function_with_meta_as_fixed_arg
+<span class="ansi33">Running task example</span><span class="ansi33">...</span><span class="ansi33">Done</span>
+<span class="ansi32">{
+    "capabilities": [
+        "superuser"
+    ],
+    "device": null,
+    "email": "system@root.encapsia.com",
+    "expires_at": "2019-03-03T16:27:58.726031+00:00",
+    "id": 2,
+    "issued_at": "2019-03-03T16:17:58.726031+00:00",
+    "name": "Root Superuser",
+    "namespace": "example",
+    "notification_token": null,
+    "role": null,
+    "role_alias": null,
+    "site_id": "",
+    "token": "70202bdf9bcc4b679d31c86195aba0d0",
+    "url": "https://tcc24.icethree.com/v1/tasks/example/test_module.test_function_with_meta_as_fixed_arg"
+}</span>
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Run task function expecting uploaded data. ===</span>
+&gt;encapsia run task example test_module.test_function_for_posted_data --upload=example_data.txt
+<span class="ansi33">Running task example</span><span class="ansi33">...</span><span class="ansi33">Done</span>
+<span class="ansi32">I've been uploaded from a file!</span>
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Run task function which takes no arguments. This *should* fail!!! ===</span>
+&gt;encapsia run task example test_module.test_function_with_no_args
+<span class="ansi33">Running task example</span><span class="ansi31">
+Status: failed</span>
+<span class="ansi31">Traceback (most recent call last):
+  File "/home/ice/.local/share/virtualenvs/example/lib/python3.6/site-packages/rq/worker.py", line 793, in perform_job
+    rv = job.perform()
+  File "/home/ice/.local/share/virtualenvs/example/lib/python3.6/site-packages/rq/job.py", line 599, in perform
+    self._result = self._execute()
+  File "/home/ice/.local/share/virtualenvs/example/lib/python3.6/site-packages/rq/job.py", line 605, in _execute
+    return self.func(*self.args, **self.kwargs)
+TypeError: test_function_with_no_args() got an unexpected keyword argument 'meta'
+</span>
+Aborted!
+&gt;true
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Run task function with fixed arg and no meta. This *should* fail!!! ===</span>
+&gt;encapsia run task example test_module.test_function_with_single_arg_and_no_meta name=tim
+<span class="ansi33">Running task example</span><span class="ansi31">
+Status: failed</span>
+<span class="ansi31">Traceback (most recent call last):
+  File "/home/ice/.local/share/virtualenvs/example/lib/python3.6/site-packages/rq/worker.py", line 793, in perform_job
+    rv = job.perform()
+  File "/home/ice/.local/share/virtualenvs/example/lib/python3.6/site-packages/rq/job.py", line 599, in perform
+    self._result = self._execute()
+  File "/home/ice/.local/share/virtualenvs/example/lib/python3.6/site-packages/rq/job.py", line 605, in _execute
+    return self.func(*self.args, **self.kwargs)
+TypeError: test_function_with_single_arg_and_no_meta() got an unexpected keyword argument 'meta'
+</span>
+Aborted!
+&gt;true
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Run task function with arg and no meta. This *should* fail!!! ===</span>
+&gt;encapsia run task example test_module.test_function_with_single_kwarg name=tim
+<span class="ansi33">Running task example</span><span class="ansi31">
+Status: failed</span>
+<span class="ansi31">Traceback (most recent call last):
+  File "/home/ice/.local/share/virtualenvs/example/lib/python3.6/site-packages/rq/worker.py", line 793, in perform_job
+    rv = job.perform()
+  File "/home/ice/.local/share/virtualenvs/example/lib/python3.6/site-packages/rq/job.py", line 599, in perform
+    self._result = self._execute()
+  File "/home/ice/.local/share/virtualenvs/example/lib/python3.6/site-packages/rq/job.py", line 605, in _execute
+    return self.func(*self.args, **self.kwargs)
+TypeError: test_function_with_single_kwarg() got an unexpected keyword argument 'meta'
+</span>
+Aborted!
+&gt;true
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Run task function expecting uploaded data but without any data. This *should* fail!!! ===</span>
+&gt;encapsia run task example test_module.test_function_for_posted_data
+<span class="ansi33">Running task example</span><span class="ansi31">
+Status: failed</span>
+<span class="ansi31">Traceback (most recent call last):
+  File "/home/ice/.local/share/virtualenvs/example/lib/python3.6/site-packages/rq/worker.py", line 793, in perform_job
+    rv = job.perform()
+  File "/home/ice/.local/share/virtualenvs/example/lib/python3.6/site-packages/rq/job.py", line 599, in perform
+    self._result = self._execute()
+  File "/home/ice/.local/share/virtualenvs/example/lib/python3.6/site-packages/rq/job.py", line 605, in _execute
+    return self.func(*self.args, **self.kwargs)
+  File "./test_module.py", line 42, in test_function_for_posted_data
+    with open(posted_data_filename) as f:
+TypeError: expected str, bytes or os.PathLike object, not NoneType
+</span>
+Aborted!
+&gt;true
+
+<span class="ansi93"></span><span class="ansi1 ansi93">=== Run job function, showing 2 joblog entries with status queued and success ===</span>
+&gt;encapsia run job example test_module.test_function_for_a_job name=tim
+<span class="ansi33">Running job</span><span class="ansi33">...</span><span class="ansi33">Done</span>
+<span class="ansi32">{
+    "logs": [
+        {
+            "counter": 12,
+            "deleted": false,
+            "id": "297e5afedb454914b2fd367de2398c62",
+            "job_id": "3e55266f67b44058b6eb619709efc607",
+            "job_type": "example",
+            "node": "tcc24",
+            "output": "Hello tim",
+            "parameters": {
+                "name": "tim"
+            },
+            "reason": null,
+            "reference": "test_module.test_function_for_a_job",
+            "status": "success",
+            "updated": "2019-03-03T16:18:07.565913+00:00",
+            "user_id": "system@root.encapsia.com",
+            "zone": "tcc24"
+        },
+        {
+            "counter": 11,
+            "deleted": false,
+            "id": "f1f16ea6bd0e4beaac1295c8afcefa72",
+            "job_id": "3e55266f67b44058b6eb619709efc607",
+            "job_type": "example",
+            "node": "tcc24",
+            "output": {},
+            "parameters": {
+                "name": "tim"
+            },
+            "reason": null,
+            "reference": "test_module.test_function_for_a_job",
+            "status": "queued",
+            "updated": "2019-03-03T16:18:07.357697+00:00",
+            "user_id": "system@root.encapsia.com",
+            "zone": "tcc24"
+        }
+    ]
+}</span>
+
+</pre>
+</body>
+
+</html>

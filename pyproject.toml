@@ -29,6 +29,7 @@ http-prompt = "^1.0"
 black = {version = "^18.3-alpha.0",allows-prereleases = true}
 isort = "^4.3"
 flake8 = "^3.7"
+ansi2html = "^1.5"
 
 [build-system]
 requires = ["poetry>=0.12"]

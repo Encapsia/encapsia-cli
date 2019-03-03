@@ -14,13 +14,14 @@ See the `walkthrough_tests` directory for bash scripts which exercise the CLI.
 
 Run them e.g. with:
 
-    bash walkthrough_tests/all.sh --host tcc24 --example-plugin-src ../inf-ice-example-plugin/
+    bash walkthrough_tests/all.sh --host <host> --example-plugin-src ../inf-ice-example-plugin/
 
 Note that these tests are *not* self-verifying; they just provide helpful coverage, assurance, and working documentation.
 
 # Release checklist
 
-* Ensure "tests" run ok (see above).
+* Ensure "tests" run ok (see above). Also capture output and commit with:
+    `bash walkthrough_tests/all.sh --host tcc24 --example-plugin-src ../inf-ice-example-plugin/ 2>&1 | ansi2html -f 80% >WALKTHROUGH.html`
 * Run: `black .`
 * Run: `isort --multi-line=3 --trailing-comma --force-grid-wrap=0 --combine-as --line-width=88 -y`
 * Run: `flake8 --ignore=E501 .`
@@ -28,6 +29,7 @@ Note that these tests are *not* self-verifying; they just provide helpful covera
 
 # TODO
 
+* Find a better way to force color mode e.g. for walkthrough.html than fiddling `encapsia.py`
 * Add sending files to views (once PR accepted)
 * Use click-web to create an encapsia webserve command?? Put in a plugin?
 * Validate input to plugins uninstall

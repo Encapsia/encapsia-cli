@@ -54,6 +54,7 @@ class EncapsiaCli(click.MultiCommand):
         return sorted(COMMANDS.keys())
 
     def get_command(self, ctx, name):
+        ctx.color = True
         try:
             return COMMANDS[name]
         except KeyError:
