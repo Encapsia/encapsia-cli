@@ -59,11 +59,8 @@ def run_task(obj, namespace, function, args, upload, save_as):
     for arg in args:
         left, right = arg.split("=", 1)
         params[left.strip()] = right.strip()
-    data = None
-    if upload:
-        data = upload.read()
     result = lib.run_task(
-        api, namespace, function, params, f"Running task {namespace}", data=data
+        api, namespace, function, params, f"Running task {namespace}", data=upload
     )
     _output(result, save_as)
 
@@ -75,7 +72,7 @@ def run_task(obj, namespace, function, args, upload, save_as):
 @click.option(
     "--upload",
     type=click.File("rb"),
-    help="Name of file to upload and hence pass to the task",
+    help="Name of file to upload and hence pass to the job",
 )
 @click.option(
     "--save-as", type=click.File("w"), help="Name of file in which to save result"
@@ -98,10 +95,7 @@ def run_job(obj, namespace, function, args, upload, save_as):
     for arg in args:
         left, right = arg.split("=", 1)
         params[left.strip()] = right.strip()
-    data = None
-    if upload:
-        data = upload.read()
-    result = lib.run_job(api, namespace, function, params, data=data)
+    result = lib.run_job(api, namespace, function, params, data=upload)
     _output(result, save_as)
 
 
@@ -110,10 +104,15 @@ def run_job(obj, namespace, function, args, upload, save_as):
 @click.argument("function")
 @click.argument("args", nargs=-1)
 @click.option(
+    "--upload",
+    type=click.File("rb"),
+    help="Name of file to upload and hence pass to the task",
+)
+@click.option(
     "--save-as", type=click.File("w"), help="Name of file in which to save result"
 )
 @click.pass_obj
-def run_view(obj, namespace, function, args, save_as):
+def run_view(obj, namespace, function, args, upload, save_as):
     """Run a view in given plugin NAMESPACE and FUNCTION with ARGS.
 
     e.g.
@@ -135,11 +134,17 @@ def run_view(obj, namespace, function, args, save_as):
         else:
             path_segments.append(arg)
 
+    extra_headers = None
+    if upload:
+        extra_headers = {"Content-Type": "text/plain"}
+
     api = lib.get_api(**obj)
     response = api.call_api(
-        "get",
+        "GET",
         ["views", namespace, function] + path_segments,
         return_json=False,
         params=query_args,
+        extra_headers=extra_headers,
+        data=upload,
     )
     _output(response.text, save_as)
