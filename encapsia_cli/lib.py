@@ -62,7 +62,13 @@ def make_main(docstring, for_plugins=False):
     if for_plugins:
 
         @click.group()
-        @click.option("--colour", type=click.Choice(["always", "never", "auto"]), default="auto", help="Control colour on stdout.", envvar="ENCAPSIA_COLOUR")
+        @click.option(
+            "--colour",
+            type=click.Choice(["always", "never", "auto"]),
+            default="auto",
+            help="Control colour on stdout.",
+            envvar="ENCAPSIA_COLOUR",
+        )
         @click.option(
             "--host",
             help="Name to use to lookup credentials in .encapsia/credentials.toml",
@@ -87,7 +93,13 @@ def make_main(docstring, for_plugins=False):
     else:
 
         @click.group()
-        @click.option("--colour", type=click.Choice(["always", "never", "auto"]), default="auto", help="Control colour on stdout.", envvar="ENCAPSIA_COLOUR")
+        @click.option(
+            "--colour",
+            type=click.Choice(["always", "never", "auto"]),
+            default="auto",
+            help="Control colour on stdout.",
+            envvar="ENCAPSIA_COLOUR",
+        )
         @click.option(
             "--host",
             help="Name to use to lookup credentials in .encapsia/credentials.toml",
