@@ -30,6 +30,9 @@ Note that these tests are *not* self-verifying; they just provide helpful covera
 # TODO
 
 * Find a better way to force color mode e.g. for walkthrough.html than fiddling `encapsia.py`
+*   --colour auto/always/never
+* encapsia plugins dev-update has both --force and --reset, which is a bit confusing. Probably remove "reset"?
+* encapsia plugins dev-update caches incorrectly when an upload fails.
 * Add sending files to views (once PR accepted)
 * Use click-web to create an encapsia webserve command?? Put in a plugin?
 * Validate input to plugins uninstall
