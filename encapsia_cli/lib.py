@@ -62,6 +62,7 @@ def make_main(docstring, for_plugins=False):
     if for_plugins:
 
         @click.group()
+        @click.option("--colour", type=click.Choice(["always", "never", "auto"]), default="auto", help="Control colour on stdout.", envvar="ENCAPSIA_COLOUR")
         @click.option(
             "--host",
             help="Name to use to lookup credentials in .encapsia/credentials.toml",
@@ -77,7 +78,8 @@ def make_main(docstring, for_plugins=False):
         )
         @click.pass_context
         @add_docstring(docstring)
-        def main(ctx, host, plugins_cache_dir, force):
+        def main(ctx, colour, host, plugins_cache_dir, force):
+            ctx.color = {"always": True, "never": False, "auto": None}[colour]
             plugins_cache_dir = Path(plugins_cache_dir).expanduser()
             plugins_cache_dir.mkdir(parents=True, exist_ok=True)
             ctx.obj = dict(host=host, plugins_cache_dir=plugins_cache_dir, force=force)
@@ -85,13 +87,15 @@ def make_main(docstring, for_plugins=False):
     else:
 
         @click.group()
+        @click.option("--colour", type=click.Choice(["always", "never", "auto"]), default="auto", help="Control colour on stdout.", envvar="ENCAPSIA_COLOUR")
         @click.option(
             "--host",
             help="Name to use to lookup credentials in .encapsia/credentials.toml",
         )
         @click.pass_context
         @add_docstring(docstring)
-        def main(ctx, host):
+        def main(ctx, colour, host):
+            ctx.color = {"always": True, "never": False, "auto": None}[colour]
             ctx.obj = dict(host=host)
 
     return main

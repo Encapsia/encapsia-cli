@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Force colour always, even when redirecting to a file.
+export ENCAPSIA_COLOUR=always
+
 echo "Exercise encapsia commands."
 echo "These are *not* self-verifying tests, so check the output for reasonableness!"
 

@@ -21,7 +21,7 @@ Note that these tests are *not* self-verifying; they just provide helpful covera
 # Release checklist
 
 * Ensure "tests" run ok (see above). Also capture output and commit with:
-    `bash walkthrough_tests/all.sh --host tcc24 --example-plugin-src ../inf-ice-example-plugin/ 2>&1 | ansi2html -f 80% >WALKTHROUGH.html`
+    `bash walkthrough_tests/all.sh --host <host> --example-plugin-src ../inf-ice-example-plugin/ 2>&1 | ansi2html -f 80% >WALKTHROUGH.html`
 * Run: `black .`
 * Run: `isort --multi-line=3 --trailing-comma --force-grid-wrap=0 --combine-as --line-width=88 -y`
 * Run: `flake8 --ignore=E501 .`
@@ -29,8 +29,6 @@ Note that these tests are *not* self-verifying; they just provide helpful covera
 
 # TODO
 
-* Find a better way to force color mode e.g. for walkthrough.html than fiddling `encapsia.py`
-*   --colour auto/always/never
 * encapsia plugins dev-update has both --force and --reset, which is a bit confusing. Probably remove "reset"?
 * encapsia plugins dev-update caches incorrectly when an upload fails.
 * Add sending files to views (once PR accepted)

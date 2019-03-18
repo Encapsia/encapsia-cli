@@ -15,7 +15,6 @@ but cannot find a correct entry.
 import click
 import click_completion
 
-import encapsia_cli.archive
 import encapsia_cli.config
 import encapsia_cli.database
 import encapsia_cli.fixtures
@@ -35,7 +34,6 @@ click_completion.init()
 
 
 COMMANDS = {
-    "archive": encapsia_cli.archive.main,
     "config": encapsia_cli.config.main,
     "database": encapsia_cli.database.main,
     "fixtures": encapsia_cli.fixtures.main,
@@ -56,8 +54,6 @@ class EncapsiaCli(click.MultiCommand):
         return sorted(COMMANDS.keys())
 
     def get_command(self, ctx, name):
-        # TODO find a nice way to force this from the command line
-        # ctx.color = True
         try:
             return COMMANDS[name]
         except KeyError:
