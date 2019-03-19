@@ -99,7 +99,8 @@ Commands:
   Print longer help information about the CLI.
 
 Options:
-  --help  Show this message and exit.</span>
+  --colour [always|never|auto]  Control colour on stdout.
+  --help                        Show this message and exit.</span>
 
 <span class="ansi93"></span><span class="ansi1 ansi93">=== Print out help on users ===</span>
 &gt;encapsia help users
@@ -108,8 +109,10 @@ Options:
   Manage users, including superuser and system users.
 
 Options:
-  --host TEXT  Name to use to lookup credentials in .encapsia/credentials.toml
-  --help       Show this message and exit.
+  --colour [always|never|auto]  Control colour on stdout.
+  --host TEXT                   Name to use to lookup credentials in
+                                .encapsia/credentials.toml
+  --help                        Show this message and exit.
 
 Commands:
   add-superuser   Create superuser with suitable user and role.
@@ -119,19 +122,19 @@ Commands:
 
 <span class="ansi93"></span><span class="ansi1 ansi93">=== Print out the version ===</span>
 &gt;encapsia version
-<span class="ansi33">Encapsia CLI version: 0.1.9</span>
-<span class="ansi33">Encapsia API version: 0.1.14</span>
+<span class="ansi33">Encapsia CLI version: 0.1.10</span>
+<span class="ansi33">Encapsia API version: 0.1.15</span>
 
 <span class="ansi93"></span><span class="ansi1 ansi93">=== Get whoami info about current token ===</span>
 &gt;encapsia token whoami
-<span class="ansi32">id = 2
+<span class="ansi32">id = 3
 name = "Root Superuser"
 email = "system@root.encapsia.com"
 capabilities = [ "superuser",]
-expires_at = "2019-03-15T04:54:40.436272+00:00"
-issued_at = "2019-03-03T15:08:00.436272+00:00"
+expires_at = "2019-03-30T06:42:45.087821+00:00"
+issued_at = "2019-03-18T16:56:05.087821+00:00"
 site_id = ""
-token = "329fc7cdf81a486db0414c59e40dbe00"
+token = "86c055e12ae649e5a0e7ec69ec8bf122"
 </span>
 
 <span class="ansi93"></span><span class="ansi1 ansi93">=== Set a config value to a string ===</span>
@@ -164,12 +167,12 @@ token = "329fc7cdf81a486db0414c59e40dbe00"
     "blob_lifespan": 604800,
     "blob_path": "/v1/blobs/{id}",
     "job_timeout": 3600,
-    "node": "tcc24",
+    "node": "my_node",
     "root_token": "&lt;hidden&gt;",
     "session_lifespan": 600,
     "task_timeout": 600,
-    "trial": "tcc24",
-    "url": "https://tcc24.icethree.com",
+    "trial": "my_trial",
+    "url": "http://localhost:5000",
     "view_lifespan": 600
 }&gt;cat /tmp/test_encapsia_config.json
 &gt;python -c "import json, sys; c=json.load(sys.stdin); del c['root_token']; print(json.dumps(c))" &gt; /tmp/test_encapsia_config2.json
@@ -182,12 +185,12 @@ token = "329fc7cdf81a486db0414c59e40dbe00"
     "blob_lifespan": 604800,
     "blob_path": "/v1/blobs/{id}",
     "job_timeout": 3600,
-    "node": "tcc24",
+    "node": "my_node",
     "root_token": "&lt;hidden&gt;",
     "session_lifespan": 600,
     "task_timeout": 600,
-    "trial": "tcc24",
-    "url": "https://tcc24.icethree.com",
+    "trial": "my_trial",
+    "url": "http://localhost:5000",
     "view_lifespan": 600
 }</span>
 
@@ -215,8 +218,8 @@ token = "329fc7cdf81a486db0414c59e40dbe00"
 
 <span class="ansi93"></span><span class="ansi1 ansi93">=== Install the example plugin from the cache, then uninstall it ===</span>
 &gt;encapsia plugins install --versions=example.toml
-<span class="ansi33">Uploaded /home/tcorbettclark/.encapsia/plugins-cache/plugin-example-0.0.1.tar.gz to blob: 1bb4275bd11e420d954ed186a9e57bce</span>
-<span class="ansi33">Installing</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
+<span class="ansi33">Uploaded /home/tcorbettclark/.encapsia/plugins-cache/plugin-example-0.0.1.tar.gz to blob: 7c3690a27567493cb61dd5d3764894ad</span>
+<span class="ansi33">Installing</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
 <span class="ansi33">Status: ok</span>
 <span class="ansi32">Destroying plugin namespace: example
 Stopped all task workers for namespace: example
@@ -244,32 +247,33 @@ Installing collected packages: redis, click, rq
 Successfully installed click-7.0 redis-2.10.6 rq-0.12.0
 Made virtualenv: example
 Installing wheels in to namespace example
-pew in example pip install --find-links /tmp/tmp1y4xu85j/plugin-example-0.0.1/wheels --requirement /tmp/tmp1y4xu85j/plugin-example-0.0.1/wheels/requirements.txt
-Looking in links: /tmp/tmp1y4xu85j/plugin-example-0.0.1/wheels
-Collecting encapsia-api (from -r /tmp/tmp1y4xu85j/plugin-example-0.0.1/wheels/requirements.txt (line 1))
-Collecting requests[security]&lt;3.0,&gt;=2.20 (from encapsia-api-&gt;-r /tmp/tmp1y4xu85j/plugin-example-0.0.1/wheels/requirements.txt (line 1))
+pew in example pip install --find-links /tmp/tmpvjft1izv/plugin-example-0.0.1/wheels --requirement /tmp/tmpvjft1izv/plugin-example-0.0.1/wheels/requirements.txt
+Looking in links: /tmp/tmpvjft1izv/plugin-example-0.0.1/wheels
+Collecting encapsia-api (from -r /tmp/tmpvjft1izv/plugin-example-0.0.1/wheels/requirements.txt (line 1))
+  Using cached https://files.pythonhosted.org/packages/24/cf/5a2a8011e5784edf5a760576e30f99730b1d6dd11fa95b17cc3419b0c1d3/encapsia_api-0.1.15-py3-none-any.whl
+Collecting requests[security]&lt;3.0,&gt;=2.20 (from encapsia-api-&gt;-r /tmp/tmpvjft1izv/plugin-example-0.0.1/wheels/requirements.txt (line 1))
   Using cached https://files.pythonhosted.org/packages/7d/e3/20f3d364d6c8e5d2353c72a67778eb189176f08e873c9900e10c0287b84b/requests-2.21.0-py2.py3-none-any.whl
-Collecting toml&lt;0.11.0,&gt;=0.10.0 (from encapsia-api-&gt;-r /tmp/tmp1y4xu85j/plugin-example-0.0.1/wheels/requirements.txt (line 1))
+Collecting toml&lt;0.11.0,&gt;=0.10.0 (from encapsia-api-&gt;-r /tmp/tmpvjft1izv/plugin-example-0.0.1/wheels/requirements.txt (line 1))
   Using cached https://files.pythonhosted.org/packages/a2/12/ced7105d2de62fa7c8fb5fce92cc4ce66b57c95fb875e9318dba7f8c5db0/toml-0.10.0-py2.py3-none-any.whl
-Collecting chardet&lt;3.1.0,&gt;=3.0.2 (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp1y4xu85j/plugin-example-0.0.1/wheels/requirements.txt (line 1))
-  Using cached https://files.pythonhosted.org/packages/bc/a9/01ffebfb562e4274b6487b4bb1ddec7ca55ec7510b22e4c51f14098443b8/chardet-3.0.4-py2.py3-none-any.whl
-Collecting certifi&gt;=2017.4.17 (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp1y4xu85j/plugin-example-0.0.1/wheels/requirements.txt (line 1))
-  Using cached https://files.pythonhosted.org/packages/9f/e0/accfc1b56b57e9750eba272e24c4dddeac86852c2bebd1236674d7887e8a/certifi-2018.11.29-py2.py3-none-any.whl
-Collecting urllib3&lt;1.25,&gt;=1.21.1 (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp1y4xu85j/plugin-example-0.0.1/wheels/requirements.txt (line 1))
-  Using cached https://files.pythonhosted.org/packages/62/00/ee1d7de624db8ba7090d1226aebefab96a2c71cd5cfa7629d6ad3f61b79e/urllib3-1.24.1-py2.py3-none-any.whl
-Collecting idna&lt;2.9,&gt;=2.5 (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp1y4xu85j/plugin-example-0.0.1/wheels/requirements.txt (line 1))
+Collecting idna&lt;2.9,&gt;=2.5 (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmpvjft1izv/plugin-example-0.0.1/wheels/requirements.txt (line 1))
   Using cached https://files.pythonhosted.org/packages/14/2c/cd551d81dbe15200be1cf41cd03869a46fe7226e7450af7a6545bfc474c9/idna-2.8-py2.py3-none-any.whl
-Collecting cryptography&gt;=1.3.4; extra == "security" (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp1y4xu85j/plugin-example-0.0.1/wheels/requirements.txt (line 1))
-Collecting pyOpenSSL&gt;=0.14; extra == "security" (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp1y4xu85j/plugin-example-0.0.1/wheels/requirements.txt (line 1))
+Collecting chardet&lt;3.1.0,&gt;=3.0.2 (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmpvjft1izv/plugin-example-0.0.1/wheels/requirements.txt (line 1))
+  Using cached https://files.pythonhosted.org/packages/bc/a9/01ffebfb562e4274b6487b4bb1ddec7ca55ec7510b22e4c51f14098443b8/chardet-3.0.4-py2.py3-none-any.whl
+Collecting certifi&gt;=2017.4.17 (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmpvjft1izv/plugin-example-0.0.1/wheels/requirements.txt (line 1))
+  Using cached https://files.pythonhosted.org/packages/60/75/f692a584e85b7eaba0e03827b3d51f45f571c2e793dd731e598828d380aa/certifi-2019.3.9-py2.py3-none-any.whl
+Collecting urllib3&lt;1.25,&gt;=1.21.1 (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmpvjft1izv/plugin-example-0.0.1/wheels/requirements.txt (line 1))
+  Using cached https://files.pythonhosted.org/packages/62/00/ee1d7de624db8ba7090d1226aebefab96a2c71cd5cfa7629d6ad3f61b79e/urllib3-1.24.1-py2.py3-none-any.whl
+Collecting cryptography&gt;=1.3.4; extra == "security" (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmpvjft1izv/plugin-example-0.0.1/wheels/requirements.txt (line 1))
+Collecting pyOpenSSL&gt;=0.14; extra == "security" (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmpvjft1izv/plugin-example-0.0.1/wheels/requirements.txt (line 1))
   Using cached https://files.pythonhosted.org/packages/01/c8/ceb170d81bd3941cbeb9940fc6cc2ef2ca4288d0ca8929ea4db5905d904d/pyOpenSSL-19.0.0-py2.py3-none-any.whl
-Collecting six&gt;=1.4.1 (from cryptography&gt;=1.3.4; extra == "security"-&gt;requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp1y4xu85j/plugin-example-0.0.1/wheels/requirements.txt (line 1))
-  Using cached https://files.pythonhosted.org/packages/73/fb/00a976f728d0d1fecfe898238ce23f502a721c0ac0ecfedb80e0d88c64e9/six-1.12.0-py2.py3-none-any.whl
-Collecting asn1crypto&gt;=0.21.0 (from cryptography&gt;=1.3.4; extra == "security"-&gt;requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp1y4xu85j/plugin-example-0.0.1/wheels/requirements.txt (line 1))
+Collecting asn1crypto&gt;=0.21.0 (from cryptography&gt;=1.3.4; extra == "security"-&gt;requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmpvjft1izv/plugin-example-0.0.1/wheels/requirements.txt (line 1))
   Using cached https://files.pythonhosted.org/packages/ea/cd/35485615f45f30a510576f1a56d1e0a7ad7bd8ab5ed7cdc600ef7cd06222/asn1crypto-0.24.0-py2.py3-none-any.whl
-Collecting cffi!=1.11.3,&gt;=1.8 (from cryptography&gt;=1.3.4; extra == "security"-&gt;requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp1y4xu85j/plugin-example-0.0.1/wheels/requirements.txt (line 1))
-Collecting pycparser (from cffi!=1.11.3,&gt;=1.8-&gt;cryptography&gt;=1.3.4; extra == "security"-&gt;requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp1y4xu85j/plugin-example-0.0.1/wheels/requirements.txt (line 1))
-Installing collected packages: chardet, certifi, urllib3, idna, six, asn1crypto, pycparser, cffi, cryptography, pyOpenSSL, requests, toml, encapsia-api
-Successfully installed asn1crypto-0.24.0 certifi-2018.11.29 cffi-1.12.2 chardet-3.0.4 cryptography-2.6.1 encapsia-api-0.1.14 idna-2.8 pyOpenSSL-19.0.0 pycparser-2.19 requests-2.21.0 six-1.12.0 toml-0.10.0 urllib3-1.24.1
+Collecting six&gt;=1.4.1 (from cryptography&gt;=1.3.4; extra == "security"-&gt;requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmpvjft1izv/plugin-example-0.0.1/wheels/requirements.txt (line 1))
+  Using cached https://files.pythonhosted.org/packages/73/fb/00a976f728d0d1fecfe898238ce23f502a721c0ac0ecfedb80e0d88c64e9/six-1.12.0-py2.py3-none-any.whl
+Collecting cffi!=1.11.3,&gt;=1.8 (from cryptography&gt;=1.3.4; extra == "security"-&gt;requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmpvjft1izv/plugin-example-0.0.1/wheels/requirements.txt (line 1))
+Collecting pycparser (from cffi!=1.11.3,&gt;=1.8-&gt;cryptography&gt;=1.3.4; extra == "security"-&gt;requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmpvjft1izv/plugin-example-0.0.1/wheels/requirements.txt (line 1))
+Installing collected packages: idna, chardet, certifi, urllib3, asn1crypto, six, pycparser, cffi, cryptography, pyOpenSSL, requests, toml, encapsia-api
+Successfully installed asn1crypto-0.24.0 certifi-2019.3.9 cffi-1.12.2 chardet-3.0.4 cryptography-2.6.1 encapsia-api-0.1.15 idna-2.8 pyOpenSSL-19.0.0 pycparser-2.19 requests-2.21.0 six-1.12.0 toml-0.10.0 urllib3-1.24.1
 Installing tasks in to namespace example
 Installed task file /home/ice/example/test_module.py
 Configuring 1 task workers for namespace example
@@ -277,6 +281,7 @@ Creating views namespace example
 Created PostgreSQL schema: example
 Installing views in to namespace example
 Installing view permissions.sql
+Installing view test_upload_views.sql
 Installing view test_views.sql
 Creating views namespace example
 Created PostgreSQL schema: example
@@ -294,12 +299,12 @@ Deleted PostgreSQL schema: example
 Removing all/any schedules from plugin namespace: example</span>
 
 <span class="ansi93"></span><span class="ansi1 ansi93">=== Dev update the example plugin from scratch ===</span>
-&gt;encapsia plugins dev-update $EXAMPLE_PLUGIN_SRC --reset
+&gt;encapsia plugins --force dev-update $EXAMPLE_PLUGIN_SRC
 <span class="ansi33">Including: tasks</span>
 <span class="ansi33">Including: views</span>
 <span class="ansi33">Including: wheels</span>
 <span class="ansi33">Including: schedules</span>
-<span class="ansi33">Uploading to server</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
+<span class="ansi33">Uploading to server</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
 <span class="ansi33">Status: ok</span>
 <span class="ansi32">Installing plugin example (0.0.1)
 pew new -d example
@@ -319,32 +324,33 @@ Installing collected packages: redis, click, rq
 Successfully installed click-7.0 redis-2.10.6 rq-0.12.0
 Made virtualenv: example
 Installing wheels in to namespace example
-pew in example pip install --find-links /tmp/tmp_ft5792e/tmpry2ehh_0/wheels --requirement /tmp/tmp_ft5792e/tmpry2ehh_0/wheels/requirements.txt
-Looking in links: /tmp/tmp_ft5792e/tmpry2ehh_0/wheels
-Collecting encapsia-api (from -r /tmp/tmp_ft5792e/tmpry2ehh_0/wheels/requirements.txt (line 1))
-Collecting toml&lt;0.11.0,&gt;=0.10.0 (from encapsia-api-&gt;-r /tmp/tmp_ft5792e/tmpry2ehh_0/wheels/requirements.txt (line 1))
+pew in example pip install --find-links /tmp/tmpqex41n4_/tmpvhzdmen5/wheels --requirement /tmp/tmpqex41n4_/tmpvhzdmen5/wheels/requirements.txt
+Looking in links: /tmp/tmpqex41n4_/tmpvhzdmen5/wheels
+Collecting encapsia-api (from -r /tmp/tmpqex41n4_/tmpvhzdmen5/wheels/requirements.txt (line 1))
+  Using cached https://files.pythonhosted.org/packages/24/cf/5a2a8011e5784edf5a760576e30f99730b1d6dd11fa95b17cc3419b0c1d3/encapsia_api-0.1.15-py3-none-any.whl
+Collecting toml&lt;0.11.0,&gt;=0.10.0 (from encapsia-api-&gt;-r /tmp/tmpqex41n4_/tmpvhzdmen5/wheels/requirements.txt (line 1))
   Using cached https://files.pythonhosted.org/packages/a2/12/ced7105d2de62fa7c8fb5fce92cc4ce66b57c95fb875e9318dba7f8c5db0/toml-0.10.0-py2.py3-none-any.whl
-Collecting requests[security]&lt;3.0,&gt;=2.20 (from encapsia-api-&gt;-r /tmp/tmp_ft5792e/tmpry2ehh_0/wheels/requirements.txt (line 1))
+Collecting requests[security]&lt;3.0,&gt;=2.20 (from encapsia-api-&gt;-r /tmp/tmpqex41n4_/tmpvhzdmen5/wheels/requirements.txt (line 1))
   Using cached https://files.pythonhosted.org/packages/7d/e3/20f3d364d6c8e5d2353c72a67778eb189176f08e873c9900e10c0287b84b/requests-2.21.0-py2.py3-none-any.whl
-Collecting chardet&lt;3.1.0,&gt;=3.0.2 (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp_ft5792e/tmpry2ehh_0/wheels/requirements.txt (line 1))
+Collecting chardet&lt;3.1.0,&gt;=3.0.2 (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmpqex41n4_/tmpvhzdmen5/wheels/requirements.txt (line 1))
   Using cached https://files.pythonhosted.org/packages/bc/a9/01ffebfb562e4274b6487b4bb1ddec7ca55ec7510b22e4c51f14098443b8/chardet-3.0.4-py2.py3-none-any.whl
-Collecting idna&lt;2.9,&gt;=2.5 (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp_ft5792e/tmpry2ehh_0/wheels/requirements.txt (line 1))
+Collecting certifi&gt;=2017.4.17 (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmpqex41n4_/tmpvhzdmen5/wheels/requirements.txt (line 1))
+  Using cached https://files.pythonhosted.org/packages/60/75/f692a584e85b7eaba0e03827b3d51f45f571c2e793dd731e598828d380aa/certifi-2019.3.9-py2.py3-none-any.whl
+Collecting idna&lt;2.9,&gt;=2.5 (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmpqex41n4_/tmpvhzdmen5/wheels/requirements.txt (line 1))
   Using cached https://files.pythonhosted.org/packages/14/2c/cd551d81dbe15200be1cf41cd03869a46fe7226e7450af7a6545bfc474c9/idna-2.8-py2.py3-none-any.whl
-Collecting certifi&gt;=2017.4.17 (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp_ft5792e/tmpry2ehh_0/wheels/requirements.txt (line 1))
-  Using cached https://files.pythonhosted.org/packages/9f/e0/accfc1b56b57e9750eba272e24c4dddeac86852c2bebd1236674d7887e8a/certifi-2018.11.29-py2.py3-none-any.whl
-Collecting urllib3&lt;1.25,&gt;=1.21.1 (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp_ft5792e/tmpry2ehh_0/wheels/requirements.txt (line 1))
+Collecting urllib3&lt;1.25,&gt;=1.21.1 (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmpqex41n4_/tmpvhzdmen5/wheels/requirements.txt (line 1))
   Using cached https://files.pythonhosted.org/packages/62/00/ee1d7de624db8ba7090d1226aebefab96a2c71cd5cfa7629d6ad3f61b79e/urllib3-1.24.1-py2.py3-none-any.whl
-Collecting pyOpenSSL&gt;=0.14; extra == "security" (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp_ft5792e/tmpry2ehh_0/wheels/requirements.txt (line 1))
+Collecting cryptography&gt;=1.3.4; extra == "security" (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmpqex41n4_/tmpvhzdmen5/wheels/requirements.txt (line 1))
+Collecting pyOpenSSL&gt;=0.14; extra == "security" (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmpqex41n4_/tmpvhzdmen5/wheels/requirements.txt (line 1))
   Using cached https://files.pythonhosted.org/packages/01/c8/ceb170d81bd3941cbeb9940fc6cc2ef2ca4288d0ca8929ea4db5905d904d/pyOpenSSL-19.0.0-py2.py3-none-any.whl
-Collecting cryptography&gt;=1.3.4; extra == "security" (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp_ft5792e/tmpry2ehh_0/wheels/requirements.txt (line 1))
-Collecting six&gt;=1.5.2 (from pyOpenSSL&gt;=0.14; extra == "security"-&gt;requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp_ft5792e/tmpry2ehh_0/wheels/requirements.txt (line 1))
-  Using cached https://files.pythonhosted.org/packages/73/fb/00a976f728d0d1fecfe898238ce23f502a721c0ac0ecfedb80e0d88c64e9/six-1.12.0-py2.py3-none-any.whl
-Collecting asn1crypto&gt;=0.21.0 (from cryptography&gt;=1.3.4; extra == "security"-&gt;requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp_ft5792e/tmpry2ehh_0/wheels/requirements.txt (line 1))
+Collecting asn1crypto&gt;=0.21.0 (from cryptography&gt;=1.3.4; extra == "security"-&gt;requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmpqex41n4_/tmpvhzdmen5/wheels/requirements.txt (line 1))
   Using cached https://files.pythonhosted.org/packages/ea/cd/35485615f45f30a510576f1a56d1e0a7ad7bd8ab5ed7cdc600ef7cd06222/asn1crypto-0.24.0-py2.py3-none-any.whl
-Collecting cffi!=1.11.3,&gt;=1.8 (from cryptography&gt;=1.3.4; extra == "security"-&gt;requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp_ft5792e/tmpry2ehh_0/wheels/requirements.txt (line 1))
-Collecting pycparser (from cffi!=1.11.3,&gt;=1.8-&gt;cryptography&gt;=1.3.4; extra == "security"-&gt;requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp_ft5792e/tmpry2ehh_0/wheels/requirements.txt (line 1))
-Installing collected packages: toml, chardet, idna, certifi, urllib3, six, asn1crypto, pycparser, cffi, cryptography, pyOpenSSL, requests, encapsia-api
-Successfully installed asn1crypto-0.24.0 certifi-2018.11.29 cffi-1.12.2 chardet-3.0.4 cryptography-2.6.1 encapsia-api-0.1.14 idna-2.8 pyOpenSSL-19.0.0 pycparser-2.19 requests-2.21.0 six-1.12.0 toml-0.10.0 urllib3-1.24.1
+Collecting cffi!=1.11.3,&gt;=1.8 (from cryptography&gt;=1.3.4; extra == "security"-&gt;requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmpqex41n4_/tmpvhzdmen5/wheels/requirements.txt (line 1))
+Collecting six&gt;=1.4.1 (from cryptography&gt;=1.3.4; extra == "security"-&gt;requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmpqex41n4_/tmpvhzdmen5/wheels/requirements.txt (line 1))
+  Using cached https://files.pythonhosted.org/packages/73/fb/00a976f728d0d1fecfe898238ce23f502a721c0ac0ecfedb80e0d88c64e9/six-1.12.0-py2.py3-none-any.whl
+Collecting pycparser (from cffi!=1.11.3,&gt;=1.8-&gt;cryptography&gt;=1.3.4; extra == "security"-&gt;requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmpqex41n4_/tmpvhzdmen5/wheels/requirements.txt (line 1))
+Installing collected packages: toml, chardet, certifi, idna, urllib3, asn1crypto, pycparser, cffi, six, cryptography, pyOpenSSL, requests, encapsia-api
+Successfully installed asn1crypto-0.24.0 certifi-2019.3.9 cffi-1.12.2 chardet-3.0.4 cryptography-2.6.1 encapsia-api-0.1.15 idna-2.8 pyOpenSSL-19.0.0 pycparser-2.19 requests-2.21.0 six-1.12.0 toml-0.10.0 urllib3-1.24.1
 Installing tasks in to namespace example
 Installed task file /home/ice/example/test_module.py
 Configuring 1 task workers for namespace example
@@ -352,6 +358,7 @@ Creating views namespace example
 Created PostgreSQL schema: example
 Installing views in to namespace example
 Installing view permissions.sql
+Installing view test_upload_views.sql
 Installing view test_views.sql
 Creating views namespace example
 Created PostgreSQL schema: example
@@ -365,19 +372,19 @@ Installing schedules in to namespace example</span>
 &gt;touch $EXAMPLE_PLUGIN_SRC/tasks/test_new_module.py
 &gt;encapsia plugins dev-update $EXAMPLE_PLUGIN_SRC
 <span class="ansi33">Including: tasks</span>
-<span class="ansi33">Uploading to server</span><span class="ansi33">.</span><span class="ansi33">..</span><span class="ansi33">Done</span>
+<span class="ansi33">Uploading to server</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
 <span class="ansi33">Status: ok</span>
 <span class="ansi32">Installing plugin example (0.0.1)
 Virtualenv already exists: example
 Installing tasks in to namespace example
-Installed task file /home/ice/example/test_module.py
 Installed task file /home/ice/example/test_new_module.py
+Installed task file /home/ice/example/test_module.py
 Configuring 1 task workers for namespace example</span>
 &gt;rm $EXAMPLE_PLUGIN_SRC/tasks/test_new_module.py
 
 <span class="ansi93"></span><span class="ansi1 ansi93">=== Uninstall the example plugin ===</span>
 &gt;encapsia plugins --force uninstall example
-<span class="ansi33">Uninstalling example</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
+<span class="ansi33">Uninstalling example</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
 <span class="ansi33">Status: ok</span>
 <span class="ansi32">Destroying plugin namespace: example
 Stopped all task workers for namespace: example
@@ -390,7 +397,7 @@ Removing all/any schedules from plugin namespace: example</span>
 
 <span class="ansi93"></span><span class="ansi1 ansi93">=== Create and destroy new namespace ===</span>
 &gt;encapsia plugins dev-create-namespace testing123
-<span class="ansi33">Creating namespace</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
+<span class="ansi33">Creating namespace</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
 <span class="ansi33">Status: ok</span>
 <span class="ansi32">Made webfiles directory: /var/share/nginx/iceplugins/testing123
 Made tasks directory: /home/ice/testing123
@@ -425,35 +432,16 @@ Deleted PostgreSQL schema: testing123</span>
 
 <span class="ansi93"></span><span class="ansi1 ansi93">=== Get info on all plugins ===</span>
 &gt;encapsia plugins info
-<span class="ansi33">Fetching list of namespaces</span><span class="ansi33">.</span><span class="ansi33">..</span><span class="ansi33">Done</span>
+<span class="ansi33">Fetching list of namespaces</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
 <span class="ansi33">Status: ok</span>
-<span class="ansi32">analytics (tasks)
-analytics (webfiles)
-archiver (tasks)
-archiver (webfiles)
-chat (webfiles)
-conduct (tasks)
-conduct (webfiles)
-entry (tasks)
-entry (webfiles)
-esourcetraining (webfiles)
-insights (webfiles)
-launch (webfiles)
-loader (tasks)
-loader (webfiles)
-loaderreview (webfiles)
-manager (tasks)
-manager (webfiles)
-overview (webfiles)
-tags (webfiles)
-tutor (webfiles)</span>
+<span class="ansi32"></span>
 
 <span class="ansi93"></span><span class="ansi1 ansi93">=== Create a backup ===</span>
 &gt;encapsia database backup /tmp/test_encapsia_backup
 <span class="ansi33">Backing up database</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
-<span class="ansi33">Downloaded 538069 bytes to /tmp/test_encapsia_backup</span>
+<span class="ansi33">Downloaded 569252 bytes to /tmp/test_encapsia_backup</span>
 &gt;ls -l /tmp/test_encapsia_backup
--rw------- 1 tcorbettclark tcorbettclark 538069 Mar  3 16:17 /tmp/test_encapsia_backup
+-rw------- 1 tcorbettclark tcorbettclark 569252 Mar 19 10:39 /tmp/test_encapsia_backup
 
 <span class="ansi93"></span><span class="ansi1 ansi93">=== Restore from the backup ===</span>
 &gt;encapsia database restore --yes /tmp/test_encapsia_backup
@@ -464,8 +452,8 @@ tutor (webfiles)</span>
 
 <span class="ansi93"></span><span class="ansi1 ansi93">=== Create a fixture ===</span>
 &gt;encapsia fixtures create test_fixture
-<span class="ansi33">Creating fixture test_fixture</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
-<span class="ansi32">Fixture "test_fixture" created on Sun Mar  3 16:17:15 2019</span>
+<span class="ansi33">Creating fixture test_fixture</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
+<span class="ansi32">Fixture "test_fixture" created on Tue Mar 19 10:39:43 2019</span>
 
 <span class="ansi93"></span><span class="ansi1 ansi93">=== Use a fixture ===</span>
 &gt;encapsia fixtures use --yes test_fixture
@@ -475,26 +463,25 @@ tutor (webfiles)</span>
 
 <span class="ansi93"></span><span class="ansi1 ansi93">=== Delete a fixture ===</span>
 &gt;encapsia fixtures delete --yes test_fixture
-<span class="ansi33">Deleting fixture test_fixture</span><span class="ansi33">...</span><span class="ansi33">Done</span>
+<span class="ansi33">Deleting fixture test_fixture</span><span class="ansi33">.</span><span class="ansi33">..</span><span class="ansi33">Done</span>
 <span class="ansi32">Deleted fixture: test_fixture</span>
 
 <span class="ansi93"></span><span class="ansi1 ansi93">=== List all fixtures ===</span>
 &gt;encapsia fixtures list
 <span class="ansi33">Fetching list of fixtures</span><span class="ansi33">...</span><span class="ansi33">Done</span>
 <span class="ansi32">empty
-foobar
 google
 onesubject
 ready
 smalldata</span>
 
 <span class="ansi93"></span><span class="ansi1 ansi93">=== (Setup for running views or tasks etc) Install the example plugin from src ===</span>
-&gt;encapsia plugins dev-update --reset $EXAMPLE_PLUGIN_SRC
+&gt;encapsia plugins --force dev-update $EXAMPLE_PLUGIN_SRC
 <span class="ansi33">Including: tasks</span>
 <span class="ansi33">Including: views</span>
 <span class="ansi33">Including: wheels</span>
 <span class="ansi33">Including: schedules</span>
-<span class="ansi33">Uploading to server</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
+<span class="ansi33">Uploading to server</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
 <span class="ansi33">Status: ok</span>
 <span class="ansi32">Installing plugin example (0.0.1)
 pew new -d example
@@ -514,32 +501,33 @@ Installing collected packages: redis, click, rq
 Successfully installed click-7.0 redis-2.10.6 rq-0.12.0
 Made virtualenv: example
 Installing wheels in to namespace example
-pew in example pip install --find-links /tmp/tmp9hyasdty/tmp9zrsc_v8/wheels --requirement /tmp/tmp9hyasdty/tmp9zrsc_v8/wheels/requirements.txt
-Looking in links: /tmp/tmp9hyasdty/tmp9zrsc_v8/wheels
-Collecting encapsia-api (from -r /tmp/tmp9hyasdty/tmp9zrsc_v8/wheels/requirements.txt (line 1))
-Collecting toml&lt;0.11.0,&gt;=0.10.0 (from encapsia-api-&gt;-r /tmp/tmp9hyasdty/tmp9zrsc_v8/wheels/requirements.txt (line 1))
+pew in example pip install --find-links /tmp/tmpiku2d5fj/tmp4gen88zp/wheels --requirement /tmp/tmpiku2d5fj/tmp4gen88zp/wheels/requirements.txt
+Looking in links: /tmp/tmpiku2d5fj/tmp4gen88zp/wheels
+Collecting encapsia-api (from -r /tmp/tmpiku2d5fj/tmp4gen88zp/wheels/requirements.txt (line 1))
+  Using cached https://files.pythonhosted.org/packages/24/cf/5a2a8011e5784edf5a760576e30f99730b1d6dd11fa95b17cc3419b0c1d3/encapsia_api-0.1.15-py3-none-any.whl
+Collecting toml&lt;0.11.0,&gt;=0.10.0 (from encapsia-api-&gt;-r /tmp/tmpiku2d5fj/tmp4gen88zp/wheels/requirements.txt (line 1))
   Using cached https://files.pythonhosted.org/packages/a2/12/ced7105d2de62fa7c8fb5fce92cc4ce66b57c95fb875e9318dba7f8c5db0/toml-0.10.0-py2.py3-none-any.whl
-Collecting requests[security]&lt;3.0,&gt;=2.20 (from encapsia-api-&gt;-r /tmp/tmp9hyasdty/tmp9zrsc_v8/wheels/requirements.txt (line 1))
+Collecting requests[security]&lt;3.0,&gt;=2.20 (from encapsia-api-&gt;-r /tmp/tmpiku2d5fj/tmp4gen88zp/wheels/requirements.txt (line 1))
   Using cached https://files.pythonhosted.org/packages/7d/e3/20f3d364d6c8e5d2353c72a67778eb189176f08e873c9900e10c0287b84b/requests-2.21.0-py2.py3-none-any.whl
-Collecting urllib3&lt;1.25,&gt;=1.21.1 (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp9hyasdty/tmp9zrsc_v8/wheels/requirements.txt (line 1))
-  Using cached https://files.pythonhosted.org/packages/62/00/ee1d7de624db8ba7090d1226aebefab96a2c71cd5cfa7629d6ad3f61b79e/urllib3-1.24.1-py2.py3-none-any.whl
-Collecting certifi&gt;=2017.4.17 (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp9hyasdty/tmp9zrsc_v8/wheels/requirements.txt (line 1))
-  Using cached https://files.pythonhosted.org/packages/9f/e0/accfc1b56b57e9750eba272e24c4dddeac86852c2bebd1236674d7887e8a/certifi-2018.11.29-py2.py3-none-any.whl
-Collecting idna&lt;2.9,&gt;=2.5 (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp9hyasdty/tmp9zrsc_v8/wheels/requirements.txt (line 1))
+Collecting idna&lt;2.9,&gt;=2.5 (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmpiku2d5fj/tmp4gen88zp/wheels/requirements.txt (line 1))
   Using cached https://files.pythonhosted.org/packages/14/2c/cd551d81dbe15200be1cf41cd03869a46fe7226e7450af7a6545bfc474c9/idna-2.8-py2.py3-none-any.whl
-Collecting chardet&lt;3.1.0,&gt;=3.0.2 (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp9hyasdty/tmp9zrsc_v8/wheels/requirements.txt (line 1))
+Collecting urllib3&lt;1.25,&gt;=1.21.1 (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmpiku2d5fj/tmp4gen88zp/wheels/requirements.txt (line 1))
+  Using cached https://files.pythonhosted.org/packages/62/00/ee1d7de624db8ba7090d1226aebefab96a2c71cd5cfa7629d6ad3f61b79e/urllib3-1.24.1-py2.py3-none-any.whl
+Collecting certifi&gt;=2017.4.17 (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmpiku2d5fj/tmp4gen88zp/wheels/requirements.txt (line 1))
+  Using cached https://files.pythonhosted.org/packages/60/75/f692a584e85b7eaba0e03827b3d51f45f571c2e793dd731e598828d380aa/certifi-2019.3.9-py2.py3-none-any.whl
+Collecting chardet&lt;3.1.0,&gt;=3.0.2 (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmpiku2d5fj/tmp4gen88zp/wheels/requirements.txt (line 1))
   Using cached https://files.pythonhosted.org/packages/bc/a9/01ffebfb562e4274b6487b4bb1ddec7ca55ec7510b22e4c51f14098443b8/chardet-3.0.4-py2.py3-none-any.whl
-Collecting pyOpenSSL&gt;=0.14; extra == "security" (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp9hyasdty/tmp9zrsc_v8/wheels/requirements.txt (line 1))
+Collecting pyOpenSSL&gt;=0.14; extra == "security" (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmpiku2d5fj/tmp4gen88zp/wheels/requirements.txt (line 1))
   Using cached https://files.pythonhosted.org/packages/01/c8/ceb170d81bd3941cbeb9940fc6cc2ef2ca4288d0ca8929ea4db5905d904d/pyOpenSSL-19.0.0-py2.py3-none-any.whl
-Collecting cryptography&gt;=1.3.4; extra == "security" (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp9hyasdty/tmp9zrsc_v8/wheels/requirements.txt (line 1))
-Collecting six&gt;=1.5.2 (from pyOpenSSL&gt;=0.14; extra == "security"-&gt;requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp9hyasdty/tmp9zrsc_v8/wheels/requirements.txt (line 1))
+Collecting cryptography&gt;=1.3.4; extra == "security" (from requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmpiku2d5fj/tmp4gen88zp/wheels/requirements.txt (line 1))
+Collecting six&gt;=1.5.2 (from pyOpenSSL&gt;=0.14; extra == "security"-&gt;requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmpiku2d5fj/tmp4gen88zp/wheels/requirements.txt (line 1))
   Using cached https://files.pythonhosted.org/packages/73/fb/00a976f728d0d1fecfe898238ce23f502a721c0ac0ecfedb80e0d88c64e9/six-1.12.0-py2.py3-none-any.whl
-Collecting asn1crypto&gt;=0.21.0 (from cryptography&gt;=1.3.4; extra == "security"-&gt;requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp9hyasdty/tmp9zrsc_v8/wheels/requirements.txt (line 1))
+Collecting cffi!=1.11.3,&gt;=1.8 (from cryptography&gt;=1.3.4; extra == "security"-&gt;requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmpiku2d5fj/tmp4gen88zp/wheels/requirements.txt (line 1))
+Collecting asn1crypto&gt;=0.21.0 (from cryptography&gt;=1.3.4; extra == "security"-&gt;requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmpiku2d5fj/tmp4gen88zp/wheels/requirements.txt (line 1))
   Using cached https://files.pythonhosted.org/packages/ea/cd/35485615f45f30a510576f1a56d1e0a7ad7bd8ab5ed7cdc600ef7cd06222/asn1crypto-0.24.0-py2.py3-none-any.whl
-Collecting cffi!=1.11.3,&gt;=1.8 (from cryptography&gt;=1.3.4; extra == "security"-&gt;requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp9hyasdty/tmp9zrsc_v8/wheels/requirements.txt (line 1))
-Collecting pycparser (from cffi!=1.11.3,&gt;=1.8-&gt;cryptography&gt;=1.3.4; extra == "security"-&gt;requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmp9hyasdty/tmp9zrsc_v8/wheels/requirements.txt (line 1))
-Installing collected packages: toml, urllib3, certifi, idna, chardet, six, asn1crypto, pycparser, cffi, cryptography, pyOpenSSL, requests, encapsia-api
-Successfully installed asn1crypto-0.24.0 certifi-2018.11.29 cffi-1.12.2 chardet-3.0.4 cryptography-2.6.1 encapsia-api-0.1.14 idna-2.8 pyOpenSSL-19.0.0 pycparser-2.19 requests-2.21.0 six-1.12.0 toml-0.10.0 urllib3-1.24.1
+Collecting pycparser (from cffi!=1.11.3,&gt;=1.8-&gt;cryptography&gt;=1.3.4; extra == "security"-&gt;requests[security]&lt;3.0,&gt;=2.20-&gt;encapsia-api-&gt;-r /tmp/tmpiku2d5fj/tmp4gen88zp/wheels/requirements.txt (line 1))
+Installing collected packages: toml, idna, urllib3, certifi, chardet, six, pycparser, cffi, asn1crypto, cryptography, pyOpenSSL, requests, encapsia-api
+Successfully installed asn1crypto-0.24.0 certifi-2019.3.9 cffi-1.12.2 chardet-3.0.4 cryptography-2.6.1 encapsia-api-0.1.15 idna-2.8 pyOpenSSL-19.0.0 pycparser-2.19 requests-2.21.0 six-1.12.0 toml-0.10.0 urllib3-1.24.1
 Installing tasks in to namespace example
 Installed task file /home/ice/example/test_module.py
 Configuring 1 task workers for namespace example
@@ -547,6 +535,7 @@ Creating views namespace example
 Created PostgreSQL schema: example
 Installing views in to namespace example
 Installing view permissions.sql
+Installing view test_upload_views.sql
 Installing view test_views.sql
 Creating views namespace example
 Created PostgreSQL schema: example
@@ -593,17 +582,17 @@ Installing schedules in to namespace example</span>
             ],
             "device": null,
             "email": "system@root.encapsia.com",
-            "expires_at": "2019-03-15T04:54:40.436272+00:00",
-            "id": 2,
-            "issued_at": "2019-03-03T15:08:00.436272+00:00",
+            "expires_at": "2019-03-30T06:42:45.087821+00:00",
+            "id": 3,
+            "issued_at": "2019-03-18T16:56:05.087821+00:00",
             "name": "Root Superuser",
             "namespace": "example",
             "notification_token": null,
             "role": null,
             "role_alias": null,
             "site_id": "",
-            "token": "329fc7cdf81a486db0414c59e40dbe00",
-            "url": "https://tcc24.icethree.com/v1/views/example/test_only_meta"
+            "token": "86c055e12ae649e5a0e7ec69ec8bf122",
+            "url": "https://tcc21.icethree.com/v1/views/example/test_only_meta"
         }
     }
 ]</span>
@@ -635,17 +624,17 @@ Installing schedules in to namespace example</span>
                 ],
                 "device": null,
                 "email": "system@root.encapsia.com",
-                "expires_at": "2019-03-15T04:54:40.436272+00:00",
-                "id": 2,
-                "issued_at": "2019-03-03T15:08:00.436272+00:00",
+                "expires_at": "2019-03-30T06:42:45.087821+00:00",
+                "id": 3,
+                "issued_at": "2019-03-18T16:56:05.087821+00:00",
                 "name": "Root Superuser",
                 "namespace": "example",
                 "notification_token": null,
                 "role": null,
                 "role_alias": null,
                 "site_id": "",
-                "token": "329fc7cdf81a486db0414c59e40dbe00",
-                "url": "https://tcc24.icethree.com/v1/views/example/test_mixture/hello?limit=123"
+                "token": "86c055e12ae649e5a0e7ec69ec8bf122",
+                "url": "https://tcc21.icethree.com/v1/views/example/test_mixture/hello?limit=123"
             }
         }
     }
@@ -707,17 +696,17 @@ hello tim
         ],
         "device": null,
         "email": "system@root.encapsia.com",
-        "expires_at": "2019-03-03T16:27:57.326614+00:00",
-        "id": 2,
-        "issued_at": "2019-03-03T16:17:57.326614+00:00",
+        "expires_at": "2019-03-19T10:50:28.638901+00:00",
+        "id": 3,
+        "issued_at": "2019-03-19T10:40:28.638901+00:00",
         "name": "Root Superuser",
         "namespace": "example",
         "notification_token": null,
         "role": null,
         "role_alias": null,
         "site_id": "",
-        "token": "610606f783ff47f08cd8f91c2d6ec3a5",
-        "url": "https://tcc24.icethree.com/v1/tasks/example/test_module.test_function_with_any_args?a=1&amp;b=2&amp;c=3"
+        "token": "e4c06c03aeee46b2810e0b2c5e5a87ab",
+        "url": "https://tcc21.icethree.com/v1/tasks/example/test_module.test_function_with_any_args?a=1&amp;b=2&amp;c=3"
     }
 }</span>
 
@@ -730,17 +719,17 @@ hello tim
     ],
     "device": null,
     "email": "system@root.encapsia.com",
-    "expires_at": "2019-03-03T16:27:58.726031+00:00",
-    "id": 2,
-    "issued_at": "2019-03-03T16:17:58.726031+00:00",
+    "expires_at": "2019-03-19T10:50:30.024992+00:00",
+    "id": 3,
+    "issued_at": "2019-03-19T10:40:30.024992+00:00",
     "name": "Root Superuser",
     "namespace": "example",
     "notification_token": null,
     "role": null,
     "role_alias": null,
     "site_id": "",
-    "token": "70202bdf9bcc4b679d31c86195aba0d0",
-    "url": "https://tcc24.icethree.com/v1/tasks/example/test_module.test_function_with_meta_as_fixed_arg"
+    "token": "46dbb24ef7544e2ba97d14cc34cc4274",
+    "url": "https://tcc21.icethree.com/v1/tasks/example/test_module.test_function_with_meta_as_fixed_arg"
 }</span>
 
 <span class="ansi93"></span><span class="ansi1 ansi93">=== Run task function expecting uploaded data. ===</span>
@@ -820,12 +809,12 @@ Aborted!
 <span class="ansi32">{
     "logs": [
         {
-            "counter": 12,
+            "counter": 11,
             "deleted": false,
-            "id": "297e5afedb454914b2fd367de2398c62",
-            "job_id": "3e55266f67b44058b6eb619709efc607",
+            "id": "7b6c9d13af694df980b29b19e24f67a4",
+            "job_id": "128d2fc12ff048838809d9ebc7891fa2",
             "job_type": "example",
-            "node": "tcc24",
+            "node": "my_node",
             "output": "Hello tim",
             "parameters": {
                 "name": "tim"
@@ -833,17 +822,17 @@ Aborted!
             "reason": null,
             "reference": "test_module.test_function_for_a_job",
             "status": "success",
-            "updated": "2019-03-03T16:18:07.565913+00:00",
+            "updated": "2019-03-19T10:40:39.356933+00:00",
             "user_id": "system@root.encapsia.com",
-            "zone": "tcc24"
+            "zone": "server"
         },
         {
-            "counter": 11,
+            "counter": 10,
             "deleted": false,
-            "id": "f1f16ea6bd0e4beaac1295c8afcefa72",
-            "job_id": "3e55266f67b44058b6eb619709efc607",
+            "id": "879dac0020754eb39256a84f731fd39d",
+            "job_id": "128d2fc12ff048838809d9ebc7891fa2",
             "job_type": "example",
-            "node": "tcc24",
+            "node": "my_node",
             "output": {},
             "parameters": {
                 "name": "tim"
@@ -851,9 +840,9 @@ Aborted!
             "reason": null,
             "reference": "test_module.test_function_for_a_job",
             "status": "queued",
-            "updated": "2019-03-03T16:18:07.357697+00:00",
+            "updated": "2019-03-19T10:40:39.113317+00:00",
             "user_id": "system@root.encapsia.com",
-            "zone": "tcc24"
+            "zone": "server"
         }
     ]
 }</span>
