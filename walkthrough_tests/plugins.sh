@@ -34,7 +34,7 @@ encapsia plugins install --versions=example.toml
 encapsia plugins --force uninstall example
 
 test "Dev update the example plugin from scratch"
-encapsia plugins dev-update $EXAMPLE_PLUGIN_SRC --reset
+encapsia plugins --force dev-update $EXAMPLE_PLUGIN_SRC
 
 test "Second time round there is nothing to do because nothing has changed"
 encapsia plugins dev-update $EXAMPLE_PLUGIN_SRC

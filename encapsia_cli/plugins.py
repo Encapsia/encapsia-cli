@@ -117,9 +117,8 @@ def get_modified_plugin_directories(directory, reset=False):
 
 @main.command("dev-update")
 @click.argument("directory", default=".")
-@click.option("--reset", is_flag=True, help="Always update everything.")
 @click.pass_obj
-def dev_update(obj, directory, reset):
+def dev_update(obj, directory):
     """Update plugin parts which have changed since previous update.
 
     Optionally pass in the DIRECTORY of the plugin (defaults to cwd).
@@ -131,7 +130,7 @@ def dev_update(obj, directory, reset):
         lib.log_error("Not in a plugin directory.")
         sys.exit(1)
     modified_plugin_directories = get_modified_plugin_directories(
-        directory, reset=reset
+        directory, reset=obj["force"]
     )
     if modified_plugin_directories:
         with lib.temp_directory() as temp_directory:

@@ -29,9 +29,10 @@ Note that these tests are *not* self-verifying; they just provide helpful covera
 
 # TODO
 
-* encapsia plugins dev-update has both --force and --reset, which is a bit confusing. Probably remove "reset"?
-* encapsia plugins dev-update caches incorrectly when an upload fails.
-* Add sending files to views (once PR accepted)
-* Use click-web to create an encapsia webserve command?? Put in a plugin?
-* Validate input to plugins uninstall
-* Add an "encapsia plugins dev-server" command to forward calls to localhost to remote, thus allowing easier dev without installing anything except the SQL.
+* Bug: encapsia plugins dev-update caches incorrectly when an upload fails.
+* Feature: Add receiving files from tasks
+* Feature: Add sending files to views
+* Featuer: Add package command for running standard tasks
+* Bug: Validate input to plugins uninstall
+* Feature: Add "encapsia plugins reactor" to forward local calls to remote for even easier dev without installing anything except the SQL.
+* Feature: Use click-web to create an encapsia webserve command?? Put in a plugin?

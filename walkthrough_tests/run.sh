@@ -13,7 +13,7 @@ cd $(dirname "$0")
 start_tests
 
 test "(Setup for running views or tasks etc) Install the example plugin from src"
-encapsia plugins dev-update --reset $EXAMPLE_PLUGIN_SRC
+encapsia plugins --force dev-update $EXAMPLE_PLUGIN_SRC
 
 # The views
 
