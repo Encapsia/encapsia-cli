@@ -1,4 +1,5 @@
 """Install, uninstall, create, and update plugins."""
+from contextlib import contextmanager
 import datetime
 import re
 import shutil
@@ -106,13 +107,24 @@ class LastUploadedVsModifiedTracker:
                 else:
                     yield Path(name)
                     self.data[name] = datetime.datetime.utcnow()
-        self.save()
 
 
+class PluginsTaskError(Exception):
+
+    pass
+
+
+@contextmanager
 def get_modified_plugin_directories(directory, reset=False):
-    return list(
-        LastUploadedVsModifiedTracker(directory, reset=reset).get_modified_directories()
-    )
+    tracker = LastUploadedVsModifiedTracker(directory, reset=reset)
+    try:
+        yield list(tracker.get_modified_directories())
+    except PluginsTaskError:
+        pass
+    except Exception:
+        raise
+    else:
+        tracker.save()
 
 
 @main.command("dev-update")
@@ -129,27 +141,29 @@ def dev_update(obj, directory):
     if not plugin_toml_path.exists():
         lib.log_error("Not in a plugin directory.")
         sys.exit(1)
-    modified_plugin_directories = get_modified_plugin_directories(
+
+    with get_modified_plugin_directories(
         directory, reset=obj["force"]
-    )
-    if modified_plugin_directories:
-        with lib.temp_directory() as temp_directory:
-            shutil.copy(plugin_toml_path, temp_directory)
-            for modified_directory in modified_plugin_directories:
-                lib.log(f"Including: {modified_directory}")
-                shutil.copytree(
-                    directory / modified_directory, temp_directory / modified_directory
+    ) as modified_plugin_directories:
+        if modified_plugin_directories:
+            with lib.temp_directory() as temp_directory:
+                shutil.copy(plugin_toml_path, temp_directory)
+                for modified_directory in modified_plugin_directories:
+                    lib.log(f"Including: {modified_directory}")
+                    shutil.copytree(
+                        directory / modified_directory,
+                        temp_directory / modified_directory
+                    )
+                api = lib.get_api(**obj)
+                lib.run_plugins_task(
+                    api,
+                    "dev_update_plugin",
+                    dict(),
+                    "Uploading to server",
+                    data=lib.create_targz_as_bytes(temp_directory),
                 )
-            api = lib.get_api(**obj)
-            lib.run_plugins_task(
-                api,
-                "dev_update_plugin",
-                dict(),
-                "Uploading to server",
-                data=lib.create_targz_as_bytes(temp_directory),
-            )
-    else:
-        lib.log("Nothing to do.")
+        else:
+            lib.log("Nothing to do.")
 
 
 @main.command("dev-create-namespace")

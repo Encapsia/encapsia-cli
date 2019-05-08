@@ -220,8 +220,10 @@ def run_plugins_task(api, name, params, message, data=None):
     if reply["status"] == "ok":
         log(f"Status: {reply['status']}")
         log_output(reply["output"].strip())
+        return True
     else:
         log_error(str(reply), abort=True)
+        return False
 
 
 def run_job(api, namespace, function, params, data=None):
