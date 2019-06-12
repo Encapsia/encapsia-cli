@@ -3,6 +3,7 @@ import json
 
 import click
 
+from encapsia_api.rest import FileDownloadResponse
 from encapsia_cli import lib
 
 main = lib.make_main(__doc__)
@@ -14,19 +15,34 @@ def _output(result, save_as):
     Either print (pretty if possible) or write to file.
 
     """
-    if not isinstance(result, str):
-        result = json.dumps(result)
-    if save_as:
-        save_as.write(result)
-        lib.log(f"Saved result to {save_as.name}")
+    if isinstance(result, FileDownloadResponse):
+        lib.log(
+            f"File download response: filename={result.filename}, "
+            f"mime_type={result.mime_type}"
+        )
+        if save_as:
+            save_as.write(result.content)
+            lib.log(f"Saved result to {save_as.name}")
+        elif result.filename:
+            with open(result.filename, "wb") as f:
+                f.write(result.content)
+            lib.log(f"Saved result to {result.filename}")
+        else:
+            lib.log_output(result.content.decode(errors='replace'))
     else:
-        try:
-            # Try to pretty print if it converts to JSON.
-            data = json.loads(result)
-            lib.pretty_print(data, "json")
-        except json.decoder.JSONDecodeError:
-            # Otherwise print normally.
-            lib.log_output(str(result))
+        if not isinstance(result, str):
+            result = json.dumps(result)
+        if save_as:
+            save_as.write(result.encode("UTF-8", errors="strict"))
+            lib.log(f"Saved result to {save_as.name}")
+        else:
+            try:
+                # Try to pretty print if it converts to JSON.
+                data = json.loads(result)
+                lib.pretty_print(data, "json")
+            except json.decoder.JSONDecodeError:
+                # Otherwise print normally.
+                lib.log_output(str(result))
 
 
 @main.command("task")
@@ -39,7 +55,9 @@ def _output(result, save_as):
     help="Name of file to upload and hence pass to the task",
 )
 @click.option(
-    "--save-as", type=click.File("w"), help="Name of file in which to save result"
+    "--save-as",
+    type=click.File("wb"),
+    help="Name of file in which to save result"
 )
 @click.pass_obj
 def run_task(obj, namespace, function, args, upload, save_as):
