@@ -93,7 +93,7 @@ def run_task(obj, namespace, function, args, upload, save_as):
     help="Name of file to upload and hence pass to the job",
 )
 @click.option(
-    "--save-as", type=click.File("w"), help="Name of file in which to save result"
+    "--save-as", type=click.File("wb"), help="Name of file in which to save result"
 )
 @click.pass_obj
 def run_job(obj, namespace, function, args, upload, save_as):
@@ -127,7 +127,7 @@ def run_job(obj, namespace, function, args, upload, save_as):
     help="Name of file to upload and hence pass to the task",
 )
 @click.option(
-    "--save-as", type=click.File("w"), help="Name of file in which to save result"
+    "--save-as", type=click.File("wb"), help="Name of file in which to save result"
 )
 @click.pass_obj
 def run_view(obj, namespace, function, args, upload, save_as):
