@@ -42,10 +42,10 @@ test "Run view with mixture of argument types"
 encapsia run view example test_mixture hello limit=123
 
 test "Run view which returns CSV directly"
-encapsia run view example example_view_function_as_csv_file
+encapsia run view --post example example_view_function_as_csv_file
 
-test "Run view which returns JSON directly"
-encapsia run view example example_view_function_as_json_file
+test "Run view which populates table from CSV file"
+encapsia run view --post example example_create_and_populate_table --upload treaties.csv
 
 # The tasks
 
