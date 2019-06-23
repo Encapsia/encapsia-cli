@@ -152,7 +152,7 @@ def dev_update(obj, directory):
                     lib.log(f"Including: {modified_directory}")
                     shutil.copytree(
                         directory / modified_directory,
-                        temp_directory / modified_directory
+                        temp_directory / modified_directory,
                     )
                 api = lib.get_api(**obj)
                 lib.run_plugins_task(

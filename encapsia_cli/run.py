@@ -28,7 +28,7 @@ def _output(result, save_as):
                 f.write(result.content)
             lib.log(f"Saved result to {result.filename}")
         else:
-            lib.log_output(result.content.decode(errors='replace'))
+            lib.log_output(result.content.decode(errors="replace"))
     else:
         if not isinstance(result, str):
             result = json.dumps(result)
@@ -55,9 +55,7 @@ def _output(result, save_as):
     help="Name of file to upload and hence pass to the task",
 )
 @click.option(
-    "--save-as",
-    type=click.File("wb"),
-    help="Name of file in which to save result"
+    "--save-as", type=click.File("wb"), help="Name of file in which to save result"
 )
 @click.pass_obj
 def run_task(obj, namespace, function, args, upload, save_as):

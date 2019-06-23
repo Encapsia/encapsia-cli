@@ -68,8 +68,7 @@ colour_option = click.option(
 
 
 host_option = click.option(
-    "--host",
-    help="Name to use to lookup credentials in .encapsia/credentials.toml",
+    "--host", help="Name to use to lookup credentials in .encapsia/credentials.toml"
 )
 
 
