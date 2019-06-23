@@ -1,10 +1,10 @@
 """Install, uninstall, create, and update plugins."""
-from contextlib import contextmanager
 import datetime
 import re
 import shutil
 import sys
 import urllib.request
+from contextlib import contextmanager
 from pathlib import Path
 
 import click
