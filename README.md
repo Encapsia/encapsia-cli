@@ -20,19 +20,15 @@ Note that these tests are *not* self-verifying; they just provide helpful covera
 
 # Release checklist
 
-* Ensure "tests" run ok (see above). Also capture output and commit with:
-    `bash walkthrough_tests/all.sh --host <host> --example-plugin-src ../inf-ice-example-plugin/ 2>&1 | ansi2html -f 80% >WALKTHROUGH.html`
 * Run: `black .`
 * Run: `isort --multi-line=3 --trailing-comma --force-grid-wrap=0 --combine-as --line-width=88 -y`
 * Run: `flake8 --ignore=E501 .`
+* Ensure "tests" run ok (see above). Also capture output and commit with:
+    `bash walkthrough_tests/all.sh --host <host> --example-plugin-src ../inf-ice-example-plugin/ 2>&1 | ansi2html -f 80% >WALKTHROUGH.html`
 * Ensure git tag, package version, and `enacpsia_cli.__version__` are all equal.
 
 # TODO
 
-* Bug: encapsia plugins dev-update caches incorrectly when an upload fails.
-* Feature: Add receiving files from tasks
-* Feature: Add sending files to views
-* Featuer: Add package command for running standard tasks
-* Bug: Validate input to plugins uninstall
+* Feature: Add package command for running standard tasks
 * Feature: Add "encapsia plugins reactor" to forward local calls to remote for even easier dev without installing anything except the SQL.
 * Feature: Use click-web to create an encapsia webserve command?? Put in a plugin?
