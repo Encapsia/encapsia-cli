@@ -122,6 +122,11 @@ def run_job(obj, namespace, function, args, upload, save_as):
 @click.argument("function")
 @click.argument("args", nargs=-1)
 @click.option(
+    "--post",
+    is_flag=True,
+    help="Use POST instead of GET (for view functions that change the database)",
+)
+@click.option(
     "--upload",
     type=click.File("rb"),
     help="Name of file to upload and hence pass to the task",
@@ -130,7 +135,7 @@ def run_job(obj, namespace, function, args, upload, save_as):
     "--save-as", type=click.File("wb"), help="Name of file in which to save result"
 )
 @click.pass_obj
-def run_view(obj, namespace, function, args, upload, save_as):
+def run_view(obj, namespace, function, args, post, upload, save_as):
     """Run a view in given plugin NAMESPACE and FUNCTION with ARGS.
 
     e.g.
@@ -158,7 +163,7 @@ def run_view(obj, namespace, function, args, upload, save_as):
 
     api = lib.get_api(**obj)
     response = api.call_api(
-        "GET",
+        "POST" if post else "GET",
         ["views", namespace, function] + path_segments,
         return_json=False,
         params=query_args,
