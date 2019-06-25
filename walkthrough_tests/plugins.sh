@@ -15,7 +15,7 @@ start_tests
 test "Build the example plugin from src"
 encapsia plugins --force build-from-src $EXAMPLE_PLUGIN_SRC
 
-test "Requst a build again, but this time it should be skipped over because it already exists in the cache"
+test "Request a build again, but this time it should be skipped over because it already exists in the cache"
 encapsia plugins build-from-src $EXAMPLE_PLUGIN_SRC
 
 test "Move the example plugin out of the cache and then add it back in directly"
@@ -28,6 +28,9 @@ encapsia plugins build-from-legacy-s3 --versions=s3_plugins.toml --email=test_us
 
 test "Second time should be skipped over because it is already in the cache"
 encapsia plugins build-from-legacy-s3 --versions=s3_plugins.toml --email=test_user@encapsia.com
+
+test "Initialise Pluginsmanager"
+encapsia plugins initialise
 
 test "Install the example plugin from the cache, then uninstall it"
 encapsia plugins install --versions=example.toml

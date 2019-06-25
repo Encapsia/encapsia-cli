@@ -331,3 +331,11 @@ def fetch_from_url(obj, url):
             lib.log(f"Created: {output_filename}")
     else:
         lib.log_error("That doesn't look like a plugin. Aborting!", abort=True)
+
+
+@main.command()
+@click.pass_obj
+def initialise(obj):
+    """Initialising PluginsManager."""
+    api = lib.get_api(**obj)
+    lib.run_plugins_task(api, "initialise", dict(), "Initialising")
