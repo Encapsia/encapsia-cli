@@ -141,31 +141,28 @@ def run_view(obj, namespace, function, args, post, upload, save_as):
     \b
     encapsia run view example_namespace test_view 3 tim limit=45
 
-    If an ARGS contains an "=" sign then send it as an optional query string argument.
-    Otherwise send it as a URL path segment.
+    If an ARGS contains an "=" sign then send it as an optional argument (will end up
+    as query string). Otherwise send it as a mandatory argument (will end as
+    URL path segment).
 
     """
     # Split command line arguments into path segments and query string arguments.
-    query_args = {}
-    path_segments = []
+    view_opts = {}
+    view_args = []
     for arg in args:
         if "=" in arg:
             left, right = arg.split("=", 1)
-            query_args[left] = right
+            view_opts[left] = right
         else:
-            path_segments.append(arg)
-
-    extra_headers = None
-    if upload:
-        extra_headers = {"Content-Type": "text/plain"}
+            view_args.append(arg)
 
     api = lib.get_api(**obj)
-    response = api.call_api(
-        "POST" if post else "GET",
-        ["views", namespace, function] + path_segments,
-        return_json=False,
-        params=query_args,
-        extra_headers=extra_headers,
-        data=upload,
+    result = api.run_view(
+        namespace,
+        function,
+        view_args=view_args,
+        view_opts=view_opts,
+        upload=upload,
+        use_post=post,
     )
-    _output(response.text, save_as)
+    _output(result, save_as)
