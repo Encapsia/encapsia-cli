@@ -126,5 +126,10 @@ encapsia run task example test_module.test_function_for_posted_data || true
 
 # The jobs
 
-test "Run job function, showing 2 joblog entries with status queued and success"""
-encapsia run job example test_module.test_function_for_a_job name=tim
+test "Run job function and return (JSON) result"
+encapsia run job example test_module.test_function_for_a_job name=Tim
+
+test "Run job function and save (JSON) result"
+encapsia run job example test_module.test_function_for_a_job name=Tim --save-as=/tmp/test_job_result.json
+echo $(cat /tmp/test_job_result.json)
+rm /tmp/test_job_result.json

@@ -101,7 +101,13 @@ def run_job(obj, namespace, function, args, upload, save_as):
         left, right = arg.split("=", 1)
         params[left.strip()] = right.strip()
     result = lib.run_job(
-        api, namespace, function, params, upload=upload, download=save_as
+        api,
+        namespace,
+        function,
+        params,
+        f"Running job {namespace}",
+        upload=upload,
+        download=save_as,
     )
     _log_output(result)
 
