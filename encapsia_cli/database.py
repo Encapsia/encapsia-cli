@@ -47,8 +47,6 @@ def restore(obj, filename, yes):
     # This means that attempts to use it will generate a 500 error when
     # Nginx tries to check the permission.
     # Further, the current token may no longer work.
-    poll, NoTaskResultYet = api.dbctl_action(
-        "restore_database", dict(data_handle=handle)
-    )
+    poll, NoResultYet = api.dbctl_action("restore_database", dict(data_handle=handle))
     lib.log("Database restore requested.")
     lib.log("Please verify by other means (e.g. look at the logs).")
