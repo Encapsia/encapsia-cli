@@ -110,9 +110,6 @@ encapsia run task example test_module.test_function_for_posted_data --upload=exa
 diff -s example_data.jpg /tmp/example_data.jpg
 rm /tmp/example_data.jpg
 
-
-exit
-
 # The failing tasks. These should fail so have an " || true" at the end to keep these tests running.
 
 test "Run task function which takes no arguments. This *should* fail!!!"
