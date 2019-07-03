@@ -8,11 +8,38 @@ from contextlib import contextmanager
 from pathlib import Path
 
 import click
+import tempfile
 import toml
 
 from encapsia_cli import lib
 
 main = lib.make_main(__doc__, for_plugins=True)
+
+
+def _fetch_plugin_and_store_in_cache(url, plugins_cache_dir, force=False):
+    full_name = url.rsplit("/", 1)[-1]
+    m = re.match(r"plugin-([^-]*)-([^-]*).tar.gz", full_name)
+    if m:
+        output_filename = plugins_cache_dir / full_name
+        if not force and output_filename.exists():
+            lib.log(f"Found: {output_filename} (Skipping)")
+        else:
+            filename, headers = urllib.request.urlretrieve(url, tempfile.mkstemp()[1])
+            shutil.move(filename, output_filename)
+            lib.log(f"Created: {output_filename}")
+    else:
+        lib.log_error("That doesn't look like a plugin. Aborting!", abort=True)
+
+
+def _install_plugin(api, filename):
+    """Use the API to install plugin directly from a file."""
+    if not filename.exists():
+        lib.log_error(f"Cannot find plugin: {filename}", abort=True)
+    # TODO only upload if not already installed? (unless --force)
+    blob_id = api.upload_file_as_blob(filename.as_posix())
+    # TODO create plugin entity and pass that in (the pluginsmanager creates the pluginlogs entity)
+    lib.log(f"Uploaded {filename} to blob: {blob_id}")
+    lib.run_plugins_task(api, "install_plugin", dict(blob_id=blob_id), "Installing")
 
 
 @main.command()
@@ -23,32 +50,42 @@ def info(obj):
     lib.run_plugins_task(api, "list_namespaces", dict(), "Fetching list of namespaces")
 
 
-def read_toml(filename):
-    with filename.open() as f:
-        return toml.load(f)
+@main.command()
+@click.argument("url")
+@click.pass_obj
+def fetch_from_url(obj, url):
+    """Copy a plugin from given URL into the plugin cache."""
+    plugins_cache_dir = obj["plugins_cache_dir"]
+    force = obj["force"]
+    _fetch_plugin_and_store_in_cache(url, plugins_cache_dir, force)
 
 
 @main.command()
-@click.option("--versions", help="TOML file containing webapp names and versions.")
+@click.option(
+    "--versions", default=None, help="TOML file containing webapp names and versions."
+)
+@click.argument("plugin_filenames", nargs=-1)
 @click.pass_obj
-def install(obj, versions):
-    """Install plugins from version.toml file."""
-    plugins_cache_dir = obj["plugins_cache_dir"]
-    versions = Path(versions)
-    api = lib.get_api(**obj)
-    for name, version in read_toml(versions).items():
-        plugin_filename = plugins_cache_dir / f"plugin-{name}-{version}.tar.gz"
-        if not plugin_filename.exists():
-            lib.log_error(
-                f"Unable to find plugin {name} version {name} in cache ({plugins_cache_dir})",
-                abort=True,
-            )
+def install(obj, versions, plugin_filenames):
+    """Install plugins from files and/or an optional version.toml file.
 
-        # TODO only upload if not already installed? (unless --force)
-        blob_id = api.upload_file_as_blob(plugin_filename.as_posix())
-        # TODO create plugin entity and pass that in (the pluginsmanager creates the pluginlogs entity)
-        lib.log(f"Uploaded {plugin_filename} to blob: {blob_id}")
-        lib.run_plugins_task(api, "install_plugin", dict(blob_id=blob_id), "Installing")
+    New plugins will be put in the cache before being installed.
+
+    All plugins specified in the versions TOML file will be taken from the cache.
+
+    """
+    plugins_cache_dir = obj["plugins_cache_dir"]
+    api = lib.get_api(**obj)
+    for plugin_filename in plugin_filenames:
+        plugin_filename = Path(plugin_filename).resolve()
+        _fetch_plugin_and_store_in_cache(
+            plugin_filename.as_uri(), plugins_cache_dir, force=True
+        )
+        _install_plugin(api, plugins_cache_dir / plugin_filename.name)
+    if versions:
+        versions = Path(versions)
+        for name, version in lib.read_toml(versions).items():
+            _install_plugin(api, plugins_cache_dir / f"plugin-{name}-{version}.tar.gz")
 
 
 @main.command()
@@ -284,7 +321,7 @@ def build_from_src(obj, sources):
     force = obj["force"]
     for source_directory in sources:
         source_directory = Path(source_directory)
-        manifest = read_toml(source_directory / "plugin.toml")
+        manifest = lib.read_toml(source_directory / "plugin.toml")
         name = manifest["name"]
         version = manifest["version"]
         output_filename = plugins_cache_dir / f"plugin-{name}-{version}.tar.gz"
@@ -310,24 +347,3 @@ def build_from_src(obj, sources):
                             shutil.copytree(source_t, base_dir / t)
                 lib.create_targz(base_dir, output_filename)
                 lib.log(f"Created: {output_filename}")
-
-
-@main.command()
-@click.argument("url")
-@click.pass_obj
-def fetch_from_url(obj, url):
-    """Copy a plugin from given URL into the plugin cache."""
-    plugins_cache_dir = obj["plugins_cache_dir"]
-    force = obj["force"]
-    full_name = url.rsplit("/", 1)[-1]
-    m = re.match(r"plugin-([^-]*)-([^-]*).tar.gz", full_name)
-    if m:
-        output_filename = plugins_cache_dir / full_name
-        if not force and output_filename.exists():
-            lib.log(f"Found: {output_filename} (Skipping)")
-        else:
-            filename, headers = urllib.request.urlretrieve(url)
-            shutil.move(filename, output_filename)
-            lib.log(f"Created: {output_filename}")
-    else:
-        lib.log_error("That doesn't look like a plugin. Aborting!", abort=True)
