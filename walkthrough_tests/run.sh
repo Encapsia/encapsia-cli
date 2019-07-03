@@ -47,6 +47,16 @@ encapsia run view --post example example_view_function_as_csv_file
 test "Run view which populates table from CSV file"
 encapsia run view --post example example_create_and_populate_table --upload treaties.csv
 
+test "Run view and use save as"
+encapsia run view example test_one_optional_arg --save-as=/tmp/test_view_download.json
+echo -n '[{"test_one_optional_arg": 1000}]' | diff -s /tmp/test_view_download.json -
+rm /tmp/test_view_download.json
+
+test "Run view which returns CSV directly and use save as"
+encapsia run view --post example example_view_function_as_csv_file --save-as=/tmp/test_view_download.csv
+cat /tmp/test_view_download.csv
+rm /tmp/test_view_download.csv
+
 # The tasks
 
 test "Run basic test task function"

@@ -9,8 +9,8 @@ from encapsia_cli import lib
 main = lib.make_main(__doc__)
 
 
-def _output(result):
-    """Pretty-print result from running a task, job, or view."""
+def _log_output(result):
+    """Pretty-print log the result from running a task, job, or view."""
     if isinstance(result, FileDownloadResponse):
         lib.log(
             f"Response saved to: {result.filename} " f"(mime_type={result.mime_type})"
@@ -65,7 +65,7 @@ def run_task(obj, namespace, function, args, upload, save_as):
         upload=upload,
         download=save_as,
     )
-    _output(result)
+    _log_output(result)
 
 
 @main.command("job")
@@ -89,7 +89,7 @@ def run_job(obj, namespace, function, args, upload, save_as):
     E.g.
 
     \b
-    encapsia run job example_namespace test_module.test_function x=3 y=tim "z=hello stranger"
+    encapsia run job example_namespace test_module.test_function x=3 y=tim "z=hello"
 
     Note that all args must be named and the values are all considered strings (not
     least because arguments are encoded over a URL string).
@@ -103,7 +103,7 @@ def run_job(obj, namespace, function, args, upload, save_as):
     result = lib.run_job(
         api, namespace, function, params, upload=upload, download=save_as
     )
-    _output(result)
+    _log_output(result)
 
 
 @main.command("view")
@@ -121,7 +121,9 @@ def run_job(obj, namespace, function, args, upload, save_as):
     help="Name of file to upload and hence pass to the task",
 )
 @click.option(
-    "--save-as", type=click.File("wb"), help="Name of file in which to save result"
+    "--save-as",
+    type=click.Path(readable=False),
+    help="Name of file in which to save result",
 )
 @click.pass_obj
 def run_view(obj, namespace, function, args, post, upload, save_as):
@@ -136,7 +138,7 @@ def run_view(obj, namespace, function, args, post, upload, save_as):
     Otherwise send it as a URL path segment.
 
     """
-    # Split command line arguments into path segments and query string arguments.
+    api = lib.get_api(**obj)
     query_args = {}
     path_segments = []
     for arg in args:
@@ -146,17 +148,13 @@ def run_view(obj, namespace, function, args, post, upload, save_as):
         else:
             path_segments.append(arg)
 
-    extra_headers = None
-    if upload:
-        extra_headers = {"Content-Type": "text/plain"}
-
-    api = lib.get_api(**obj)
-    response = api.call_api(
-        "POST" if post else "GET",
-        ["views", namespace, function] + path_segments,
-        return_json=False,
-        params=query_args,
-        extra_headers=extra_headers,
-        data=upload,
+    result = api.run_view(
+        namespace,
+        function,
+        view_arguments=path_segments,
+        view_options=query_args,
+        use_post=post,
+        upload=upload,
+        download=save_as,
     )
-    _output(response.text, save_as)
+    _log_output(result)
