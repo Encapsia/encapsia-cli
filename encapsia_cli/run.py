@@ -1,48 +1,27 @@
-"""Run an Encapsia task or view."""
+"""Run an Encapsia task, job, or view."""
 import json
 
 import click
-from encapsia_api.rest import FileDownloadResponse
-
+from encapsia_api import FileDownloadResponse
 from encapsia_cli import lib
+
 
 main = lib.make_main(__doc__)
 
 
-def _output(result, save_as):
-    """Deal with result from task or view etc.
-
-    Either print (pretty if possible) or write to file.
-
-    """
+def _output(result):
+    """Pretty-print result from running a task, job, or view."""
     if isinstance(result, FileDownloadResponse):
         lib.log(
-            f"File download response: filename={result.filename}, "
-            f"mime_type={result.mime_type}"
+            f"Response saved to: {result.filename} " f"(mime_type={result.mime_type})"
         )
-        if save_as:
-            save_as.write(result.content)
-            lib.log(f"Saved result to {save_as.name}")
-        elif result.filename:
-            with open(result.filename, "wb") as f:
-                f.write(result.content)
-            lib.log(f"Saved result to {result.filename}")
-        else:
-            lib.log_output(result.content.decode(errors="replace"))
     else:
-        if not isinstance(result, str):
-            result = json.dumps(result)
-        if save_as:
-            save_as.write(result.encode("UTF-8", errors="strict"))
-            lib.log(f"Saved result to {save_as.name}")
-        else:
-            try:
-                # Try to pretty print if it converts to JSON.
-                data = json.loads(result)
-                lib.pretty_print(data, "json")
-            except json.decoder.JSONDecodeError:
-                # Otherwise print normally.
-                lib.log_output(str(result))
+        try:
+            # Try to pretty print if it converts to JSON.
+            lib.pretty_print(result, "json")
+        except json.decoder.JSONDecodeError:
+            # Otherwise print normally.
+            lib.log_output(str(result))
 
 
 @main.command("task")
@@ -55,7 +34,9 @@ def _output(result, save_as):
     help="Name of file to upload and hence pass to the task",
 )
 @click.option(
-    "--save-as", type=click.File("wb"), help="Name of file in which to save result"
+    "--save-as",
+    type=click.Path(readable=False),
+    help="Name of file in which to save result",
 )
 @click.pass_obj
 def run_task(obj, namespace, function, args, upload, save_as):
@@ -64,7 +45,7 @@ def run_task(obj, namespace, function, args, upload, save_as):
     E.g.
 
     \b
-    encapsia run task example_namespace test_module.test_function x=3 y=tim "z=hello stranger"
+    encapsia run task example_namespace test_module.test_function x=3 y=tim
 
     Note that all args must be named and the values are all considered strings (not
     least because arguments are encoded over a URL string).
@@ -76,9 +57,15 @@ def run_task(obj, namespace, function, args, upload, save_as):
         left, right = arg.split("=", 1)
         params[left.strip()] = right.strip()
     result = lib.run_task(
-        api, namespace, function, params, f"Running task {namespace}", data=upload
+        api,
+        namespace,
+        function,
+        params,
+        f"Running task {namespace}",
+        upload=upload,
+        download=save_as,
     )
-    _output(result, save_as)
+    _output(result)
 
 
 @main.command("job")
@@ -91,7 +78,9 @@ def run_task(obj, namespace, function, args, upload, save_as):
     help="Name of file to upload and hence pass to the job",
 )
 @click.option(
-    "--save-as", type=click.File("wb"), help="Name of file in which to save result"
+    "--save-as",
+    type=click.Path(readable=False),
+    help="Name of file in which to save result",
 )
 @click.pass_obj
 def run_job(obj, namespace, function, args, upload, save_as):
@@ -111,8 +100,10 @@ def run_job(obj, namespace, function, args, upload, save_as):
     for arg in args:
         left, right = arg.split("=", 1)
         params[left.strip()] = right.strip()
-    result = lib.run_job(api, namespace, function, params, data=upload)
-    _output(result, save_as)
+    result = lib.run_job(
+        api, namespace, function, params, upload=upload, download=save_as
+    )
+    _output(result)
 
 
 @main.command("view")

@@ -195,9 +195,11 @@ def visual_poll(message, poll, NoTaskResultYet, wait=0.2):
     return result
 
 
-def run_task(api, namespace, name, params, message, data=None):
+def run_task(api, namespace, name, params, message, upload=None, download=None):
     """Return the raw json result or log (HTTP) error and abort."""
-    poll, NoTaskResultYet = api.run_task(namespace, name, params, data)
+    poll, NoTaskResultYet = api.run_task(
+        namespace, name, params, upload=upload, download=download
+    )
     try:
         return visual_poll(message, poll, NoTaskResultYet)
     except encapsia_api.EncapsiaApiError as e:
@@ -214,7 +216,7 @@ def run_plugins_task(api, name, params, message, data=None):
         "icepluginsmanager.{}".format(name),
         params,
         message,
-        data,
+        upload=data,
     )
     if reply["status"] == "ok":
         log(f"Status: {reply['status']}")

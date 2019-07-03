@@ -69,8 +69,39 @@ encapsia run task example test_module.test_function_with_any_args a=1 b=2 c=3
 test "Run test task function which only takes meta as a fixed argument"
 encapsia run task example test_module.test_function_with_meta_as_fixed_arg
 
-test "Run task function expecting uploaded data."
+test "Run task function with uploaded text data."
 encapsia run task example test_module.test_function_for_posted_data --upload=example_data.txt
+
+test "Run task function with uploaded json data."
+encapsia run task example test_module.test_function_for_posted_data --upload=example_data.json
+
+test "Run task function with uploaded jpg data."
+encapsia run task example test_module.test_function_for_posted_data --upload=example_data.jpg
+
+test "Run task function with uploaded json data."
+encapsia run task example test_module.test_function_for_posted_data --upload=example_data.json
+
+test "Run task function with uploaded jpg data."
+encapsia run task example test_module.test_function_for_posted_data --upload=example_data.jpg
+
+test "Run task function with uploaded text data and use save as."
+encapsia run task example test_module.test_function_for_posted_data --upload=example_data.txt --save-as=/tmp/example_data.txt
+# Because of the way we have written the test function, even text comes back as JSON string.
+echo -n "\"$(cat example_data.txt)\"" | diff -s /tmp/example_data.txt -
+rm /tmp/example_data.txt
+
+test "Run task function with uploaded json data and use save as."
+encapsia run task example test_module.test_function_for_posted_data --upload=example_data.json --save-as=/tmp/example_data.json
+diff -s example_data.json /tmp/example_data.json
+rm /tmp/example_data.json
+
+test "Run task function with uploaded jpg data and use save as."
+encapsia run task example test_module.test_function_for_posted_data --upload=example_data.jpg --save-as=/tmp/example_data.jpg
+diff -s example_data.jpg /tmp/example_data.jpg
+rm /tmp/example_data.jpg
+
+
+exit
 
 # The failing tasks. These should fail so have an " || true" at the end to keep these tests running.
 
