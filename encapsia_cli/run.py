@@ -2,8 +2,8 @@
 import json
 
 import click
-
 from encapsia_api import FileDownloadResponse
+
 from encapsia_cli import lib
 
 main = lib.make_main(__doc__)
@@ -12,9 +12,7 @@ main = lib.make_main(__doc__)
 def _log_result(result):
     """Pretty-print log the result from running a task, job, or view."""
     if isinstance(result, FileDownloadResponse):
-        lib.log(
-            f"Response saved to: {result.filename} " f"(mime_type={result.mime_type})"
-        )
+        lib.log(f"Response saved to: {result.filename} (mime_type={result.mime_type})")
     else:
         try:
             # Try to pretty print if it converts to JSON.

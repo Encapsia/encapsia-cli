@@ -11,9 +11,8 @@ import time
 from pathlib import Path
 
 import click
-import toml
-
 import encapsia_api
+import toml
 
 
 def log(message="", nl=True):
