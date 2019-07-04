@@ -47,6 +47,16 @@ encapsia run view --post example example_view_function_as_csv_file
 test "Run view which populates table from CSV file"
 encapsia run view --post example example_create_and_populate_table --upload treaties.csv
 
+test "Run view and use save as"
+encapsia run view example test_one_optional_arg --save-as=/tmp/test_view_download.json
+echo -n '[{"test_one_optional_arg": 1000}]' | diff -s /tmp/test_view_download.json -
+rm /tmp/test_view_download.json
+
+test "Run view which returns CSV directly and use save as"
+encapsia run view --post example example_view_function_as_csv_file --save-as=/tmp/test_view_download.csv
+cat /tmp/test_view_download.csv
+rm /tmp/test_view_download.csv
+
 # The tasks
 
 test "Run basic test task function"
@@ -69,8 +79,36 @@ encapsia run task example test_module.test_function_with_any_args a=1 b=2 c=3
 test "Run test task function which only takes meta as a fixed argument"
 encapsia run task example test_module.test_function_with_meta_as_fixed_arg
 
-test "Run task function expecting uploaded data."
+test "Run task function with uploaded text data."
 encapsia run task example test_module.test_function_for_posted_data --upload=example_data.txt
+
+test "Run task function with uploaded json data."
+encapsia run task example test_module.test_function_for_posted_data --upload=example_data.json
+
+test "Run task function with uploaded jpg data."
+encapsia run task example test_module.test_function_for_posted_data --upload=example_data.jpg
+
+test "Run task function with uploaded json data."
+encapsia run task example test_module.test_function_for_posted_data --upload=example_data.json
+
+test "Run task function with uploaded jpg data."
+encapsia run task example test_module.test_function_for_posted_data --upload=example_data.jpg
+
+test "Run task function with uploaded text data and use save as."
+encapsia run task example test_module.test_function_for_posted_data --upload=example_data.txt --save-as=/tmp/example_data.txt
+# Because of the way we have written the test function, even text comes back as JSON string.
+echo -n "\"$(cat example_data.txt)\"" | diff -s /tmp/example_data.txt -
+rm /tmp/example_data.txt
+
+test "Run task function with uploaded json data and use save as."
+encapsia run task example test_module.test_function_for_posted_data --upload=example_data.json --save-as=/tmp/example_data.json
+diff -s example_data.json /tmp/example_data.json
+rm /tmp/example_data.json
+
+test "Run task function with uploaded jpg data and use save as."
+encapsia run task example test_module.test_function_for_posted_data --upload=example_data.jpg --save-as=/tmp/example_data.jpg
+diff -s example_data.jpg /tmp/example_data.jpg
+rm /tmp/example_data.jpg
 
 # The failing tasks. These should fail so have an " || true" at the end to keep these tests running.
 
@@ -88,5 +126,10 @@ encapsia run task example test_module.test_function_for_posted_data || true
 
 # The jobs
 
-test "Run job function, showing 2 joblog entries with status queued and success"""
-encapsia run job example test_module.test_function_for_a_job name=tim
+test "Run job function and return (JSON) result"
+encapsia run job example test_module.test_function_for_a_job name=Tim
+
+test "Run job function and save (JSON) result"
+encapsia run job example test_module.test_function_for_a_job name=Tim --save-as=/tmp/test_job_result.json
+echo $(cat /tmp/test_job_result.json)
+rm /tmp/test_job_result.json

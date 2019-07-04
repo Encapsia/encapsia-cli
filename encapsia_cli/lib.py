@@ -195,9 +195,11 @@ def visual_poll(message, poll, NoTaskResultYet, wait=0.2):
     return result
 
 
-def run_task(api, namespace, name, params, message, data=None):
+def run_task(api, namespace, name, params, message, upload=None, download=None):
     """Return the raw json result or log (HTTP) error and abort."""
-    poll, NoTaskResultYet = api.run_task(namespace, name, params, data)
+    poll, NoTaskResultYet = api.run_task(
+        namespace, name, params, upload=upload, download=download
+    )
     try:
         return visual_poll(message, poll, NoTaskResultYet)
     except encapsia_api.EncapsiaApiError as e:
@@ -214,7 +216,7 @@ def run_plugins_task(api, name, params, message, data=None):
         "icepluginsmanager.{}".format(name),
         params,
         message,
-        data,
+        upload=data,
     )
     if reply["status"] == "ok":
         log(f"Status: {reply['status']}")
@@ -225,37 +227,17 @@ def run_plugins_task(api, name, params, message, data=None):
         return False
 
 
-def run_job(api, namespace, function, params, data=None):
-    """Run job, wait for it to complete, and log all joblogs; or log error from the task."""
-    extra_headers = {"Content-type": "application/octet-stream"} if data else None
-    reply = api.post(
-        ("jobs", namespace, function),
-        params=params,
-        data=data,
-        extra_headers=extra_headers,
+def run_job(api, namespace, function, params, message, upload=None, download=None):
+    """Run job, wait for it to complete, and log all joblogs; or log error from task."""
+    poll, NoResultYet = api.run_job(
+        namespace, function, params, upload=upload, download=download
     )
-    task_id = reply["result"]["task_id"]
-    job_id = reply["result"]["job_id"]
-
-    class NoResultYet:
-        pass
-
-    def get_task_result():
-        reply = api.get(("tasks", namespace, task_id))
-        rest_api_result = reply["result"]
-        task_status = rest_api_result["status"]
-        task_result = rest_api_result["result"]
-        if task_status == "finished":
-            return task_result
-        elif task_status == "failed":
-            log_error(f"\nStatus: {task_status}")
-            log_error(rest_api_result.get("exc_info"), abort=True)
-        else:
-            return NoResultYet
-
-    visual_poll("Running job", get_task_result, NoResultYet)
-    reply = api.get(("jobs", namespace, job_id))
-    return reply["result"]
+    try:
+        return visual_poll(message, poll, NoResultYet)
+    except encapsia_api.EncapsiaApiError as e:
+        result = e.args[0]
+        log_error(f"\nStatus: {result['status']}")
+        log_error(result.get("exc_info"), abort=True)
 
 
 def dbctl_action(api, name, params, message):
