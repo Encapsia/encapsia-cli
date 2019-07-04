@@ -9,7 +9,7 @@ from encapsia_cli import lib
 main = lib.make_main(__doc__)
 
 
-def _log_output(result):
+def _log_result(result):
     """Pretty-print log the result from running a task, job, or view."""
     if isinstance(result, FileDownloadResponse):
         lib.log(
@@ -65,7 +65,7 @@ def run_task(obj, namespace, function, args, upload, save_as):
         upload=upload,
         download=save_as,
     )
-    _log_output(result)
+    _log_result(result)
 
 
 @main.command("job")
@@ -109,7 +109,7 @@ def run_job(obj, namespace, function, args, upload, save_as):
         upload=upload,
         download=save_as,
     )
-    _log_output(result)
+    _log_result(result)
 
 
 @main.command("view")
@@ -163,4 +163,4 @@ def run_view(obj, namespace, function, args, post, upload, save_as):
         upload=upload,
         download=save_as,
     )
-    _log_output(result)
+    _log_result(result)
