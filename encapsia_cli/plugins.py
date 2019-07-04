@@ -3,12 +3,12 @@ import datetime
 import re
 import shutil
 import sys
+import tempfile
 import urllib.request
 from contextlib import contextmanager
 from pathlib import Path
 
 import click
-import tempfile
 import toml
 
 from encapsia_cli import lib
@@ -37,7 +37,8 @@ def _install_plugin(api, filename):
         lib.log_error(f"Cannot find plugin: {filename}", abort=True)
     # TODO only upload if not already installed? (unless --force)
     blob_id = api.upload_file_as_blob(filename.as_posix())
-    # TODO create plugin entity and pass that in (the pluginsmanager creates the pluginlogs entity)
+    # TODO create plugin entity and pass that in
+    # TODO (the pluginsmanager creates the pluginlogs entity)
     lib.log(f"Uploaded {filename} to blob: {blob_id}")
     lib.run_plugins_task(api, "install_plugin", dict(blob_id=blob_id), "Installing")
 
@@ -67,11 +68,11 @@ def fetch_from_url(obj, url):
 @click.argument("plugin_filenames", nargs=-1)
 @click.pass_obj
 def install(obj, versions, plugin_filenames):
-    """Install plugins from files and/or an optional version.toml file.
+    """Install plugins from files and/or an optional versions.toml file.
 
-    New plugins will be put in the cache before being installed.
+    Plugins named directly will be put in the cache before being installed.
 
-    All plugins specified in the versions TOML file will be taken from the cache.
+    Plugins specified in the versions.toml file will be taken from the cache.
 
     """
     plugins_cache_dir = obj["plugins_cache_dir"]
@@ -95,7 +96,8 @@ def uninstall(obj, namespace):
     """Uninstall named plugin."""
     if not obj["force"]:
         click.confirm(
-            f'Are you sure you want to uninstall the plugin (delete all!) from namespace "{namespace}"?',
+            f'Are you sure you want to uninstall the plugin " + \
+            f"(delete all!) from namespace "{namespace}"?',
             abort=True,
         )
     api = lib.get_api(**obj)
