@@ -240,36 +240,6 @@ def run_job(api, namespace, function, params, message, upload=None, download=Non
         log_error(f"\nStatus: {result['status']}")
         log_error(result.get("exc_info"), abort=True)
 
-    # extra_headers = {"Content-type": "application/octet-stream"} if data else None
-    # reply = api.post(
-    #     ("jobs", namespace, function),
-    #     params=params,
-    #     data=data,
-    #     extra_headers=extra_headers,
-    # )
-    # task_id = reply["result"]["task_id"]
-    # job_id = reply["result"]["job_id"]
-
-    # class NoResultYet:
-    #     pass
-
-    # def get_task_result():
-    #     reply = api.get(("tasks", namespace, task_id))
-    #     rest_api_result = reply["result"]
-    #     task_status = rest_api_result["status"]
-    #     task_result = rest_api_result["result"]
-    #     if task_status == "finished":
-    #         return task_result
-    #     elif task_status == "failed":
-    #         log_error(f"\nStatus: {task_status}")
-    #         log_error(rest_api_result.get("exc_info"), abort=True)
-    #     else:
-    #         return NoResultYet
-
-    # visual_poll("Running job", get_task_result, NoResultYet)
-    # reply = api.get(("jobs", namespace, job_id))
-    # return reply["result"]
-
 
 def dbctl_action(api, name, params, message):
     poll, NoTaskResultYet = api.dbctl_action(name, params)
