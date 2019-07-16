@@ -96,8 +96,8 @@ def uninstall(obj, namespace):
     """Uninstall named plugin."""
     if not obj["force"]:
         click.confirm(
-            f"Are you sure you want to uninstall the plugin " + \
-            f"(delete all!) from namespace {namespace}",
+            f"Are you sure you want to uninstall the plugin "
+            + f"(delete all!) from namespace {namespace}",
             abort=True,
         )
     api = lib.get_api(**obj)
