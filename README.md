@@ -29,6 +29,7 @@ Note that these tests are *not* self-verifying; they just provide helpful covera
 
 # TODO
 
+* Feature: Add plugins command for linting e.g. consistency of capabilities
 * Feature: Add package command for running standard tasks
 * Feature: Add "encapsia plugins reactor" to forward local calls to remote for even easier dev without installing anything except the SQL.
 * Feature: Use click-web to create an encapsia webserve command?? Put in a plugin?
