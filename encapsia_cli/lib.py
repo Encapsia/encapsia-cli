@@ -202,8 +202,8 @@ def run_task(api, namespace, name, params, message, upload=None, download=None):
     )
     try:
         return visual_poll(message, poll, NoTaskResultYet)
-    except encapsia_api.EncapsiaApiError as e:
-        result = e.args[0]
+    except encapsia_api.EncapsiaApiFailedTaskError as e:
+        result = e.payload
         log_error(f"\nStatus: {result['status']}")
         log_error(result.get("exc_info"), abort=True)
 
@@ -234,8 +234,8 @@ def run_job(api, namespace, function, params, message, upload=None, download=Non
     )
     try:
         return visual_poll(message, poll, NoResultYet)
-    except encapsia_api.EncapsiaApiError as e:
-        result = e.args[0]
+    except encapsia_api.EncapsiaApiFailedTaskError as e:
+        result = e.payload
         log_error(f"\nStatus: {result['status']}")
         log_error(result.get("exc_info"), abort=True)
 
