@@ -21,8 +21,8 @@ Note that these tests are *not* self-verifying; they just provide helpful covera
 ## Release checklist
 
 * Run: `black .`
-* Run: `isort --multi-line=3 --trailing-comma --force-grid-wrap=0 --combine-as --line-width=88 -y`
-* Run: `flake8 --ignore=E501 .`
+* Run: `isort`
+* Run: `flake8 .`
 * Ensure "tests" run ok (see above). Also capture output and commit with:
     `bash walkthrough_tests/all.sh --host <host> --example-plugin-src ../inf-ice-example-plugin/ 2>&1 | ansi2html -f 80% >WALKTHROUGH.html`
 * Ensure git tag, package version, and `enacpsia_cli.__version__` are all equal.
