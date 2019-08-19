@@ -44,7 +44,8 @@ touch $EXAMPLE_PLUGIN_SRC/tasks/test_new_module.py
 encapsia plugins dev-update $EXAMPLE_PLUGIN_SRC
 rm $EXAMPLE_PLUGIN_SRC/tasks/test_new_module.py
 
-test "Uninstall the example plugin"
+test "Install the non-dev version of the example plugin so we can uninstall it (to be tidy)."
+encapsia plugins install --versions=example.toml
 encapsia plugins --force uninstall example
 
 test "Create and destroy new namespace"
