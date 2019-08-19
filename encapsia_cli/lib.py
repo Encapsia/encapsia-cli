@@ -218,12 +218,12 @@ def run_plugins_task(api, name, params, message, data=None):
         message,
         upload=data,
     )
+    log(f"Status: {reply['status']}")
     if reply["status"] == "ok":
-        log(f"Status: {reply['status']}")
         log_output(reply["output"].strip())
         return True
     else:
-        log_error(str(reply), abort=True)
+        log_error(reply["output"].strip())
         return False
 
 
