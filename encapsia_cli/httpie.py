@@ -1,4 +1,5 @@
 """Helper to use httpie with the URL and credentials passed in."""
+import importlib
 import subprocess
 
 import click
@@ -12,6 +13,10 @@ main = lib.make_main(__doc__)
 @click.pass_obj
 def shell(obj):
     """Launch an httpie interactive shell with passed-in credentials."""
+    try:
+        importlib.import_module("http_prompt")
+    except ModuleNotFoundError:
+        lib.log_error("Please install http-prompt first.", abort=True)
     api = lib.get_api(**obj)
     argv = [
         "http-prompt",
