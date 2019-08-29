@@ -7,10 +7,10 @@ import tempfile
 import urllib.request
 from contextlib import contextmanager
 from pathlib import Path
-from tabulate import tabulate
 
 import click
 import toml
+from tabulate import tabulate
 
 from encapsia_cli import lib
 
@@ -51,7 +51,10 @@ def dev_list_namespaces(obj):
 
 @main.command()
 @click.option(
-    "--logs", is_flag=True, default=False, help="Include output from install log (verbose!)."
+    "--logs",
+    is_flag=True,
+    default=False,
+    help="Include output from install log (verbose!).",
 )
 @click.pass_obj
 def info(obj, logs):
