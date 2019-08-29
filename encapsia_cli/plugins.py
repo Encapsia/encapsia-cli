@@ -42,8 +42,8 @@ def _install_plugin(api, filename):
 
 @main.command()
 @click.pass_obj
-def info(obj):
-    """Provide some information about installed plugins."""
+def dev_list_namespaces(obj):
+    """Provide some information about the namespace usage of installed plugins."""
     api = lib.get_api(**obj)
     lib.run_plugins_task(api, "list_namespaces", dict(), "Fetching list of namespaces")
 
