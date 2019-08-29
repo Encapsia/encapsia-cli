@@ -35,10 +35,7 @@ def _install_plugin(api, filename):
     """Use the API to install plugin directly from a file."""
     if not filename.exists():
         lib.log_error(f"Cannot find plugin: {filename}", abort=True)
-    # TODO only upload if not already installed? (unless --force)
     blob_id = api.upload_file_as_blob(filename.as_posix())
-    # TODO create plugin entity and pass that in
-    # TODO (the pluginsmanager creates the pluginlogs entity)
     lib.log(f"Uploaded {filename} to blob: {blob_id}")
     lib.run_plugins_task(api, "install_plugin", dict(blob_id=blob_id), "Installing")
 
