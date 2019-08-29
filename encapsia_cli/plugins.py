@@ -7,6 +7,7 @@ import tempfile
 import urllib.request
 from contextlib import contextmanager
 from pathlib import Path
+from tabulate import tabulate
 
 import click
 import toml
@@ -35,20 +36,36 @@ def _install_plugin(api, filename):
     """Use the API to install plugin directly from a file."""
     if not filename.exists():
         lib.log_error(f"Cannot find plugin: {filename}", abort=True)
-    # TODO only upload if not already installed? (unless --force)
     blob_id = api.upload_file_as_blob(filename.as_posix())
-    # TODO create plugin entity and pass that in
-    # TODO (the pluginsmanager creates the pluginlogs entity)
     lib.log(f"Uploaded {filename} to blob: {blob_id}")
     lib.run_plugins_task(api, "install_plugin", dict(blob_id=blob_id), "Installing")
 
 
 @main.command()
 @click.pass_obj
-def info(obj):
-    """Provide some information about installed plugins."""
+def dev_list_namespaces(obj):
+    """Provide some information about the namespace usage of installed plugins."""
     api = lib.get_api(**obj)
     lib.run_plugins_task(api, "list_namespaces", dict(), "Fetching list of namespaces")
+
+
+@main.command()
+@click.option(
+    "--logs", is_flag=True, default=False, help="Include output from install log (verbose!)."
+)
+@click.pass_obj
+def info(obj, logs):
+    """Provide information about installed plugins."""
+    api = lib.get_api(**obj)
+    raw_info = api.run_view("pluginsmanager", "installed_plugins_with_tags")
+    headers = ["name", "version", "description", "when", "plugin_tags"]
+    info = ([p[h] for h in headers] for p in raw_info)
+    lib.log(tabulate(info, headers=headers))
+    if logs:
+        for i in raw_info:
+            name, output = i["name"], i["output"]
+            lib.log(f"\n[Install log for {name}]")
+            lib.log_output(output.strip())
 
 
 @main.command()
