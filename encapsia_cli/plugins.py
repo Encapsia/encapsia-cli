@@ -7,6 +7,7 @@ import tempfile
 import urllib.request
 from contextlib import contextmanager
 from pathlib import Path
+from tabulate import tabulate
 
 import click
 import toml
@@ -46,6 +47,25 @@ def dev_list_namespaces(obj):
     """Provide some information about the namespace usage of installed plugins."""
     api = lib.get_api(**obj)
     lib.run_plugins_task(api, "list_namespaces", dict(), "Fetching list of namespaces")
+
+
+@main.command()
+@click.option(
+    "--logs", is_flag=True, default=False, help="Include output from install log (verbose!)."
+)
+@click.pass_obj
+def info(obj, logs):
+    """Provide information about installed plugins."""
+    api = lib.get_api(**obj)
+    raw_info = api.run_view("pluginsmanager", "installed_plugins")
+    headers = ["name", "version", "description", "success", "when"]
+    info = ([p[h] for h in headers] for p in raw_info)
+    lib.log(tabulate(info, headers=headers))
+    if logs:
+        for i in raw_info:
+            name, output = i["name"], i["output"]
+            lib.log(f"\n[Install log for {name}]")
+            lib.log_output(output.strip())
 
 
 @main.command()
