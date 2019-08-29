@@ -58,7 +58,7 @@ def info(obj, logs):
     """Provide information about installed plugins."""
     api = lib.get_api(**obj)
     raw_info = api.run_view("pluginsmanager", "installed_plugins_with_tags")
-    headers = ["name", "version", "description", "success", "when", "plugin_tags"]
+    headers = ["name", "version", "description", "when", "plugin_tags"]
     info = ([p[h] for h in headers] for p in raw_info)
     lib.log(tabulate(info, headers=headers))
     if logs:
