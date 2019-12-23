@@ -6,7 +6,7 @@ All of these are designed to work with server 1.5 and beyond.
 
 ## Autocomplete
 
-Setup autocomplete using the instructions found on <https://github.com/click-contrib/click-completion.>
+Setup autocomplete using the instructions found on <https://github.com/click-contrib/click-completion>
 
 ## Tests
 
