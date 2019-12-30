@@ -19,13 +19,9 @@ def backup(obj, filename):
         filename = Path(filename)
     api = lib.get_api(**obj)
     handle = lib.dbctl_action(api, "backup_database", dict(), "Backing up database")
-    temp_filename = Path(
-        api.dbctl_download_data(handle)
+    filename = Path(
+        api.dbctl_download_data(handle, filename)
     )  # TODO remove Path() once encapsia_api switched over to pathlib
-    if filename is None:
-        filename = temp_filename
-    else:
-        temp_filename.rename(filename)
     lib.log(f"Downloaded {filename.stat().st_size} bytes to {filename}")
 
 
