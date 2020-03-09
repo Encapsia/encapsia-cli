@@ -1,10 +1,10 @@
 """Manage users, including superuser and system users."""
+from pathlib import Path
+
 import click
 import tabulate
 
 from encapsia_cli import lib
-
-from pathlib import Path
 
 main = lib.make_main(__doc__)
 
@@ -108,7 +108,9 @@ def export_users_and_roles(obj, filename, with_roles):
         export_data["roles"] = api.get_all_roles()
     with open(filename, "w") as f:
         lib.pretty_print(export_data, "toml", f)
-        lib.log_output(f"Exported {len(export_data['users'])} users and {len(export_data.get('roles', []))} roles to {filename}")
+        lib.log_output(
+            f"Exported {len(export_data['users'])} users and {len(export_data.get('roles', []))} roles to {filename}"
+        )
 
 
 @main.command("import")
@@ -128,5 +130,6 @@ def import_users_and_roles(obj, filename):
         api.post("users", json=users)
     if roles:
         api.post("roles", json=roles)
-    lib.log_output(f"Imported {len(users)} users and {len(roles)} roles from {filename}")
-
+    lib.log_output(
+        f"Imported {len(users)} users and {len(roles)} roles from {filename}"
+    )
