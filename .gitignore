@@ -11,3 +11,4 @@ dist/
 .eggs/
 pip-wheel-metadata/
 .encapsia/
+.vscode/
