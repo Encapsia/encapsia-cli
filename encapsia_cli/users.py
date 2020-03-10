@@ -99,14 +99,13 @@ def delete_user(obj, email):
 @click.pass_obj
 def export_users_and_roles(obj, filename, with_roles):
     """Export users (and roles) to given TOML file."""
-    if filename:
-        filename = Path(filename)
+    filename = Path(filename)
     api = lib.get_api(**obj)
     export_data = {}
     export_data["users"] = api.get_all_users()
     if with_roles:
         export_data["roles"] = api.get_all_roles()
-    with open(filename, "w") as f:
+    with filename.open(mode="w") as f:
         lib.pretty_print(export_data, "toml", f)
         lib.log_output(
             f"Exported {len(export_data['users'])} users and {len(export_data.get('roles', []))} roles to {filename}"
@@ -120,8 +119,7 @@ def export_users_and_roles(obj, filename, with_roles):
 @click.pass_obj
 def import_users_and_roles(obj, filename):
     """Import users (and roles) from given TOML file."""
-    if filename:
-        filename = Path(filename)
+    filename = Path(filename)
     api = lib.get_api(**obj)
     import_data = lib.read_toml(filename)
     users = import_data.get("users", [])
