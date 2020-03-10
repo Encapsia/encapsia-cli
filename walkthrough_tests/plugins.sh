@@ -5,7 +5,7 @@ source $(dirname "$0")/lib.sh
 
 # Validate input arguments.
 [ -z "$ENCAPSIA_HOST" ] && echo "Please provide host using --host argument" && exit 1
-[ -z "$EXAMPLE_PLUGIN_SRC" ] && echo "Please provide example plugin src directory --example-plugin-src argument" && exit 1
+[ -z "$EXAMPLE_PLUGIN_SRC" ] && echo "Please provide example plugin src directory using --example-plugin-src argument" && exit 1
 
 # Change directory to this test directory for relative paths.
 cd $(dirname "$0")
