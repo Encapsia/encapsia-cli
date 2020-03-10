@@ -34,6 +34,7 @@ encapsia users list --all-users
 
 test "Export all users and roles"
 encapsia users export /tmp/test_encapsia_users.toml
+cat /tmp/test_encapsia_users.toml
 
 test "Import users and roles"
 encapsia users import /tmp/test_encapsia_users.toml
