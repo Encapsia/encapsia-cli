@@ -20,6 +20,10 @@ do
     esac
 done
 
+# Pretty print a banner separator.
+function banner() {
+    echo -e "\n\e[34m\e[1m<<< $1 >>>\e[0m"
+}
 
 # Pretty print the test descriptions.
 function test() {
