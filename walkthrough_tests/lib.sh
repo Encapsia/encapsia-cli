@@ -1,4 +1,7 @@
 # Quick-and-dirty parse arguments.
+# Save the args so we can restore them later, allowing this "library" to
+# be imported multiple times.
+saved_args=("$@")
 while [[ $# -gt 0 ]]
 do
     key="$1"
@@ -19,7 +22,12 @@ do
         ;;
     esac
 done
+set -- "${saved_args[@]}"
 
+# Pretty print a banner separator.
+function banner() {
+    echo -e "\n\e[34m\e[1m<<< $1 >>>\e[0m"
+}
 
 # Pretty print the test descriptions.
 function test() {

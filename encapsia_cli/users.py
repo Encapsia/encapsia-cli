@@ -1,4 +1,6 @@
 """Manage users, including superuser and system users."""
+from pathlib import Path
+
 import click
 import tabulate
 
@@ -87,3 +89,45 @@ def delete_user(obj, email):
     """Delete user (but *do not* delete any related role)."""
     api = lib.get_api(**obj)
     api.delete_user(email)
+
+
+@main.command("export")
+@click.argument(
+    "filename", type=click.Path(writable=True, readable=False), required=True
+)
+@click.option("--with-roles/--without-roles", default=True)
+@click.pass_obj
+def export_users_and_roles(obj, filename, with_roles):
+    """Export users (and roles) to given TOML file."""
+    filename = Path(filename)
+    api = lib.get_api(**obj)
+    export_data = {}
+    export_data["users"] = api.get_all_users()
+    if with_roles:
+        export_data["roles"] = api.get_all_roles()
+    with filename.open(mode="w") as f:
+        lib.pretty_print(export_data, "toml", f)
+        lib.log_output(
+            f"Exported {len(export_data['users'])} users and {len(export_data.get('roles', []))} roles to {filename}"
+        )
+
+
+@main.command("import")
+@click.argument(
+    "filename", type=click.Path(writable=False, readable=True), required=True
+)
+@click.pass_obj
+def import_users_and_roles(obj, filename):
+    """Import users (and roles) from given TOML file."""
+    filename = Path(filename)
+    api = lib.get_api(**obj)
+    import_data = lib.read_toml(filename)
+    users = import_data.get("users", [])
+    roles = import_data.get("roles", [])
+    if users:
+        api.post("users", json=users)
+    if roles:
+        api.post("roles", json=roles)
+    lib.log_output(
+        f"Imported {len(users)} users and {len(roles)} roles from {filename}"
+    )
