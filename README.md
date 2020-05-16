@@ -1,5 +1,7 @@
 # About
 
+<a href="https://snyk.io/test/github/tcorbettclark/encapsia-cli?targetFile=requirements.txt"><img src="https://snyk.io/test/github/tcorbettclark/encapsia-cli/badge.svg?targetFile=requirements.txt" alt="Known Vulnerabilities" data-canonical-src="https://snyk.io/test/github/tcorbettclark/encapsia-cli?targetFile=requirements.txt" style="max-width:100%;"></a>
+
 This package provides command line access to Encapsia over the REST API.
 
 All of these are designed to work with server 1.5 and beyond.
@@ -25,4 +27,5 @@ Note that these tests are *not* self-verifying; they just provide helpful covera
 * Run: `flake8 .`
 * Ensure "tests" run ok (see above). Also capture output and commit with:
     `bash walkthrough_tests/all.sh --host <host> --example-plugin-src ../inf-ice-example-plugin/ 2>&1 | ansi2html -f 80% >WALKTHROUGH.html`
+* Run: `poetry export -f requirements.txt >requirements.txt` (for snyk scanning)
 * Ensure git tag, package version, and `enacpsia_cli.__version__` are all equal.
