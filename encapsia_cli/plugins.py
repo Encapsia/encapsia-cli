@@ -1,14 +1,18 @@
 """Install, uninstall, create, and update plugins."""
+
 import datetime
+import operator
 import re
 import shutil
-import sys
 import tempfile
 import urllib.request
+from collections import defaultdict
 from contextlib import contextmanager
 from pathlib import Path
 
+import boto3
 import click
+import semver
 import toml
 from tabulate import tabulate
 
@@ -17,112 +21,307 @@ from encapsia_cli import lib
 main = lib.make_main(__doc__, for_plugins=True)
 
 
-def _fetch_plugin_and_store_in_cache(url, plugins_cache_dir, force=False):
-    full_name = url.rsplit("/", 1)[-1]
+def _add_to_local(plugins_local_dir, uri, force=False):
+    full_name = uri.rsplit("/", 1)[-1]
     m = re.match(r"plugin-([^-]*)-([^-]*).tar.gz", full_name)
     if m:
-        output_filename = plugins_cache_dir / full_name
+        output_filename = plugins_local_dir / full_name
         if not force and output_filename.exists():
             lib.log(f"Found: {output_filename} (Skipping)")
         else:
-            filename, headers = urllib.request.urlretrieve(url, tempfile.mkstemp()[1])
+            filename, headers = urllib.request.urlretrieve(uri, tempfile.mkstemp()[1])
             shutil.move(filename, output_filename)
             lib.log(f"Created: {output_filename}")
     else:
         lib.log_error("That doesn't look like a plugin. Aborting!", abort=True)
 
 
-def _install_plugin(api, filename):
+def _install_plugin(api, filename, print_output=False):
     """Use the API to install plugin directly from a file."""
-    if not filename.exists():
+    if not filename.is_file():
         lib.log_error(f"Cannot find plugin: {filename}", abort=True)
     blob_id = api.upload_file_as_blob(filename.as_posix())
     lib.log(f"Uploaded {filename} to blob: {blob_id}")
-    lib.run_plugins_task(api, "install_plugin", dict(blob_id=blob_id), "Installing")
+    lib.run_plugins_task(
+        api,
+        "install_plugin",
+        dict(blob_id=blob_id),
+        "Installing",
+        print_output=print_output,
+    )
+
+
+class PluginInfo:
+
+    PLUGIN_REGEX = re.compile(r"^.*plugin-([^-]*)-(.*)\.tar.gz$")
+    FOUR_DIGIT_VERSION_REGEX = re.compile(r"([0-9]+)\.([0-9]+)\.([0-9]+)\.([0-9]+)")
+    DEV_VERSION_REGEX = re.compile(r"([0-9]+)\.([0-9]+)\.([0-9]+)dev([0-9]+)")
+
+    def __init__(self, raw):
+        """Takes either (name, version) or some kind of plugin filename."""
+        if isinstance(raw, tuple):
+            self.name, self.version = raw
+        elif isinstance(raw, (str, Path)):
+            m = self.PLUGIN_REGEX.match(str(raw))
+            if m:
+                self.name = m.group(1)
+                self.version = m.group(2)
+            else:
+                raise ValueError(f"Unable to parse: {raw}")
+        self.semver = self.parse_version(self.version)
+        self.key = self.name, self.semver
+
+    def parse_version(self, version):
+        # Consider a 4th digit to be a SemVer pre-release.
+        m = self.FOUR_DIGIT_VERSION_REGEX.match(version)
+        if m:
+            major, minor, patch, prerelease = m.groups()
+            return semver.VersionInfo(
+                major=major, minor=minor, patch=patch, prerelease=prerelease
+            )
+        # E.g. 0.0.209dev12 is build 12.
+        m = self.DEV_VERSION_REGEX.match(version)
+        if m:
+            major, minor, patch, build = m.groups()
+            return semver.VersionInfo(
+                major=major, minor=minor, patch=patch, build=build
+            )
+        # Otherwise hope that the semver package can deal with it.
+        try:
+            return semver.VersionInfo.parse(version)
+        except ValueError as e:
+            lib.log_error(str(e))
+            # At least return something comparable.
+            return semver.VersionInfo(major=0)
+
+    def formatted_version(self):
+        version, semver = self.version, str(self.semver)
+        if semver == version:
+            return semver
+        else:
+            return f"{version} ({semver})"
+
+    def get_as_filename(self):
+        return f"plugin-{self.name}-{self.version}.tar.gz"
+
+    def get_as_s3_name(self):
+        return f"{self.name}/{self.get_as_filename()}"
+
+    def __str__(self):
+        return self.get_as_filename()
+
+
+def _get_local_versions(plugins_local_dir, name=None):
+    if name:
+        result = Path(plugins_local_dir).glob(f"plugin-{name}-*.tar.gz")
+    else:
+        result = Path(plugins_local_dir).glob("plugin-*-*.tar.gz")
+    return [PluginInfo(raw) for raw in result]
+
+
+def _get_s3_versions(plugins_s3_bucket, name=None):
+    s3 = boto3.client("s3")
+    paginator = s3.get_paginator("list_objects_v2")
+    if name:
+        response = paginator.paginate(
+            Bucket=plugins_s3_bucket, Prefix=f"{name}/", Delimiter="/"
+        )
+    else:
+        response = paginator.paginate(Bucket=plugins_s3_bucket)
+    return [
+        PluginInfo(x["Key"])
+        for r in response
+        for x in r.get("Contents", [])
+        if x["Key"].endswith(".tar.gz")
+    ]
+
+
+def _get_latest_version(plugin_infos):
+    try:
+        return max(plugin_infos, key=operator.attrgetter("key"))
+    except ValueError:
+        return None
+
+
+def _get_latest_versions(plugin_infos):
+    by_name = defaultdict(list)
+    for pi in plugin_infos:
+        by_name[pi.name].append(pi)
+    return {name: _get_latest_version(by_name[name]) for name in by_name}
+
+
+def _get_latest_local_plugin_by_name(plugins_local_dir, name):
+    pi = _get_latest_version(_get_local_versions(plugins_local_dir, name))
+    if pi:
+        return Path(pi.get_as_filename())
+    else:
+        return None
+
+
+def _get_latest_s3_plugin_by_name(plugins_s3_bucket, name):
+    return _get_latest_version(
+        _get_s3_versions(plugins_s3_bucket, name)
+    ).get_as_s3_name()
+
+
+def _get_latest_local_versions(plugins_local_dir):
+    return _get_latest_versions(_get_local_versions(plugins_local_dir))
+
+
+def _get_latest_s3_versions(plugins_s3_bucket):
+    return _get_latest_versions(_get_s3_versions(plugins_s3_bucket))
+
+
+def _download_plugin_from_s3(plugins_s3_bucket, name, filename):
+    s3 = boto3.client("s3")
+    with open(filename, "wb") as f:
+        s3.download_fileobj(plugins_s3_bucket, name, f)
 
 
 @main.command()
 @click.pass_obj
 def dev_list_namespaces(obj):
-    """Provide some information about the namespace usage of installed plugins."""
+    """Print information about the namespace usage of installed plugins."""
     api = lib.get_api(**obj)
     lib.run_plugins_task(api, "list_namespaces", dict(), "Fetching list of namespaces")
 
 
 @main.command()
-@click.option(
-    "--logs",
-    is_flag=True,
-    default=False,
-    help="Include output from install log (verbose!).",
-)
 @click.pass_obj
-def info(obj, logs):
-    """Provide information about installed plugins."""
+def make_versions_toml(obj):
+    """Print currently installed plugins as versions TOML."""
     api = lib.get_api(**obj)
     raw_info = api.run_view("pluginsmanager", "installed_plugins_with_tags")
-    headers = ["name", "version", "description", "when", "plugin_tags"]
-    info = ([p[h] for h in headers] for p in raw_info)
-    lib.log(tabulate(info, headers=headers))
-    if logs:
-        for i in raw_info:
-            name, output = i["name"], i["output"]
-            lib.log(f"\n[Install log for {name}]")
-            lib.log_output(output.strip())
+    info = {i["name"]: i["version"] for i in raw_info}
+    lib.log_output(toml.dumps(info))
 
 
 @main.command()
-@click.argument("url")
+@click.argument("plugins", nargs=-1)
 @click.pass_obj
-def fetch_from_url(obj, url):
-    """Copy a plugin from given URL into the plugin cache."""
-    plugins_cache_dir = obj["plugins_cache_dir"]
-    force = obj["force"]
-    _fetch_plugin_and_store_in_cache(url, plugins_cache_dir, force)
+def latest_log(obj, plugins):
+    """Print the latest install logs for given plugins."""
+    api = lib.get_api(**obj)
+    # Despite the name, this only fetches the latest log for each plugin, not all!
+    raw_info = api.run_view("pluginsmanager", "all_plugin_logs")
+    if plugins:
+        # Filter to specified plugins.
+        raw_info = [i for i in raw_info if i["name"] in plugins]
+    for i in raw_info:
+        for f in (
+            "name",
+            "version",
+            "description",
+            "action",
+            "server",
+            "success",
+            "when",
+        ):
+            lib.log(f"{f.capitalize()}: {i[f]}")
+        lib.log("Logs:")
+        if i["success"]:
+            lib.log_output(i["output"].strip())
+        else:
+            lib.log_error(i["output"].strip())
+        lib.log("")
+
+
+@main.command()
+@click.argument("plugins", nargs=-1)
+@click.pass_obj
+def info(obj, plugins):
+    """Print information about (successfully) installed plugins."""
+    api = lib.get_api(**obj)
+    raw_info = api.run_view("pluginsmanager", "installed_plugins_with_tags")
+    if plugins:
+        # Filter to specified plugins.
+        raw_info = [i for i in raw_info if i["name"] in plugins]
+    # Tidy formatting
+    for i in raw_info:
+        i["version"] = PluginInfo((i["name"], i["version"])).formatted_version()
+        plugin_tags = i.pop("plugin_tags")
+        if isinstance(plugin_tags, list):
+            i["plugin-tags"] = ", ".join(sorted(plugin_tags))
+        else:
+            i["plugin-tags"] = ""
+    headers = [
+        "name",
+        "version",
+        "description",
+        "when",
+        "plugin-tags",
+    ]
+    info = ([p[h] for h in headers] for p in raw_info)
+    lib.log(tabulate(info, headers=headers))
 
 
 @main.command()
 @click.option(
     "--versions", default=None, help="TOML file containing webapp names and versions."
 )
-@click.argument("plugin_filenames", nargs=-1)
+@click.option(
+    "--show-logs/--no-show-logs", default=False, help="Print installation logs."
+)
+@click.argument("plugins", nargs=-1)
 @click.pass_obj
-def install(obj, versions, plugin_filenames):
-    """Install plugins from files and/or an optional versions.toml file.
+def install(obj, versions, show_logs, plugins):
+    """Install plugins by name, from files, or from a versions.toml file.
 
-    Plugins named directly will be put in the cache before being installed.
+    Plugins provided as files are put in the local before being installed.
 
-    Plugins specified in the versions.toml file will be taken from the cache.
+    When described by name alone, the latest plugin of that name in the local will be used.
+
+    And plugins specified in the versions.toml file will be taken from the local.
 
     """
-    plugins_cache_dir = obj["plugins_cache_dir"]
-    api = lib.get_api(**obj)
-    for plugin_filename in plugin_filenames:
-        plugin_filename = Path(plugin_filename).resolve()
-        _fetch_plugin_and_store_in_cache(
-            plugin_filename.as_uri(), plugins_cache_dir, force=True
-        )
-        _install_plugin(api, plugins_cache_dir / plugin_filename.name)
+    plugins_local_dir = obj["plugins_local_dir"]
+    # First create a list of plugin files to install.
+    filenames = []
+    for plugin in plugins:
+        plugin_filename = Path(plugin).resolve()
+        if plugin_filename.is_file():
+            _add_to_local(plugins_local_dir, plugin_filename.as_uri(), force=True)
+            filenames.append(plugins_local_dir / plugin_filename.name)
+        else:
+            plugin_filename = _get_latest_local_plugin_by_name(
+                plugins_local_dir, plugin
+            )
+            if plugin_filename:
+                filenames.append(plugins_local_dir / plugin_filename)
+            else:
+                lib.log_error(f"Cannot find plugin with name: {plugin}", abort=True)
     if versions:
         versions = Path(versions)
         for name, version in lib.read_toml(versions).items():
-            _install_plugin(api, plugins_cache_dir / f"plugin-{name}-{version}.tar.gz")
+            filenames.append(plugins_local_dir / f"plugin-{name}-{version}.tar.gz")
+
+    # Now install them.
+    api = lib.get_api(**obj)
+    for filename in filenames:
+        _install_plugin(api, filename, print_output=show_logs)
 
 
 @main.command()
+@click.option(
+    "--show-logs/--no-show-logs", default=False, help="Print installation logs."
+)
 @click.argument("namespace")
 @click.pass_obj
-def uninstall(obj, namespace):
+def uninstall(obj, show_logs, namespace):
     """Uninstall named plugin."""
     if not obj["force"]:
         click.confirm(
-            f"Are you sure you want to uninstall the plugin "
+            "Are you sure you want to uninstall the plugin "
             + f"(delete all!) from namespace {namespace}",
             abort=True,
         )
     api = lib.get_api(**obj)
     lib.run_plugins_task(
-        api, "uninstall_plugin", dict(namespace=namespace), f"Uninstalling {namespace}"
+        api,
+        "uninstall_plugin",
+        dict(namespace=namespace),
+        f"Uninstalling {namespace}",
+        print_output=show_logs,
     )
 
 
@@ -198,8 +397,7 @@ def dev_update(obj, directory):
     directory = Path(directory)
     plugin_toml_path = directory / "plugin.toml"
     if not plugin_toml_path.exists():
-        lib.log_error("Not in a plugin directory.")
-        sys.exit(1)
+        lib.log_error("Not in a plugin directory.", abort=True)
 
     with get_modified_plugin_directories(
         directory, reset=obj["force"]
@@ -251,102 +449,19 @@ def dev_destroy_namespace(obj, namespace):
     )
 
 
-def make_plugin_toml_file(filename, name, description, version, created_by):
-    obj = dict(
-        name=name,
-        description=description,
-        version=version,
-        created_by=created_by,
-        n_task_workers=1,
-        reset_on_install=True,
-    )
-    lib.write_toml(filename, obj)
-
-
-@main.command()
-@click.option(
-    "--versions",
-    type=click.Path(exists=True),
-    help="TOML file containing webapp names and versions.",
-)
-@click.option("--email", prompt="Your email", help="Email creator of the plugins.")
-@click.option(
-    "--s3-directory", default="ice-webapp-builds", help="Base directory on S3."
-)
-@click.pass_obj
-def build_from_legacy_s3(obj, versions, email, s3_directory):
-    """Build plugins from legacy webapps hosted on AWS S3."""
-    plugins_cache_dir = obj["plugins_cache_dir"]
-    force = obj["force"]
-    versions = Path(versions)
-    for name, version in lib.read_toml(versions).items():
-        output_filename = Path(plugins_cache_dir, f"plugin-{name}-{version}.tar.gz")
-        if not force and output_filename.exists():
-            lib.log(f"Found: {output_filename} (Skipping)")
-        else:
-            _download_and_build_plugin_from_s3(
-                s3_directory, name, version, email, output_filename
-            )
-            lib.log(f"Created: {output_filename}")
-
-
-def _download_and_build_plugin_from_s3(
-    s3_directory, name, version, email, output_filename
-):
-    with lib.temp_directory() as temp_directory:
-        base_dir = temp_directory / f"plugin-{name}-{version}"
-        base_dir.mkdir()
-
-        # Download everything from S3 into the webfiles folder.
-        # (we will move out the views and tasks if present).
-        files_directory = base_dir / "webfiles"
-        files_directory.mkdir()
-        lib.run(
-            "aws",
-            "s3",
-            "cp",
-            f"s3://{s3_directory}/{name}/{version}",
-            files_directory.as_posix(),
-            "--recursive",
-        )
-
-        # Move out the views if they exist.
-        views_directory = files_directory / "views"
-        if views_directory.exists():
-            views_directory.rename(base_dir / "views")
-
-        # Move out the wheels if they exist.
-        wheels_directory = files_directory / "tasks/wheels"
-        if wheels_directory.exists():
-            wheels_directory.rename(base_dir / "wheels")
-
-        # Move out the tasks if they exist.
-        tasks_directory = files_directory / "tasks"
-        if tasks_directory.exists():
-            tasks_directory.rename(base_dir / "tasks")
-
-        # Create a plugin.toml manifest.
-        make_plugin_toml_file(
-            base_dir / "plugin.toml", name, f"Webapp {name}", version, email
-        )
-
-        # Convert all into tar.gz
-        lib.create_targz(base_dir, output_filename)
-
-
 @main.command()
 @click.argument("sources", nargs=-1)
 @click.pass_obj
 def build_from_src(obj, sources):
     """Build plugins from given source directories."""
-    plugins_cache_dir = obj["plugins_cache_dir"]
+    plugins_local_dir = obj["plugins_local_dir"]
     force = obj["force"]
     for source_directory in sources:
         source_directory = Path(source_directory)
         manifest = lib.read_toml(source_directory / "plugin.toml")
         name = manifest["name"]
         version = manifest["version"]
-        output_filename = plugins_cache_dir / f"plugin-{name}-{version}.tar.gz"
+        output_filename = plugins_local_dir / f"plugin-{name}-{version}.tar.gz"
         if not force and output_filename.exists():
             lib.log(f"Found: {output_filename} (Skipping)")
         else:
@@ -369,3 +484,131 @@ def build_from_src(obj, sources):
                             shutil.copytree(source_t, base_dir / t)
                 lib.create_targz(base_dir, output_filename)
                 lib.log(f"Created: {output_filename}")
+
+
+@main.command()
+@click.option(
+    "--all-versions/--latest-versions",
+    default=False,
+    help="List all versions, not just the latest.",
+)
+@click.pass_obj
+def s3_info(obj, all_versions):
+    """Print information about plugins on S3. By default, only includes latest versions."""
+    plugins_s3_bucket = obj["plugins_s3_bucket"]
+    if all_versions:
+        result = _get_s3_versions(plugins_s3_bucket)
+    else:
+        result = _get_latest_s3_versions(plugins_s3_bucket).values()
+    result = sorted(result, key=operator.attrgetter("key"))
+    info = ([r.name, r.formatted_version()] for r in result)
+    lib.log(tabulate(info, headers=["name", "version"]))
+
+
+@main.command()
+@click.argument("url_or_file")
+@click.pass_obj
+def local_add(obj, url_or_file):
+    """Copy a plugin from given URL or file into local store."""
+    plugins_local_dir = obj["plugins_local_dir"]
+    force = obj["force"]
+    if Path(url_or_file).is_file():
+        url_or_file = Path(url_or_file).resolve().as_uri()
+    if urllib.parse.urlparse(url_or_file).scheme == "":
+        lib.log_error(f"Not a file or a URL: {url_or_file}", abort=True)
+    _add_to_local(plugins_local_dir, url_or_file, force)
+
+
+@main.command()
+@click.option(
+    "--versions", default=None, help="TOML file containing webapp names and versions."
+)
+@click.pass_obj
+def local_add_from_s3(obj, versions):
+    """Add plugins from AWS S3 to the local store. If no versions file provided then fetch latest version of all plugins."""
+    plugins_local_dir = obj["plugins_local_dir"]
+    plugins_s3_bucket = obj["plugins_s3_bucket"]
+    force = obj["force"]
+    if versions:
+        to_fetch = [PluginInfo(x) for x in lib.read_toml(Path(versions)).items()]
+    else:
+        to_fetch = _get_latest_s3_versions(plugins_s3_bucket).values()
+    for pi in to_fetch:
+        filename = Path(plugins_local_dir, pi.get_as_filename())
+        if not force and filename.exists():
+            lib.log(f"Found: {filename} (Skipping)")
+        else:
+            _download_plugin_from_s3(plugins_s3_bucket, pi.get_as_s3_name(), filename)
+            lib.log(f"Created: {filename}")
+
+
+@main.command()
+@click.option(
+    "--all-versions/--latest-versions",
+    default=False,
+    help="List all versions, not just the latest.",
+)
+@click.pass_obj
+def local_info(obj, all_versions):
+    """Print information about locald plugins. By default, only includes latest versions."""
+    plugins_local_dir = obj["plugins_local_dir"]
+    if all_versions:
+        result = _get_local_versions(plugins_local_dir)
+    else:
+        result = _get_latest_local_versions(plugins_local_dir).values()
+    result = sorted(result, key=operator.attrgetter("key"))
+    info = ([r.name, r.formatted_version()] for r in result)
+    lib.log(tabulate(info, headers=["name", "version"]))
+
+
+@main.command()
+@click.option(
+    "--refresh-from-s3/----no-refresh-from-s3",
+    default=False,
+    help="First fetch latest versions from S3 before checking.",
+)
+@click.option(
+    "--dry-run/--no-dry-run",
+    default=False,
+    help="Report what will be done but don't change anything.",
+)
+@click.option(
+    "--show-logs/--no-show-logs", default=False, help="Print installation logs."
+)
+@click.argument("plugins", nargs=-1)
+@click.pass_obj
+@click.pass_context
+def update(ctx, obj, refresh_from_s3, dry_run, show_logs, plugins):
+    """Install latest plugin versions from local, optionally limited to particular plugins."""
+    plugins_local_dir = obj["plugins_local_dir"]
+    force = obj["force"]
+    if refresh_from_s3:
+        ctx.invoke(local_add_from_s3)
+    local_versions = _get_latest_local_versions(plugins_local_dir)
+    api = lib.get_api(**obj)
+    raw_info = api.run_view("pluginsmanager", "installed_plugins_with_tags")
+    installed_versions = [PluginInfo((i["name"], i["version"])) for i in raw_info]
+    for pi in installed_versions:
+        if len(plugins) > 0 and pi.name not in plugins:
+            continue
+        if pi.name not in local_versions:
+            lib.log(f"Skipping because plugin not in local: {pi.name}")
+            continue
+        local_pi = local_versions[pi.name]
+        if force or pi.semver < local_pi.semver:
+            lib.log(
+                f"Upgrading plugin: {pi.name} from {pi.formatted_version()} to {local_pi.formatted_version()}"
+            )
+            if not dry_run:
+                _install_plugin(
+                    api,
+                    plugins_local_dir / local_pi.get_as_filename(),
+                    print_output=show_logs,
+                )
+        else:
+            lib.log(
+                f"Skipping because already current: {pi.name} {pi.formatted_version()}"
+            )
+    for p in plugins:
+        if p not in set(pi.name for pi in installed_versions):
+            lib.log_error(f"Skipping because requested plugin is not installed: {p}")
