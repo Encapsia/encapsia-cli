@@ -13,7 +13,7 @@ do
         shift # past value
         ;;
         --example-plugin-src)
-        EXAMPLE_PLUGIN_SRC=$(realpath "$2")
+        EXAMPLE_PLUGIN_SRC="$( cd "$2" >/dev/null 2>&1 && pwd )"
         shift # past argument
         shift # past value
         ;;
@@ -26,12 +26,12 @@ set -- "${saved_args[@]}"
 
 # Pretty print a banner separator.
 function banner() {
-    echo -e "\n\e[34m\e[1m<<< $1 >>>\e[0m"
+    echo -e "\n<<< $1 >>>"
 }
 
 # Pretty print the test descriptions.
 function test() {
-    echo -e "\n\e[93m\e[1m=== $1 ===\e[0m"
+    echo -e "\n=== $1 ==="
 }
 
 
