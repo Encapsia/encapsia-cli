@@ -1,6 +1,6 @@
 import click
-
 import encapsia_api
+
 import encapsia_cli
 from encapsia_cli import lib
 
