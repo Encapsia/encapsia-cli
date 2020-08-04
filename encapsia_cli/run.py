@@ -2,8 +2,8 @@
 import json
 
 import click
-
 from encapsia_api import FileDownloadResponse
+
 from encapsia_cli import lib
 
 main = lib.make_main(__doc__)

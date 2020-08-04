@@ -10,21 +10,20 @@
 .body_foreground > .bold,.bold > .body_foreground, body.body_foreground > pre > .bold { color: #FFFFFF; font-weight: normal; }
 .inv_foreground { color: #000000; }
 .inv_background { background-color: #AAAAAA; }
-.ansi1 { font-weight: bold; }
 .ansi31 { color: #aa0000; }
 .ansi32 { color: #00aa00; }
 .ansi33 { color: #aa5500; }
 .ansi34 { color: #0000aa; }
-.ansi93 { color: #ea9540; }
+.ansi36 { color: #00aaaa; }
 </style>
 </head>
 <body class="body_foreground body_background" style="font-size: 80%;" >
 <pre class="ansi2html-content">
 
-<span class="ansi34"></span><span class="ansi1 ansi34">&lt;&lt;&lt; Starting walkthrough tests of encapsia-cli &gt;&gt;&gt;</span>
+<span class="ansi36">&lt;&lt;&lt; Starting walkthrough tests of encapsia-cli &gt;&gt;&gt;</span>
 These are *not* self-verifying tests, so check the output for reasonableness!
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Print out overall help ===</span>
+<span class="ansi34">=== Print out overall help ===</span>
 &gt;encapsia help
 <span class="ansi33">Usage: encapsia help [OPTIONS] COMMAND [ARGS]...
 
@@ -71,16 +70,19 @@ Commands:
 <span class="ansi33">  fixtures list                       List available fixtures.</span>
 <span class="ansi33">  fixtures use                        Switch to fixture with given name.</span>
 <span class="ansi33">  httpie shell                        Launch an httpie interactive shell with...</span>
-<span class="ansi33">  plugins build-from-legacy-s3        Build plugins from legacy webapps hosted on...</span>
-<span class="ansi33">  plugins build-from-src              Build plugins from given source directories.</span>
-<span class="ansi33">  plugins dev-create-namespace        Create namespace of given name.</span>
-<span class="ansi33">  plugins dev-destroy-namespace       Destroy namespace of given name.</span>
-<span class="ansi33">  plugins dev-list-namespaces         Provide some information about the namespace...</span>
+<span class="ansi33">  plugins add                         Add plugin(s) to local store from file, URL,...</span>
+<span class="ansi33">  plugins dev-build                   Build plugins from given source directories.</span>
+<span class="ansi33">  plugins dev-create                  Create namespace of given name.</span>
+<span class="ansi33">  plugins dev-destroy                 Destroy namespace(s) of given name.</span>
+<span class="ansi33">  plugins dev-list                    Print information about the namespace usage...</span>
 <span class="ansi33">  plugins dev-update                  Update plugin parts which have changed since...</span>
-<span class="ansi33">  plugins fetch-from-url              Copy a plugin from given URL into the plugin...</span>
-<span class="ansi33">  plugins info                        Provide information about installed plugins.</span>
-<span class="ansi33">  plugins install                     Install plugins from files and/or an optional...</span>
-<span class="ansi33">  plugins uninstall                   Uninstall named plugin.</span>
+<span class="ansi33">  plugins freeze                      Print currently installed plugins as versions...</span>
+<span class="ansi33">  plugins install                     Install/upgrade plugins by name, from files,...</span>
+<span class="ansi33">  plugins logs                        Print the latest install logs for given...</span>
+<span class="ansi33">  plugins ls                          Print information about plugins in local...</span>
+<span class="ansi33">  plugins status                      Print information about (successfully)...</span>
+<span class="ansi33">  plugins uninstall                   Uninstall named plugin(s).</span>
+<span class="ansi33">  plugins upstream                    Print information about plugins on S3.</span>
 <span class="ansi33">  run job                             Run a job in given plugin NAMESPACE and...</span>
 <span class="ansi33">  run task                            Run a task in given plugin NAMESPACE and...</span>
 <span class="ansi33">  run view                            Run a view in given plugin NAMESPACE and...</span>
@@ -98,7 +100,7 @@ Commands:
 <span class="ansi33">  users import                        Import users (and roles) from given TOML...</span>
 <span class="ansi33">  users list                          List out information about users.</span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Print out help on help ===</span>
+<span class="ansi34">=== Print out help on help ===</span>
 &gt;encapsia help help
 <span class="ansi33">Usage: encapsia help [OPTIONS] [COMMAND]
 
@@ -108,7 +110,7 @@ Options:
   --colour [always|never|auto]  Control colour on stdout.
   --help                        Show this message and exit.</span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Print out help on users ===</span>
+<span class="ansi34">=== Print out help on users ===</span>
 &gt;encapsia help users
 <span class="ansi33">Usage: encapsia help [OPTIONS] COMMAND [ARGS]...
 
@@ -129,48 +131,48 @@ Commands:
   import          Import users (and roles) from given TOML file.
   list            List out information about users.</span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Print out the version ===</span>
+\e[93m\e[1m=== Print out the version ===\e[0m
 &gt;encapsia version
-<span class="ansi33">Encapsia CLI version: 0.1.16</span>
-<span class="ansi33">Encapsia API version: 0.1.22</span>
+<span class="ansi33">Encapsia CLI version: 0.1.17</span>
+<span class="ansi33">Encapsia API version: 0.1.25</span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Get whoami info about current token ===</span>
+<span class="ansi34">=== Get whoami info about current token ===</span>
 &gt;encapsia token whoami
-<span class="ansi32">id = 91
+<span class="ansi32">id = 2
 name = "Root Superuser"
 email = "system@root.encapsia.com"
 capabilities = [ "superuser",]
-expires_at = "2021-03-10T16:06:56.568357+00:00"
-issued_at = "2020-03-10T16:06:56.568357+00:00"
+expires_at = "2020-08-05T18:39:57.437497+00:00"
+issued_at = "2020-08-04T14:53:17.437497+00:00"
 site_id = ""
-token = "9a4fa2d5ccd04080ad031618405852cd"
+token = "4e5bff5761b743e39a0c682f815fa284"
 </span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Extend lifespan of token (changes the encapsia credentials) ===</span>
+<span class="ansi34">=== Extend lifespan of token (changes the encapsia credentials) ===</span>
 &gt;encapsia token extend
 <span class="ansi33">Encapsia credentials file updated.</span>
 &gt;encapsia token whoami
-<span class="ansi32">id = 95
+<span class="ansi32">id = 103
 name = "Root Superuser"
 email = "system@root.encapsia.com"
 capabilities = [ "superuser",]
-expires_at = "2021-03-10T16:31:18.118559+00:00"
-issued_at = "2020-03-10T16:31:18.118559+00:00"
+expires_at = "2021-08-04T15:52:25.382954+00:00"
+issued_at = "2020-08-04T15:52:25.382954+00:00"
 site_id = ""
-token = "eeab0effbb6b484ba4d9b6b9b1f1cddc"
+token = "310dc47f3bc24d1aaf803244e9cd21ac"
 </span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Set a config value to a string ===</span>
+<span class="ansi34">=== Set a config value to a string ===</span>
 &gt;encapsia config set test_string \"a_string\"
 &gt;encapsia config get test_string
 <span class="ansi32">"a_string"</span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Set a config value to a number ===</span>
+<span class="ansi34">=== Set a config value to a number ===</span>
 &gt;encapsia config set test_number 123
 &gt;encapsia config get test_number
 <span class="ansi32">123</span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Set a config value to a list ===</span>
+<span class="ansi34">=== Set a config value to a list ===</span>
 &gt;encapsia config set test_list '["a", 1]'
 &gt;encapsia config get test_list
 <span class="ansi32">[
@@ -178,20 +180,17 @@ token = "eeab0effbb6b484ba4d9b6b9b1f1cddc"
     1
 ]</span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Delete config values ===</span>
+<span class="ansi34">=== Delete config values ===</span>
 &gt;encapsia config delete test_string
 &gt;encapsia config delete test_number
 &gt;encapsia config delete test_list
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Save config to a file and load it again ===</span>
+<span class="ansi34">=== Save config to a file and load it again ===</span>
 &gt;encapsia config save /tmp/test_encapsia_config.json
 &gt;cat /tmp/test_encapsia_config.json
 {
     "blob_lifespan": 3600,
     "blob_path": "/v1/blobs/{id}",
-    "coding": {
-        "coding_server": "https://to.coding.server"
-    },
     "firebase": {
         "profiles": {
             "chat": {
@@ -204,21 +203,15 @@ token = "eeab0effbb6b484ba4d9b6b9b1f1cddc"
             }
         }
     },
-    "graph_tenant_id": "cmedtechnology.com",
-    "html2pdf": {
-        "conversionUrl": "https://SHpO3zw1zlHLpsOyY4@docraptor.com/docs",
-        "statusUrl": "https://SHpO3zw1zlHLpsOyY4@docraptor.com/status",
-        "test": true
-    },
     "job_timeout": 3600,
-    "node": "analytics1",
+    "node": "localhost",
     "oauth2_azure": {
         "additional_auth_parameters": {
             "sign": "sign"
         },
         "auth_uri": "https://login.windows.net/2a0d4e61-e0c9-4e26-a615-5c7ff13ea03b/oauth2/authorize?api-version=1.0&amp;prompt=login",
-        "client_id": "889c979a-939e-47ad-b595-1ac1525a7162",
-        "client_secret": "sLI86aqMw+mnGeSCmpaWP/IFqwyr0h4jg95A6uGZ3cc=",
+        "client_id": "688fb86a-ebb7-42d5-9867-fa3b2a9bfbf5",
+        "client_secret": "62qepUZVvchCcudah4Qn0w2/BD57lSsfyLLu8vXGtuA=",
         "email_jwt_key": "unique_name",
         "scope": "openid email",
         "token_uri": "https://login.windows.net/2a0d4e61-e0c9-4e26-a615-5c7ff13ea03b/oauth2/token"
@@ -234,32 +227,25 @@ token = "eeab0effbb6b484ba4d9b6b9b1f1cddc"
         "token_uri": "https://accounts.google.com/o/oauth2/token"
     },
     "oauth2_providers": [
-        "google",
-        "azure"
+        "google"
     ],
     "oauth2_reply_html": "&lt;!DOCTYPE html&gt;\n&lt;html lang='en'&gt;\n  &lt;head&gt;\n    &lt;meta charset=\"utf-8\"&gt;\n    &lt;title&gt;ICE login&lt;/title&gt;\n    &lt;script&gt;\n    var isLoginSuccess = false;\n    try {\n        if (typeof opener.handleLoginSuccess != 'undefined') {\n            opener.handleLoginSuccess(\n                '{{status|e}}:{{data|e}}', '{{return_url|e}}');\n            isLoginSuccess = true;\n        }\n    } catch (err) {\n        console.log('CORS error usually when using icewebautologin');\n    }\n    if (!isLoginSuccess) {\n        opener.postMessage('{{status|e}}:{{data|e}}', '{{return_url|e}}');\n    }\n    window.close();\n    &lt;/script&gt;\n  &lt;/head&gt;\n  &lt;body&gt;\n    &lt;input type=\"hidden\" name=\"hiddenStatus\" value='{{status|e}}'&gt;\n    &lt;input type=\"hidden\" name=\"hiddenData\" value='{{data|e}}'&gt;\n  &lt;/body&gt;\n&lt;/html&gt;\n",
     "root_token": "&lt;hidden&gt;",
     "session_lifespan": 604800,
     "task_timeout": 600,
-    "tmp_maintenance": {
-        "cleanout_interval": 72
-    },
-    "trial": "analytics1",
-    "url": "https://analytics1.icethree.com",
+    "trial": "localhost",
+    "url": "https://localhost.icethree.com",
     "view_lifespan": 600
 }&gt;cat /tmp/test_encapsia_config.json
 &gt;python -c "import json, sys; c=json.load(sys.stdin); del c['root_token']; print(json.dumps(c))" &gt; /tmp/test_encapsia_config2.json
 &gt;encapsia config load /tmp/test_encapsia_config2.json
 &gt;rm /tmp/test_encapsia_config*.json
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Show the entire config ===</span>
+<span class="ansi34">=== Show the entire config ===</span>
 &gt;encapsia config show
 <span class="ansi32">{
     "blob_lifespan": 3600,
     "blob_path": "/v1/blobs/{id}",
-    "coding": {
-        "coding_server": "https://to.coding.server"
-    },
     "firebase": {
         "profiles": {
             "chat": {
@@ -272,21 +258,15 @@ token = "eeab0effbb6b484ba4d9b6b9b1f1cddc"
             }
         }
     },
-    "graph_tenant_id": "cmedtechnology.com",
-    "html2pdf": {
-        "conversionUrl": "https://SHpO3zw1zlHLpsOyY4@docraptor.com/docs",
-        "statusUrl": "https://SHpO3zw1zlHLpsOyY4@docraptor.com/status",
-        "test": true
-    },
     "job_timeout": 3600,
-    "node": "analytics1",
+    "node": "localhost",
     "oauth2_azure": {
         "additional_auth_parameters": {
             "sign": "sign"
         },
         "auth_uri": "https://login.windows.net/2a0d4e61-e0c9-4e26-a615-5c7ff13ea03b/oauth2/authorize?api-version=1.0&amp;prompt=login",
-        "client_id": "889c979a-939e-47ad-b595-1ac1525a7162",
-        "client_secret": "sLI86aqMw+mnGeSCmpaWP/IFqwyr0h4jg95A6uGZ3cc=",
+        "client_id": "688fb86a-ebb7-42d5-9867-fa3b2a9bfbf5",
+        "client_secret": "62qepUZVvchCcudah4Qn0w2/BD57lSsfyLLu8vXGtuA=",
         "email_jwt_key": "unique_name",
         "scope": "openid email",
         "token_uri": "https://login.windows.net/2a0d4e61-e0c9-4e26-a615-5c7ff13ea03b/oauth2/token"
@@ -302,58 +282,52 @@ token = "eeab0effbb6b484ba4d9b6b9b1f1cddc"
         "token_uri": "https://accounts.google.com/o/oauth2/token"
     },
     "oauth2_providers": [
-        "google",
-        "azure"
+        "google"
     ],
     "oauth2_reply_html": "&lt;!DOCTYPE html&gt;\n&lt;html lang='en'&gt;\n  &lt;head&gt;\n    &lt;meta charset=\"utf-8\"&gt;\n    &lt;title&gt;ICE login&lt;/title&gt;\n    &lt;script&gt;\n    var isLoginSuccess = false;\n    try {\n        if (typeof opener.handleLoginSuccess != 'undefined') {\n            opener.handleLoginSuccess(\n                '{{status|e}}:{{data|e}}', '{{return_url|e}}');\n            isLoginSuccess = true;\n        }\n    } catch (err) {\n        console.log('CORS error usually when using icewebautologin');\n    }\n    if (!isLoginSuccess) {\n        opener.postMessage('{{status|e}}:{{data|e}}', '{{return_url|e}}');\n    }\n    window.close();\n    &lt;/script&gt;\n  &lt;/head&gt;\n  &lt;body&gt;\n    &lt;input type=\"hidden\" name=\"hiddenStatus\" value='{{status|e}}'&gt;\n    &lt;input type=\"hidden\" name=\"hiddenData\" value='{{data|e}}'&gt;\n  &lt;/body&gt;\n&lt;/html&gt;\n",
     "root_token": "&lt;hidden&gt;",
     "session_lifespan": 604800,
     "task_timeout": 600,
-    "tmp_maintenance": {
-        "cleanout_interval": 72
-    },
-    "trial": "analytics1",
-    "url": "https://analytics1.icethree.com",
+    "trial": "localhost",
+    "url": "https://localhost.icethree.com",
     "view_lifespan": 600
 }</span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Build the example plugin from src ===</span>
-&gt;encapsia plugins --force build-from-src $EXAMPLE_PLUGIN_SRC
-<span class="ansi33">Created: /home/tcorbettclark/.encapsia/plugins-cache/plugin-example-0.0.1.tar.gz</span>
+<span class="ansi34">=== Build the example plugin from src ===</span>
+&gt;encapsia plugins --force dev-build $EXAMPLE_PLUGIN_SRC
+<span class="ansi33">Added to local store: /Users/tcorbettclark/.encapsia/plugins/plugin-example-0.0.1.tar.gz</span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Request a build again, but this time it should be skipped over because it already exists in the cache ===</span>
-&gt;encapsia plugins build-from-src $EXAMPLE_PLUGIN_SRC
-<span class="ansi33">Found: /home/tcorbettclark/.encapsia/plugins-cache/plugin-example-0.0.1.tar.gz (Skipping)</span>
+<span class="ansi34">=== Request a build again, but this time it should be skipped over because it already exists in the local store ===</span>
+&gt;encapsia plugins dev-build $EXAMPLE_PLUGIN_SRC
+<span class="ansi33">Found: /Users/tcorbettclark/.encapsia/plugins/plugin-example-0.0.1.tar.gz (Skipping)</span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Move the example plugin out of the cache and then add it back in directly ===</span>
-&gt;mv ~/.encapsia/plugins-cache/plugin-example-0.0.1.tar.gz /tmp/
-&gt;encapsia plugins fetch-from-url file:///tmp/plugin-example-0.0.1.tar.gz
-<span class="ansi33">Created: /home/tcorbettclark/.encapsia/plugins-cache/plugin-example-0.0.1.tar.gz</span>
+<span class="ansi34">=== Move the example plugin out of the local store and then add it back in directly ===</span>
+&gt;mv ~/.encapsia/plugins/plugin-example-0.0.1.tar.gz /tmp/
+&gt;encapsia plugins add file:///tmp/plugin-example-0.0.1.tar.gz
+<span class="ansi33">Added to local store: /Users/tcorbettclark/.encapsia/plugins/plugin-example-0.0.1.tar.gz</span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Build the launch plugin from legacy S3 (after first removing from the cache) ===</span>
-&gt;rm -f ~/.encapsia/plugins-cache/plugin-launch-*.tar.gz
-&gt;encapsia plugins build-from-legacy-s3 --versions=s3_plugins.toml --email=test_user@encapsia.com
-<span class="ansi33">Created: /home/tcorbettclark/.encapsia/plugins-cache/plugin-launch-1.2.2.tar.gz</span>
-
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Second time should be skipped over because it is already in the cache ===</span>
-&gt;encapsia plugins build-from-legacy-s3 --versions=s3_plugins.toml --email=test_user@encapsia.com
-<span class="ansi33">Found: /home/tcorbettclark/.encapsia/plugins-cache/plugin-launch-1.2.2.tar.gz (Skipping)</span>
-
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Install the example plugin from the cache, then uninstall it ===</span>
-&gt;encapsia plugins install --versions=example.toml
-<span class="ansi33">Uploaded /home/tcorbettclark/.encapsia/plugins-cache/plugin-example-0.0.1.tar.gz to blob: 3472490879dc469fb48e18f27012165c</span>
-<span class="ansi33">Installing</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
-<span class="ansi33">Status: ok</span>
-<span class="ansi32">Downloaded blob 3472490879dc469fb48e18f27012165c to /tmp/tmp6emp0ky_
-Extracted /tmp/tmp6emp0ky_ into /tmp/tmp6y6y5z9u
-Registered plugin example (0.0.1) from blob 3472490879dc469fb48e18f27012165c with id a62d7127ebb24a59a26bd823a0a8110f
+<span class="ansi34">=== Install the example plugin from the local store, then uninstall it ===</span>
+&gt;encapsia plugins --force install --versions=example.toml --show-logs
+<span class="ansi33">name     existing version    new version    action
+-------  ------------------  -------------  --------
+example                      0.0.1          install</span>
+<span class="ansi33">
+(Equivalent semver versions are shown in brackets when non-semver version is used)</span>
+<span class="ansi33"></span>
+<span class="ansi33">Uploaded /Users/tcorbettclark/.encapsia/plugins/plugin-example-0.0.1.tar.gz to blob: 4fa73a4d8adc4ccdac09e22df0848d5a</span>
+<span class="ansi33">Installing</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
+<span class="ansi32">Downloaded blob 4fa73a4d8adc4ccdac09e22df0848d5a to /tmp/tmp9k7tq_82
+Extracted /tmp/tmp9k7tq_82 into /tmp/tmpk841w7ab
+Registered plugin example (0.0.1) from blob 4fa73a4d8adc4ccdac09e22df0848d5a with id d1affeecd53f442a942d447ca2d98aef
+/home/ice/inf-ice-pluginsmanager/icepluginsmanager/plugins.py:218: FutureWarning: reset_on_install is deprecated and will be treated as always true in the future
+  category=FutureWarning,
+Manifest file for example not found.
 Destroying plugin namespace: example
-Stopped all task workers for namespace: example
-Destroyed virtualenv: example
-Removed tasks directory: /home/ice/example
-Removed webfiles directory: /var/share/nginx/iceplugins/example
-Destroying views namespace example
-Deleted PostgreSQL schema: example
+No task workers configured for namespace: example
+Virtualenv does not exist: example
+Tasks directory does not exist: /home/ice/example
+Webfiles directory does not exist: /var/share/nginx/iceplugins/example
+Views namespace does not exist: example
 Remove published permissions, if any
 Remove published tags, if any
 Removing all/any schedules from plugin namespace: example
@@ -362,48 +336,55 @@ Made webfiles directory: /var/share/nginx/iceplugins/example
 Installing web files in to namespace example
 Installed manifest /var/share/nginx/iceplugins/example/plugin.toml
 pew new -d example
-Using base prefix '/home/ice/.pyenv/versions/3.6.7'
-New python executable in /home/ice/.local/share/virtualenvs/example/bin/python3.6
-Also creating executable in /home/ice/.local/share/virtualenvs/example/bin/python
-Installing setuptools, pip, wheel...
-done.
-pew in example pip install redis==2.10.6 rq==0.12.0
-Collecting redis==2.10.6
-  Using cached redis-2.10.6-py2.py3-none-any.whl (64 kB)
-Collecting rq==0.12.0
-  Using cached rq-0.12.0-py2.py3-none-any.whl (54 kB)
-Collecting click&gt;=5.0
-  Using cached click-7.1.1-py2.py3-none-any.whl (82 kB)
-Installing collected packages: redis, click, rq
-Successfully installed click-7.1.1 redis-2.10.6 rq-0.12.0
+created virtual environment CPython3.7.7.final.0-64 in 229ms
+  creator CPython3Posix(dest=/home/ice/.local/share/virtualenvs/example, clear=False, global=False)
+  seeder FromAppData(download=False, pip=latest, setuptools=latest, wheel=latest, via=copy, app_data_dir=/home/ice/.local/share/virtualenv/seed-app-data/v1.0.1)
+  activators BashActivator,CShellActivator,FishActivator,PowerShellActivator,PythonActivator,XonshActivator
+pew in example pip install -c /home/ice/inf-ice-pluginsmanager/requirements.txt redis rq
+Collecting redis==3.5.2
+  Using cached redis-3.5.2-py2.py3-none-any.whl (71 kB)
+Collecting rq==1.4.2
+  Using cached rq-1.4.2-py2.py3-none-any.whl (60 kB)
+Collecting click==7.1.2
+  Using cached click-7.1.2-py2.py3-none-any.whl (82 kB)
+Installing collected packages: click, redis, rq
+Successfully installed click-7.1.2 redis-3.5.2 rq-1.4.2
+WARNING: You are using pip version 20.1.1; however, version 20.2 is available.
+You should consider upgrading via the '/home/ice/.local/share/virtualenvs/example/bin/python -m pip install --upgrade pip' command.
 Made virtualenv: example
 Installing wheels in to namespace example
-pew in example pip install --find-links /tmp/tmp6y6y5z9u/plugin-example-0.0.1/wheels --requirement /tmp/tmp6y6y5z9u/plugin-example-0.0.1/wheels/requirements.txt
-Looking in links: /tmp/tmp6y6y5z9u/plugin-example-0.0.1/wheels
+pew in example pip install --find-links /tmp/tmpk841w7ab/plugin-example-0.0.1/wheels --requirement /tmp/tmpk841w7ab/plugin-example-0.0.1/wheels/requirements.txt
+Looking in links: /tmp/tmpk841w7ab/plugin-example-0.0.1/wheels
 Collecting encapsia-api
-  Using cached encapsia_api-0.1.22-py3-none-any.whl (11 kB)
+  Using cached encapsia_api-0.1.25-py3-none-any.whl (16 kB)
+Collecting arrow&lt;0.14.0,&gt;=0.13.1
+  Using cached arrow-0.13.2-py2.py3-none-any.whl (37 kB)
 Collecting toml&lt;0.11.0,&gt;=0.10.0
-  Using cached toml-0.10.0-py2.py3-none-any.whl (25 kB)
+  Using cached toml-0.10.1-py2.py3-none-any.whl (19 kB)
 Collecting requests[security]&lt;3.0,&gt;=2.20
-  Using cached requests-2.23.0-py2.py3-none-any.whl (58 kB)
-Collecting certifi&gt;=2017.4.17
-  Using cached certifi-2019.11.28-py2.py3-none-any.whl (156 kB)
+  Using cached requests-2.24.0-py2.py3-none-any.whl (61 kB)
+Collecting python-dateutil
+  Using cached python_dateutil-2.8.1-py2.py3-none-any.whl (227 kB)
 Collecting idna&lt;3,&gt;=2.5
-  Using cached idna-2.9-py2.py3-none-any.whl (58 kB)
-Collecting urllib3!=1.25.0,!=1.25.1,&lt;1.26,&gt;=1.21.1
-  Using cached urllib3-1.25.8-py2.py3-none-any.whl (125 kB)
+  Using cached idna-2.10-py2.py3-none-any.whl (58 kB)
+Collecting certifi&gt;=2017.4.17
+  Using cached certifi-2020.6.20-py2.py3-none-any.whl (156 kB)
 Collecting chardet&lt;4,&gt;=3.0.2
   Using cached chardet-3.0.4-py2.py3-none-any.whl (133 kB)
+Collecting urllib3!=1.25.0,!=1.25.1,&lt;1.26,&gt;=1.21.1
+  Using cached urllib3-1.25.10-py2.py3-none-any.whl (127 kB)
+Processing ./.cache/pip/wheels/2b/60/6f/01f97e3a90d25fad9ca48294524b2e2f82d0396075ba3a8b59/cryptography-3.0-cp37-cp37m-linux_x86_64.whl
 Collecting pyOpenSSL&gt;=0.14; extra == "security"
   Using cached pyOpenSSL-19.1.0-py2.py3-none-any.whl (53 kB)
-Processing ./.cache/pip/wheels/8d/f1/0f/7a44efed707005d6df5b9823293aff1e1fbd69b1649f125a8b/cryptography-2.8-cp36-cp36m-linux_x86_64.whl
-Collecting six&gt;=1.5.2
-  Using cached six-1.14.0-py2.py3-none-any.whl (10 kB)
-Processing ./.cache/pip/wheels/6c/6b/5c/30ce64a958139dc1f16109f1393d258aa13057d266b58cb486/cffi-1.14.0-cp36-cp36m-linux_x86_64.whl
+Collecting six&gt;=1.5
+  Using cached six-1.15.0-py2.py3-none-any.whl (10 kB)
+Processing ./.cache/pip/wheels/48/ac/cf/5d51b590111b6887edbcbc7ecafa179b868108736fb5f7b1b0/cffi-1.14.1-cp37-cp37m-linux_x86_64.whl
 Collecting pycparser
   Using cached pycparser-2.20-py2.py3-none-any.whl (112 kB)
-Installing collected packages: toml, certifi, idna, urllib3, chardet, six, pycparser, cffi, cryptography, pyOpenSSL, requests, encapsia-api
-Successfully installed certifi-2019.11.28 cffi-1.14.0 chardet-3.0.4 cryptography-2.8 encapsia-api-0.1.22 idna-2.9 pyOpenSSL-19.1.0 pycparser-2.20 requests-2.23.0 six-1.14.0 toml-0.10.0 urllib3-1.25.8
+Installing collected packages: six, python-dateutil, arrow, toml, idna, certifi, chardet, urllib3, pycparser, cffi, cryptography, pyOpenSSL, requests, encapsia-api
+Successfully installed arrow-0.13.2 certifi-2020.6.20 cffi-1.14.1 chardet-3.0.4 cryptography-3.0 encapsia-api-0.1.25 idna-2.10 pyOpenSSL-19.1.0 pycparser-2.20 python-dateutil-2.8.1 requests-2.24.0 six-1.15.0 toml-0.10.1 urllib3-1.25.10
+WARNING: You are using pip version 20.1.1; however, version 20.2 is available.
+You should consider upgrading via the '/home/ice/.local/share/virtualenvs/example/bin/python -m pip install --upgrade pip' command.
 Installing tasks in to namespace example
 Installed task file /home/ice/example/test_module.py
 Configuring 1 task workers for namespace example
@@ -412,13 +393,22 @@ Created PostgreSQL schema: example
 Installing views in to namespace example
 Installing view permissions.sql
 Installing view test_views.sql
-Not publishing empty tags list.
+Created/updated system user example with capabilities: ['login.transfer.from', 'login.again', 'values.read', 'values.write', 'task.run.example']
+Publishing permissions in to pluginsmanager
+Permission: example-admin
+Permission: example-minimal
+Publishing plugin tags (example,test) in to pluginsmanager
 Installing schedules in to namespace example
-Installed plugin with id a62d7127ebb24a59a26bd823a0a8110f</span>
-&gt;encapsia plugins --force uninstall example
-<span class="ansi33">Uninstalling example</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
-<span class="ansi33">Status: ok</span>
-<span class="ansi32">Destroying plugin namespace: example
+Created schedule: Test scheduled task
+Created schedule: Test scheduled task to be run with a system user
+Timeout calling hook example.test_module.test_function_with_meta_as_fixed_arg
+Installed plugin with id d1affeecd53f442a942d447ca2d98aef</span>
+&gt;encapsia plugins --force uninstall example --show-logs
+<span class="ansi33">Uninstalling example</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
+<span class="ansi32">Calling pre_uninstall_task: test_module.test_function
+Task example.test_module.test_function finished with result:
+hello None
+Destroying plugin namespace: example
 Stopped all task workers for namespace: example
 Destroyed virtualenv: example
 Removed tasks directory: /home/ice/example
@@ -429,62 +419,70 @@ Remove published permissions, if any
 Remove published tags, if any
 Removing all/any schedules from plugin namespace: example</span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Dev update the example plugin from scratch ===</span>
+<span class="ansi34">=== Dev update the example plugin from scratch ===</span>
 &gt;encapsia plugins --force dev-update $EXAMPLE_PLUGIN_SRC
 <span class="ansi33">Including: tasks</span>
 <span class="ansi33">Including: views</span>
 <span class="ansi33">Including: wheels</span>
 <span class="ansi33">Including: schedules</span>
-<span class="ansi33">Uploading to server</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
-<span class="ansi33">Status: ok</span>
-<span class="ansi32">Extracted /tmp/ice/tmp4p5o0_hg into /tmp/tmp343k0i2o
+<span class="ansi33">Uploading to server</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
+<span class="ansi32">Extracted /tmp/ice/tmpaijv5whj into /tmp/tmp1rwidmgg
+/home/ice/inf-ice-pluginsmanager/icepluginsmanager/plugins.py:218: FutureWarning: reset_on_install is deprecated and will be treated as always true in the future
+  category=FutureWarning,
 Installing plugin example (0.0.1)
 Made webfiles directory: /var/share/nginx/iceplugins/example
 Installing web files in to namespace example
 Installed manifest /var/share/nginx/iceplugins/example/plugin.toml
 pew new -d example
-Using base prefix '/home/ice/.pyenv/versions/3.6.7'
-New python executable in /home/ice/.local/share/virtualenvs/example/bin/python3.6
-Also creating executable in /home/ice/.local/share/virtualenvs/example/bin/python
-Installing setuptools, pip, wheel...
-done.
-pew in example pip install redis==2.10.6 rq==0.12.0
-Collecting redis==2.10.6
-  Using cached redis-2.10.6-py2.py3-none-any.whl (64 kB)
-Collecting rq==0.12.0
-  Using cached rq-0.12.0-py2.py3-none-any.whl (54 kB)
-Collecting click&gt;=5.0
-  Using cached click-7.1.1-py2.py3-none-any.whl (82 kB)
-Installing collected packages: redis, click, rq
-Successfully installed click-7.1.1 redis-2.10.6 rq-0.12.0
+created virtual environment CPython3.7.7.final.0-64 in 229ms
+  creator CPython3Posix(dest=/home/ice/.local/share/virtualenvs/example, clear=False, global=False)
+  seeder FromAppData(download=False, pip=latest, setuptools=latest, wheel=latest, via=copy, app_data_dir=/home/ice/.local/share/virtualenv/seed-app-data/v1.0.1)
+  activators BashActivator,CShellActivator,FishActivator,PowerShellActivator,PythonActivator,XonshActivator
+pew in example pip install -c /home/ice/inf-ice-pluginsmanager/requirements.txt redis rq
+Collecting redis==3.5.2
+  Using cached redis-3.5.2-py2.py3-none-any.whl (71 kB)
+Collecting rq==1.4.2
+  Using cached rq-1.4.2-py2.py3-none-any.whl (60 kB)
+Collecting click==7.1.2
+  Using cached click-7.1.2-py2.py3-none-any.whl (82 kB)
+Installing collected packages: click, redis, rq
+Successfully installed click-7.1.2 redis-3.5.2 rq-1.4.2
+WARNING: You are using pip version 20.1.1; however, version 20.2 is available.
+You should consider upgrading via the '/home/ice/.local/share/virtualenvs/example/bin/python -m pip install --upgrade pip' command.
 Made virtualenv: example
 Installing wheels in to namespace example
-pew in example pip install --find-links /tmp/tmp343k0i2o/tmp74cqsz_n/wheels --requirement /tmp/tmp343k0i2o/tmp74cqsz_n/wheels/requirements.txt
-Looking in links: /tmp/tmp343k0i2o/tmp74cqsz_n/wheels
+pew in example pip install --find-links /tmp/tmp1rwidmgg/tmp78zualq6/wheels --requirement /tmp/tmp1rwidmgg/tmp78zualq6/wheels/requirements.txt
+Looking in links: /tmp/tmp1rwidmgg/tmp78zualq6/wheels
 Collecting encapsia-api
-  Using cached encapsia_api-0.1.22-py3-none-any.whl (11 kB)
+  Using cached encapsia_api-0.1.25-py3-none-any.whl (16 kB)
+Collecting arrow&lt;0.14.0,&gt;=0.13.1
+  Using cached arrow-0.13.2-py2.py3-none-any.whl (37 kB)
 Collecting requests[security]&lt;3.0,&gt;=2.20
-  Using cached requests-2.23.0-py2.py3-none-any.whl (58 kB)
+  Using cached requests-2.24.0-py2.py3-none-any.whl (61 kB)
 Collecting toml&lt;0.11.0,&gt;=0.10.0
-  Using cached toml-0.10.0-py2.py3-none-any.whl (25 kB)
+  Using cached toml-0.10.1-py2.py3-none-any.whl (19 kB)
+Collecting python-dateutil
+  Using cached python_dateutil-2.8.1-py2.py3-none-any.whl (227 kB)
+Collecting urllib3!=1.25.0,!=1.25.1,&lt;1.26,&gt;=1.21.1
+  Using cached urllib3-1.25.10-py2.py3-none-any.whl (127 kB)
+Collecting certifi&gt;=2017.4.17
+  Using cached certifi-2020.6.20-py2.py3-none-any.whl (156 kB)
 Collecting chardet&lt;4,&gt;=3.0.2
   Using cached chardet-3.0.4-py2.py3-none-any.whl (133 kB)
 Collecting idna&lt;3,&gt;=2.5
-  Using cached idna-2.9-py2.py3-none-any.whl (58 kB)
-Collecting urllib3!=1.25.0,!=1.25.1,&lt;1.26,&gt;=1.21.1
-  Using cached urllib3-1.25.8-py2.py3-none-any.whl (125 kB)
-Collecting certifi&gt;=2017.4.17
-  Using cached certifi-2019.11.28-py2.py3-none-any.whl (156 kB)
+  Using cached idna-2.10-py2.py3-none-any.whl (58 kB)
+Processing ./.cache/pip/wheels/2b/60/6f/01f97e3a90d25fad9ca48294524b2e2f82d0396075ba3a8b59/cryptography-3.0-cp37-cp37m-linux_x86_64.whl
 Collecting pyOpenSSL&gt;=0.14; extra == "security"
   Using cached pyOpenSSL-19.1.0-py2.py3-none-any.whl (53 kB)
-Processing ./.cache/pip/wheels/8d/f1/0f/7a44efed707005d6df5b9823293aff1e1fbd69b1649f125a8b/cryptography-2.8-cp36-cp36m-linux_x86_64.whl
-Collecting six&gt;=1.5.2
-  Using cached six-1.14.0-py2.py3-none-any.whl (10 kB)
-Processing ./.cache/pip/wheels/6c/6b/5c/30ce64a958139dc1f16109f1393d258aa13057d266b58cb486/cffi-1.14.0-cp36-cp36m-linux_x86_64.whl
+Collecting six&gt;=1.5
+  Using cached six-1.15.0-py2.py3-none-any.whl (10 kB)
+Processing ./.cache/pip/wheels/48/ac/cf/5d51b590111b6887edbcbc7ecafa179b868108736fb5f7b1b0/cffi-1.14.1-cp37-cp37m-linux_x86_64.whl
 Collecting pycparser
   Using cached pycparser-2.20-py2.py3-none-any.whl (112 kB)
-Installing collected packages: chardet, idna, urllib3, certifi, six, pycparser, cffi, cryptography, pyOpenSSL, requests, toml, encapsia-api
-Successfully installed certifi-2019.11.28 cffi-1.14.0 chardet-3.0.4 cryptography-2.8 encapsia-api-0.1.22 idna-2.9 pyOpenSSL-19.1.0 pycparser-2.20 requests-2.23.0 six-1.14.0 toml-0.10.0 urllib3-1.25.8
+Installing collected packages: six, python-dateutil, arrow, urllib3, certifi, chardet, idna, pycparser, cffi, cryptography, pyOpenSSL, requests, toml, encapsia-api
+Successfully installed arrow-0.13.2 certifi-2020.6.20 cffi-1.14.1 chardet-3.0.4 cryptography-3.0 encapsia-api-0.1.25 idna-2.10 pyOpenSSL-19.1.0 pycparser-2.20 python-dateutil-2.8.1 requests-2.24.0 six-1.15.0 toml-0.10.1 urllib3-1.25.10
+WARNING: You are using pip version 20.1.1; however, version 20.2 is available.
+You should consider upgrading via the '/home/ice/.local/share/virtualenvs/example/bin/python -m pip install --upgrade pip' command.
 Installing tasks in to namespace example
 Installed task file /home/ice/example/test_module.py
 Configuring 1 task workers for namespace example
@@ -493,20 +491,28 @@ Created PostgreSQL schema: example
 Installing views in to namespace example
 Installing view permissions.sql
 Installing view test_views.sql
-Not publishing empty tags list.
-Installing schedules in to namespace example</span>
+Created/updated system user example with capabilities: ['login.transfer.from', 'login.again', 'values.read', 'values.write', 'task.run.example']
+Publishing permissions in to pluginsmanager
+Permission: example-admin
+Permission: example-minimal
+Publishing plugin tags (example,test) in to pluginsmanager
+Installing schedules in to namespace example
+Created schedule: Test scheduled task
+Created schedule: Test scheduled task to be run with a system user
+Timeout calling hook example.test_module.test_function_with_meta_as_fixed_arg</span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Second time round there is nothing to do because nothing has changed ===</span>
+<span class="ansi34">=== Second time round there is nothing to do because nothing has changed ===</span>
 &gt;encapsia plugins dev-update $EXAMPLE_PLUGIN_SRC
 <span class="ansi33">Nothing to do.</span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Modify the example plugin and update again. This time only the tasks should be updated ===</span>
+<span class="ansi34">=== Modify the example plugin and update again. This time only the tasks should be updated ===</span>
 &gt;touch $EXAMPLE_PLUGIN_SRC/tasks/test_new_module.py
 &gt;encapsia plugins dev-update $EXAMPLE_PLUGIN_SRC
 <span class="ansi33">Including: tasks</span>
-<span class="ansi33">Uploading to server</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
-<span class="ansi33">Status: ok</span>
-<span class="ansi32">Extracted /tmp/ice/tmpepmdmx6b into /tmp/tmp_8vzp2_2
+<span class="ansi33">Uploading to server</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
+<span class="ansi32">Extracted /tmp/ice/tmplyluuunq into /tmp/tmpuz67vei8
+/home/ice/inf-ice-pluginsmanager/icepluginsmanager/plugins.py:218: FutureWarning: reset_on_install is deprecated and will be treated as always true in the future
+  category=FutureWarning,
 Installing plugin example (0.0.1)
 Webfiles directory already exists: /var/share/nginx/iceplugins/example
 Installing web files in to namespace example
@@ -516,127 +522,54 @@ Installing tasks in to namespace example
 Installed task file /home/ice/example/test_new_module.py
 Installed task file /home/ice/example/test_module.py
 Configuring 1 task workers for namespace example
-Not publishing empty tags list.</span>
+Created/updated system user example with capabilities: ['login.transfer.from', 'login.again', 'values.read', 'values.write', 'task.run.example']
+Publishing permissions in to pluginsmanager
+Permission: example-admin
+Permission: example-minimal
+Publishing plugin tags (example,test) in to pluginsmanager
+Timeout calling hook example.test_module.test_function_with_meta_as_fixed_arg</span>
 &gt;rm $EXAMPLE_PLUGIN_SRC/tasks/test_new_module.py
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Install the non-dev version of the example plugin so we can uninstall it (to be tidy). ===</span>
-&gt;encapsia plugins install --versions=example.toml
-<span class="ansi33">Uploaded /home/tcorbettclark/.encapsia/plugins-cache/plugin-example-0.0.1.tar.gz to blob: 016560a7881645d0ad482ab8ff07ab9b</span>
-<span class="ansi33">Installing</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
-<span class="ansi33">Status: ok</span>
-<span class="ansi32">Downloaded blob 016560a7881645d0ad482ab8ff07ab9b to /tmp/tmp_g_nchj1
-Extracted /tmp/tmp_g_nchj1 into /tmp/tmp47mcidwv
-Registered plugin example (0.0.1) from blob 016560a7881645d0ad482ab8ff07ab9b with id ec77c0f908e34e61a1ad00d9670bcf77
-Destroying plugin namespace: example
-Stopped all task workers for namespace: example
-Destroyed virtualenv: example
-Removed tasks directory: /home/ice/example
-Removed webfiles directory: /var/share/nginx/iceplugins/example
-Destroying views namespace example
-Deleted PostgreSQL schema: example
-Remove published permissions, if any
-Remove published tags, if any
-Removing all/any schedules from plugin namespace: example
-Installing plugin example (0.0.1)
-Made webfiles directory: /var/share/nginx/iceplugins/example
-Installing web files in to namespace example
-Installed manifest /var/share/nginx/iceplugins/example/plugin.toml
-pew new -d example
-Using base prefix '/home/ice/.pyenv/versions/3.6.7'
-New python executable in /home/ice/.local/share/virtualenvs/example/bin/python3.6
-Also creating executable in /home/ice/.local/share/virtualenvs/example/bin/python
-Installing setuptools, pip, wheel...
-done.
-pew in example pip install redis==2.10.6 rq==0.12.0
-Collecting redis==2.10.6
-  Using cached redis-2.10.6-py2.py3-none-any.whl (64 kB)
-Collecting rq==0.12.0
-  Using cached rq-0.12.0-py2.py3-none-any.whl (54 kB)
-Collecting click&gt;=5.0
-  Using cached click-7.1.1-py2.py3-none-any.whl (82 kB)
-Installing collected packages: redis, click, rq
-Successfully installed click-7.1.1 redis-2.10.6 rq-0.12.0
-Made virtualenv: example
-Installing wheels in to namespace example
-pew in example pip install --find-links /tmp/tmp47mcidwv/plugin-example-0.0.1/wheels --requirement /tmp/tmp47mcidwv/plugin-example-0.0.1/wheels/requirements.txt
-Looking in links: /tmp/tmp47mcidwv/plugin-example-0.0.1/wheels
-Collecting encapsia-api
-  Using cached encapsia_api-0.1.22-py3-none-any.whl (11 kB)
-Collecting requests[security]&lt;3.0,&gt;=2.20
-  Using cached requests-2.23.0-py2.py3-none-any.whl (58 kB)
-Collecting toml&lt;0.11.0,&gt;=0.10.0
-  Using cached toml-0.10.0-py2.py3-none-any.whl (25 kB)
-Collecting certifi&gt;=2017.4.17
-  Using cached certifi-2019.11.28-py2.py3-none-any.whl (156 kB)
-Collecting chardet&lt;4,&gt;=3.0.2
-  Using cached chardet-3.0.4-py2.py3-none-any.whl (133 kB)
-Collecting idna&lt;3,&gt;=2.5
-  Using cached idna-2.9-py2.py3-none-any.whl (58 kB)
-Collecting urllib3!=1.25.0,!=1.25.1,&lt;1.26,&gt;=1.21.1
-  Using cached urllib3-1.25.8-py2.py3-none-any.whl (125 kB)
-Processing ./.cache/pip/wheels/8d/f1/0f/7a44efed707005d6df5b9823293aff1e1fbd69b1649f125a8b/cryptography-2.8-cp36-cp36m-linux_x86_64.whl
-Collecting pyOpenSSL&gt;=0.14; extra == "security"
-  Using cached pyOpenSSL-19.1.0-py2.py3-none-any.whl (53 kB)
-Processing ./.cache/pip/wheels/6c/6b/5c/30ce64a958139dc1f16109f1393d258aa13057d266b58cb486/cffi-1.14.0-cp36-cp36m-linux_x86_64.whl
-Collecting six&gt;=1.4.1
-  Using cached six-1.14.0-py2.py3-none-any.whl (10 kB)
-Collecting pycparser
-  Using cached pycparser-2.20-py2.py3-none-any.whl (112 kB)
-Installing collected packages: certifi, chardet, idna, urllib3, pycparser, cffi, six, cryptography, pyOpenSSL, requests, toml, encapsia-api
-Successfully installed certifi-2019.11.28 cffi-1.14.0 chardet-3.0.4 cryptography-2.8 encapsia-api-0.1.22 idna-2.9 pyOpenSSL-19.1.0 pycparser-2.20 requests-2.23.0 six-1.14.0 toml-0.10.0 urllib3-1.25.8
-Installing tasks in to namespace example
-Installed task file /home/ice/example/test_module.py
-Configuring 1 task workers for namespace example
-Creating views namespace example
-Created PostgreSQL schema: example
-Installing views in to namespace example
-Installing view permissions.sql
-Installing view test_views.sql
-Not publishing empty tags list.
-Installing schedules in to namespace example
-Installed plugin with id ec77c0f908e34e61a1ad00d9670bcf77</span>
+<span class="ansi34">=== Install the non-dev version of the example plugin so we can uninstall it (to be tidy). ===</span>
+&gt;encapsia plugins --force install --versions=example.toml
+<span class="ansi33">name     existing version    new version    action
+-------  ------------------  -------------  --------
+example                      0.0.1          install</span>
+<span class="ansi33">
+(Equivalent semver versions are shown in brackets when non-semver version is used)</span>
+<span class="ansi33"></span>
+<span class="ansi33">Uploaded /Users/tcorbettclark/.encapsia/plugins/plugin-example-0.0.1.tar.gz to blob: 1877c064b5b14a638f1a28db93704cbb</span>
+<span class="ansi33">Installing</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
 &gt;encapsia plugins --force uninstall example
-<span class="ansi33">Uninstalling example</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
-<span class="ansi33">Status: ok</span>
-<span class="ansi32">Destroying plugin namespace: example
-Stopped all task workers for namespace: example
-Destroyed virtualenv: example
-Removed tasks directory: /home/ice/example
-Removed webfiles directory: /var/share/nginx/iceplugins/example
-Destroying views namespace example
-Deleted PostgreSQL schema: example
-Remove published permissions, if any
-Remove published tags, if any
-Removing all/any schedules from plugin namespace: example</span>
+<span class="ansi33">Uninstalling example</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Create and destroy new namespace ===</span>
-&gt;encapsia plugins dev-create-namespace testing123
-<span class="ansi33">Creating namespace</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
-<span class="ansi33">Status: ok</span>
+<span class="ansi34">=== Create and destroy new namespace ===</span>
+&gt;encapsia plugins dev-create testing123
+<span class="ansi33">Creating namespace</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
 <span class="ansi32">Made webfiles directory: /var/share/nginx/iceplugins/testing123
 Made tasks directory: /home/ice/testing123
 pew new -d testing123
-Using base prefix '/home/ice/.pyenv/versions/3.6.7'
-New python executable in /home/ice/.local/share/virtualenvs/testing123/bin/python3.6
-Also creating executable in /home/ice/.local/share/virtualenvs/testing123/bin/python
-Installing setuptools, pip, wheel...
-done.
-pew in testing123 pip install redis==2.10.6 rq==0.12.0
-Collecting redis==2.10.6
-  Using cached redis-2.10.6-py2.py3-none-any.whl (64 kB)
-Collecting rq==0.12.0
-  Using cached rq-0.12.0-py2.py3-none-any.whl (54 kB)
-Collecting click&gt;=5.0
-  Using cached click-7.1.1-py2.py3-none-any.whl (82 kB)
-Installing collected packages: redis, click, rq
-Successfully installed click-7.1.1 redis-2.10.6 rq-0.12.0
+created virtual environment CPython3.7.7.final.0-64 in 190ms
+  creator CPython3Posix(dest=/home/ice/.local/share/virtualenvs/testing123, clear=False, global=False)
+  seeder FromAppData(download=False, pip=latest, setuptools=latest, wheel=latest, via=copy, app_data_dir=/home/ice/.local/share/virtualenv/seed-app-data/v1.0.1)
+  activators BashActivator,CShellActivator,FishActivator,PowerShellActivator,PythonActivator,XonshActivator
+pew in testing123 pip install -c /home/ice/inf-ice-pluginsmanager/requirements.txt redis rq
+Collecting redis==3.5.2
+  Using cached redis-3.5.2-py2.py3-none-any.whl (71 kB)
+Collecting rq==1.4.2
+  Using cached rq-1.4.2-py2.py3-none-any.whl (60 kB)
+Collecting click==7.1.2
+  Using cached click-7.1.2-py2.py3-none-any.whl (82 kB)
+Installing collected packages: click, redis, rq
+Successfully installed click-7.1.2 redis-3.5.2 rq-1.4.2
+WARNING: You are using pip version 20.1.1; however, version 20.2 is available.
+You should consider upgrading via the '/home/ice/.local/share/virtualenvs/testing123/bin/python -m pip install --upgrade pip' command.
 Made virtualenv: testing123
 Configuring 1 task workers for namespace testing123
 Creating views namespace testing123
 Created PostgreSQL schema: testing123</span>
-&gt;encapsia plugins dev-destroy-namespace testing123
-<span class="ansi33">Destroying namespace</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
-<span class="ansi33">Status: ok</span>
+&gt;encapsia plugins dev-destroy testing123
+<span class="ansi33">Destroying namespace: testing123</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
 <span class="ansi32">Stopped all task workers for namespace: testing123
 Destroyed virtualenv: testing123
 Removed tasks directory: /home/ice/testing123
@@ -644,119 +577,422 @@ Removed webfiles directory: /var/share/nginx/iceplugins/testing123
 Destroying views namespace testing123
 Deleted PostgreSQL schema: testing123</span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Get info on all plugins ===</span>
-&gt;encapsia plugins info
-<span class="ansi33">name             version    description                     when                              plugin_tags
----------------  ---------  ------------------------------  --------------------------------  -------------
-archiver         1.4.5.18   Web Archiver Plugin             2020-02-27T14:39:41.958169+00:00
-conduct          1.5.5.15   Conduct app                     2020-02-27T14:40:38.575636+00:00
-entry            1.7.2.15   Entry app                       2020-02-27T14:41:24.486903+00:00
-esourcetraining  1.1.1.6    eSourceTraining app             2020-02-27T14:41:57.829916+00:00
-inventory        1.0.1.11   Inventory app                   2020-02-27T14:42:35.056252+00:00
-launch           1.2.3.4    Launch app                      2020-02-27T14:43:11.553837+00:00
-loader           1.2.4.20   Web Loader Plugin               2020-02-27T14:43:48.731606+00:00
-loaderreview     1.1.5.8    Review app                      2020-02-27T14:44:29.742555+00:00
-manager          1.2.5.20   Manager app                     2020-02-27T14:45:04.284776+00:00
-tags             1.1.2.7    Tags app                        2020-02-27T14:45:44.630668+00:00
-tutor            1.1.3.9    Tutor app                       2020-02-27T14:46:11.078459+00:00
-tutorbundles     1.1.0.4    Tutorbundles library for tutor  2020-02-27T14:46:41.412912+00:00</span>
+<span class="ansi34">=== Fetch latest plugins from S3, install launch, and show the logs ===</span>
+&gt;encapsia plugins add --latest-existing
+&gt;encapsia plugins --force install launch
+<span class="ansi33">name    existing version    new version        action
+------  ------------------  -----------------  --------
+launch                      1.3.0.4 (1.3.0-4)  install</span>
+<span class="ansi33">
+(Equivalent semver versions are shown in brackets when non-semver version is used)</span>
+<span class="ansi33"></span>
+<span class="ansi33">Uploaded /Users/tcorbettclark/.encapsia/plugins/plugin-launch-1.3.0.4.tar.gz to blob: 2f26c7fe75de4322830e0d8b55a6a1f1</span>
+<span class="ansi33">Installing</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
+&gt;encapsia plugins logs launch
+<span class="ansi33">Name: launch</span>
+<span class="ansi33">Version: 1.3.0.4</span>
+<span class="ansi33">Description: Launch app</span>
+<span class="ansi33">Action: install</span>
+<span class="ansi33">Server: localhost</span>
+<span class="ansi33">Success: True</span>
+<span class="ansi33">When: 2020-08-04T15:55:41.462183+00:00</span>
+<span class="ansi33">Logs:</span>
+<span class="ansi32">Downloaded blob 2f26c7fe75de4322830e0d8b55a6a1f1 to /tmp/tmpakaxe0ew
+Extracted /tmp/tmpakaxe0ew into /tmp/tmp00s1zjag
+Registered plugin launch (1.3.0.4) from blob 2f26c7fe75de4322830e0d8b55a6a1f1 with id e46c2dadde6240a68ae315772875771b
+/home/ice/inf-ice-pluginsmanager/icepluginsmanager/plugins.py:218: FutureWarning: reset_on_install is deprecated and will be treated as always true in the future
+  category=FutureWarning,
+Manifest file for launch not found.
+Destroying plugin namespace: launch
+No task workers configured for namespace: launch
+Virtualenv does not exist: launch
+Tasks directory does not exist: /home/ice/launch
+Webfiles directory does not exist: /var/share/nginx/iceplugins/launch
+Views namespace does not exist: launch
+Remove published permissions, if any
+Remove published tags, if any
+Removing all/any schedules from plugin namespace: launch
+Installing plugin launch (1.3.0.4)
+Made webfiles directory: /var/share/nginx/iceplugins/launch
+Installing web files in to namespace launch
+Installed web file /var/share/nginx/iceplugins/launch/css/encapsia-identify-theme.css
+Installed web file /var/share/nginx/iceplugins/launch/css/icetoolbelt.css.map
+Installed web file /var/share/nginx/iceplugins/launch/css/encapsia.css
+Installed web file /var/share/nginx/iceplugins/launch/css/icelogin.css
+Installed web file /var/share/nginx/iceplugins/launch/css/icetoolbelt.css
+Installed web file /var/share/nginx/iceplugins/launch/css/encapsia-action-theme.css
+Installed web file /var/share/nginx/iceplugins/launch/css/encapsia-management-theme.css
+Installed web file /var/share/nginx/iceplugins/launch/css/icelogin.css.map
+Installed web file /var/share/nginx/iceplugins/launch/css/encapsia-help-theme.css
+Installed web file /var/share/nginx/iceplugins/launch/css/encapsia-collect-theme.css
+Installed web file /var/share/nginx/iceplugins/launch/icetoolbelt.js.map
+Installed web file /var/share/nginx/iceplugins/launch/index.html
+Installed web file /var/share/nginx/iceplugins/launch/logo-white.png
+Installed web file /var/share/nginx/iceplugins/launch/version.txt
+Installed web file /var/share/nginx/iceplugins/launch/icelogin.js.map
+Installed web file /var/share/nginx/iceplugins/launch/icelogin.js
+Installed web file /var/share/nginx/iceplugins/launch/icetoolbelt.js
+Installed web file /var/share/nginx/iceplugins/launch/cmed-logo.png
+Installed web file /var/share/nginx/iceplugins/launch/fonts/Roboto-Regular-webfont.ttf
+Installed web file /var/share/nginx/iceplugins/launch/fonts/Roboto-Regular-webfont.svg
+Installed web file /var/share/nginx/iceplugins/launch/fonts/Roboto-Regular-webfont.woff
+Installed web file /var/share/nginx/iceplugins/launch/fonts/Material-Design-Iconic-Font.eot
+Installed web file /var/share/nginx/iceplugins/launch/fonts/Material-Design-Iconic-Font.woff
+Installed web file /var/share/nginx/iceplugins/launch/fonts/Material-Design-Iconic-Font.woff2
+Installed web file /var/share/nginx/iceplugins/launch/fonts/Roboto-Regular-webfont.eot
+Installed web file /var/share/nginx/iceplugins/launch/fonts/Material-Design-Iconic-Font.svg
+Installed web file /var/share/nginx/iceplugins/launch/fonts/Material-Design-Iconic-Font.ttf
+Installed web file /var/share/nginx/iceplugins/launch/img/encapsia-background-with-pattern.jpg
+Installed web file /var/share/nginx/iceplugins/launch/img/encapsia-background.jpg
+Installed web file /var/share/nginx/iceplugins/launch/img/encapsia-bg-texture.png
+Installed web file /var/share/nginx/iceplugins/launch/img/encapsia-icon.svg
+Installed web file /var/share/nginx/iceplugins/launch/img/cmed-logo.svg
+Installed web file /var/share/nginx/iceplugins/launch/img/encapsia_logo-white.png
+Installed manifest /var/share/nginx/iceplugins/launch/plugin.toml
+pew new -d launch
+created virtual environment CPython3.7.7.final.0-64 in 228ms
+  creator CPython3Posix(dest=/home/ice/.local/share/virtualenvs/launch, clear=False, global=False)
+  seeder FromAppData(download=False, pip=latest, setuptools=latest, wheel=latest, via=copy, app_data_dir=/home/ice/.local/share/virtualenv/seed-app-data/v1.0.1)
+  activators BashActivator,CShellActivator,FishActivator,PowerShellActivator,PythonActivator,XonshActivator
+pew in launch pip install -c /home/ice/inf-ice-pluginsmanager/requirements.txt redis rq
+Collecting redis==3.5.2
+  Using cached redis-3.5.2-py2.py3-none-any.whl (71 kB)
+Collecting rq==1.4.2
+  Using cached rq-1.4.2-py2.py3-none-any.whl (60 kB)
+Collecting click==7.1.2
+  Using cached click-7.1.2-py2.py3-none-any.whl (82 kB)
+Installing collected packages: click, redis, rq
+Successfully installed click-7.1.2 redis-3.5.2 rq-1.4.2
+WARNING: You are using pip version 20.1.1; however, version 20.2 is available.
+You should consider upgrading via the '/home/ice/.local/share/virtualenvs/launch/bin/python -m pip install --upgrade pip' command.
+Made virtualenv: launch
+Installing wheels in to namespace launch
+pew in launch pip install --find-links /tmp/tmp00s1zjag/wheels --requirement /tmp/tmp00s1zjag/wheels/requirements.txt
+Looking in links: /tmp/tmp00s1zjag/wheels
+Collecting asn1crypto==0.24.0
+  Using cached asn1crypto-0.24.0-py2.py3-none-any.whl (101 kB)
+Collecting certifi==2019.6.16
+  Using cached certifi-2019.6.16-py2.py3-none-any.whl (157 kB)
+Processing ./.cache/pip/wheels/de/12/40/58ad933d9ca21ca526a160b76b99c01c542394b0fb6404a097/cffi-1.12.3-cp37-cp37m-linux_x86_64.whl
+Collecting chardet==3.0.4
+  Using cached chardet-3.0.4-py2.py3-none-any.whl (133 kB)
+Processing ./.cache/pip/wheels/c6/21/ff/9f1ba937660140485b316d5bbcc274487509c64c618441e1a2/cryptography-2.7-cp37-cp37m-linux_x86_64.whl
+Collecting encapsia-api==0.1.20
+  Using cached encapsia_api-0.1.20-py3-none-any.whl (10 kB)
+Collecting idna==2.8
+  Using cached idna-2.8-py2.py3-none-any.whl (58 kB)
+Processing ./.cache/pip/wheels/0e/53/27/fee7fd9562e10dd046caccfc0340b8cf789b46846e660f3380/pycparser-2.19-py2.py3-none-any.whl
+Collecting pyOpenSSL==19.0.0
+  Using cached pyOpenSSL-19.0.0-py2.py3-none-any.whl (53 kB)
+Collecting requests==2.22.0
+  Using cached requests-2.22.0-py2.py3-none-any.whl (57 kB)
+Collecting six==1.12.0
+  Using cached six-1.12.0-py2.py3-none-any.whl (10 kB)
+Collecting toml==0.10.0
+  Using cached toml-0.10.0-py2.py3-none-any.whl (25 kB)
+Collecting urllib3==1.25.3
+  Using cached urllib3-1.25.3-py2.py3-none-any.whl (150 kB)
+Installing collected packages: asn1crypto, certifi, pycparser, cffi, chardet, six, cryptography, toml, idna, urllib3, requests, encapsia-api, pyOpenSSL
+Successfully installed asn1crypto-0.24.0 certifi-2019.6.16 cffi-1.12.3 chardet-3.0.4 cryptography-2.7 encapsia-api-0.1.20 idna-2.8 pyOpenSSL-19.0.0 pycparser-2.19 requests-2.22.0 six-1.12.0 toml-0.10.0 urllib3-1.25.3
+WARNING: You are using pip version 20.1.1; however, version 20.2 is available.
+You should consider upgrading via the '/home/ice/.local/share/virtualenvs/launch/bin/python -m pip install --upgrade pip' command.
+Installing tasks in to namespace launch
+Installed task file /home/ice/launch/ice_refresh_roles_caller.py
+Configuring 1 task workers for namespace launch
+Creating views namespace launch
+Created PostgreSQL schema: launch
+Installing views in to namespace launch
+Installing view permissions.sql
+Publishing permissions in to pluginsmanager
+Permission: launch-admin
+Not publishing empty tags list.
+Task launch.ice_refresh_roles_caller.run finished with result:
+Calling manager.ice_refresh_roles.refresh_roles from launch task ...
+Request timed out after 10 seconds. The assumption is that Manager is not installed. The task will be picked up later when Manager will be installed.
+Finished calling manager.ice_refresh_roles.refresh_roles from launch task.
+Installed plugin with id e46c2dadde6240a68ae315772875771b</span>
+<span class="ansi33"></span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Create a backup ===</span>
+<span class="ansi34">=== Uninstall launch and show the logs ===</span>
+&gt;encapsia plugins --force uninstall launch
+<span class="ansi33">Uninstalling launch</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
+&gt;encapsia plugins logs launch
+<span class="ansi33">Name: launch</span>
+<span class="ansi33">Version: 1.3.0.4</span>
+<span class="ansi33">Description: Launch app</span>
+<span class="ansi33">Action: uninstall</span>
+<span class="ansi33">Server: localhost</span>
+<span class="ansi33">Success: True</span>
+<span class="ansi33">When: 2020-08-04T15:55:47.314597+00:00</span>
+<span class="ansi33">Logs:</span>
+<span class="ansi32">Destroying plugin namespace: launch
+Stopped all task workers for namespace: launch
+Destroyed virtualenv: launch
+Removed tasks directory: /home/ice/launch
+Removed webfiles directory: /var/share/nginx/iceplugins/launch
+Destroying views namespace launch
+Deleted PostgreSQL schema: launch
+Remove published permissions, if any
+Remove published tags, if any
+Removing all/any schedules from plugin namespace: launch</span>
+<span class="ansi33"></span>
+
+<span class="ansi34">=== Get status on all installed plugins ===</span>
+&gt;encapsia plugins status
+<span class="ansi33">name    version    available    description    installed    plugin-tags
+------  ---------  -----------  -------------  -----------  -------------</span>
+<span class="ansi33">
+(Equivalent semver versions are shown in brackets when non-semver version is used)</span>
+
+<span class="ansi34">=== Get info on latest plugins in the local store ===</span>
+&gt;encapsia plugins ls
+<span class="ansi33">name                   version
+---------------------  -------------------
+analytics_permissions  2.0.0
+archiver               1.5.3.1 (1.5.3-1)
+builder                1.0.0.73 (1.0.0-73)
+coding                 1.2.15
+coding_test            1.2.15.3 (1.2.15-3)
+conduct                1.6.3
+entry                  1.9.0
+esourcetraining        1.1.3
+example                0.0.1
+insights               2.0.1.2 (2.0.1-2)
+inventory              1.0.1.13 (1.0.1-13)
+launch                 1.3.0.4 (1.3.0-4)
+loader                 1.3.0.7 (1.3.0-7)
+loaderreview           1.1.7
+manager                1.3.0.4 (1.3.0-4)
+review                 1.1.5.5 (1.1.5-5)
+serverlib              1.0.0
+tags                   1.1.3
+test001gallery         1.0.1
+test002gallery         1.0.1
+test003gallery         1.0.1
+trialconfig            0.0.1
+tutor                  1.1.5
+tutorbundles           1.1.0-dev2
+webbdd                 0.1.0.1 (0.1.0-1)</span>
+<span class="ansi33">
+(Equivalent semver versions are shown in brackets when non-semver version is used)</span>
+&gt;encapsia plugins ls -l
+<span class="ansi33">name                   version              description
+---------------------  -------------------  -------------------------------------------------------------------------------------------------------------------------------------
+analytics_permissions  2.0.0                Adds the ability to use the Analytics application
+archiver               1.5.3.1 (1.5.3-1)    Web Archiver Plugin
+builder                1.0.0.73 (1.0.0-73)  Builder app
+coding                 1.2.15               Medical Coding for Encapsia
+coding_test            1.2.15.3 (1.2.15-3)  Medical Coding for Encapsia
+conduct                1.6.3                Conduct app
+entry                  1.9.0                Entry app
+esourcetraining        1.1.3                eSourceTraining app
+example                0.0.1                Example plugin
+insights               2.0.1.2 (2.0.1-2)    Insights app
+inventory              1.0.1.13 (1.0.1-13)  Inventory app
+launch                 1.3.0.4 (1.3.0-4)    Launch app
+loader                 1.3.0.7 (1.3.0-7)    Web Loader Plugin
+loaderreview           1.1.7                Review app
+manager                1.3.0.4 (1.3.0-4)    Manager app
+review                 1.1.5.5 (1.1.5-5)    Review app
+serverlib              1.0.0                Server lib is a plugin which consists of correct, clean and optimized common functionalities for re-use in other encapsia components.
+tags                   1.1.3                Tags app
+test001gallery         1.0.1                Select cancer type.
+test002gallery         1.0.1                Select lab results.
+test003gallery         1.0.1                Lab results.
+trialconfig            0.0.1                Plugin that creates and applies Trial Configuration Packages (TCP)
+tutor                  1.1.5                Tutor app
+tutorbundles           1.1.0-dev2           Tutorbundles library for tutor
+webbdd                 0.1.0.1 (0.1.0-1)    BDD</span>
+<span class="ansi33">
+(Equivalent semver versions are shown in brackets when non-semver version is used)</span>
+
+<span class="ansi34">=== Get info on upstream plugins ===</span>
+&gt;encapsia plugins upstream
+<span class="ansi33">name                   version
+---------------------  -------------------
+analytics_permissions  2.0.0
+archiver               1.5.3.6 (1.5.3-6)
+builder                1.0.0.73 (1.0.0-73)
+coding                 1.2.15
+coding_test            1.2.15.3 (1.2.15-3)
+conduct                1.6.3
+entry                  1.9.0
+esourcetraining        1.1.3
+insights               2.0.1.2 (2.0.1-2)
+inventory              1.0.1.13 (1.0.1-13)
+launch                 1.3.0.4 (1.3.0-4)
+loader                 1.3.0.7 (1.3.0-7)
+loaderreview           1.1.7
+manager                1.3.0.4 (1.3.0-4)
+review                 1.1.5.5 (1.1.5-5)
+serverlib              1.0.0
+tags                   1.1.3
+test001gallery         1.0.1
+test002gallery         1.0.1
+test003gallery         1.0.1
+trialconfig            0.0.1
+tutor                  1.1.5
+tutorbundles           1.1.0-dev2
+webbdd                 0.1.0.1 (0.1.0-1)</span>
+<span class="ansi33">
+(Equivalent semver versions are shown in brackets when non-semver version is used)</span>
+&gt;encapsia plugins upstream conduct-1.6 --all-versions
+<span class="ansi33">name     version
+-------  -------------------
+conduct  1.6.0.3 (1.6.0-3)
+conduct  1.6.0.4 (1.6.0-4)
+conduct  1.6.0.5 (1.6.0-5)
+conduct  1.6.0.6 (1.6.0-6)
+conduct  1.6.0.7 (1.6.0-7)
+conduct  1.6.0.9 (1.6.0-9)
+conduct  1.6.0.10 (1.6.0-10)
+conduct  1.6.0.11 (1.6.0-11)
+conduct  1.6.0.12 (1.6.0-12)
+conduct  1.6.0.13 (1.6.0-13)
+conduct  1.6.0.14 (1.6.0-14)
+conduct  1.6.0.15 (1.6.0-15)
+conduct  1.6.0.16 (1.6.0-16)
+conduct  1.6.0.17 (1.6.0-17)
+conduct  1.6.0.18 (1.6.0-18)
+conduct  1.6.0.19 (1.6.0-19)
+conduct  1.6.0.20 (1.6.0-20)
+conduct  1.6.0.21 (1.6.0-21)
+conduct  1.6.0.22 (1.6.0-22)
+conduct  1.6.0.23 (1.6.0-23)
+conduct  1.6.0.24 (1.6.0-24)
+conduct  1.6.0.25 (1.6.0-25)
+conduct  1.6.0.26 (1.6.0-26)
+conduct  1.6.0.27 (1.6.0-27)
+conduct  1.6.0.28 (1.6.0-28)
+conduct  1.6.0.29 (1.6.0-29)
+conduct  1.6.0.30 (1.6.0-30)
+conduct  1.6.0.31 (1.6.0-31)
+conduct  1.6.0.32 (1.6.0-32)
+conduct  1.6.0.33 (1.6.0-33)
+conduct  1.6.0.34 (1.6.0-34)
+conduct  1.6.0.35 (1.6.0-35)
+conduct  1.6.0.36 (1.6.0-36)
+conduct  1.6.0.37 (1.6.0-37)
+conduct  1.6.0.38 (1.6.0-38)
+conduct  1.6.0.39 (1.6.0-39)
+conduct  1.6.0.40 (1.6.0-40)
+conduct  1.6.0.41 (1.6.0-41)
+conduct  1.6.0
+conduct  1.6.1.1 (1.6.1-1)
+conduct  1.6.1.2 (1.6.1-2)
+conduct  1.6.1.3 (1.6.1-3)
+conduct  1.6.1
+conduct  1.6.2.1 (1.6.2-1)
+conduct  1.6.2.2 (1.6.2-2)
+conduct  1.6.2.3 (1.6.2-3)
+conduct  1.6.2.4 (1.6.2-4)
+conduct  1.6.2.5 (1.6.2-5)
+conduct  1.6.2.6 (1.6.2-6)
+conduct  1.6.2.7 (1.6.2-7)
+conduct  1.6.2.8 (1.6.2-8)
+conduct  1.6.2.9 (1.6.2-9)
+conduct  1.6.2.10 (1.6.2-10)
+conduct  1.6.2.11 (1.6.2-11)
+conduct  1.6.2.12 (1.6.2-12)
+conduct  1.6.2
+conduct  1.6.3.1 (1.6.3-1)
+conduct  1.6.3</span>
+<span class="ansi33">
+(Equivalent semver versions are shown in brackets when non-semver version is used)</span>
+
+<span class="ansi34">=== Create a backup ===</span>
 &gt;encapsia database backup /tmp/test_encapsia_backup
-<span class="ansi33">Backing up database</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
-<span class="ansi33">Downloaded 37789538 bytes to /tmp/test_encapsia_backup</span>
+<span class="ansi33">Backing up database</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
+<span class="ansi33">Downloaded 2589264 bytes to /var/folders/pm/tn09fkx563b7ryz1hbs68mzw0000gn/T/tmpdhb7314s</span>
 &gt;ls -l /tmp/test_encapsia_backup
--rw-rw-r-- 1 tcorbettclark tcorbettclark 37789538 Mar 10 16:33 /tmp/test_encapsia_backup
+ls: /tmp/test_encapsia_backup: No such file or directory
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Restore from the backup ===</span>
-&gt;encapsia database restore --yes /tmp/test_encapsia_backup
-<span class="ansi33">Database restore requested.</span>
-<span class="ansi33">Please verify by other means (e.g. look at the logs).</span>
-&gt;sleep 5
-&gt;rm /tmp/test_encapsia_backup
-
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Create a fixture ===</span>
+<span class="ansi34">=== Create a fixture ===</span>
 &gt;encapsia fixtures create test_fixture
-<span class="ansi33">Creating fixture test_fixture</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
-<span class="ansi32">Fixture "test_fixture" created on Tue Mar 10 16:33:44 2020</span>
+<span class="ansi33">Creating fixture test_fixture</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
+<span class="ansi32">Fixture "test_fixture" created on Tue Aug  4 15:55:58 2020</span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Use a fixture ===</span>
-&gt;encapsia fixtures use --yes test_fixture
-<span class="ansi33">Requested change to fixture test_fixture.</span>
-<span class="ansi33">Please verify by other means (e.g. look at the logs).</span>
-&gt;sleep 5
+<span class="ansi34">=== Use a fixture (DISABLED: to be less invasive on test server) ===</span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Delete a fixture ===</span>
+<span class="ansi34">=== Delete a fixture ===</span>
 &gt;encapsia fixtures delete --yes test_fixture
 <span class="ansi33">Deleting fixture test_fixture</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
 <span class="ansi32">Deleted fixture: test_fixture</span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== List all fixtures ===</span>
+<span class="ansi34">=== List all fixtures ===</span>
 &gt;encapsia fixtures list
 <span class="ansi33">Fetching list of fixtures</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
-<span class="ansi32">ANALYTICS_ready
-fully_installed
-initialised
+<span class="ansi32">empty
+google
+onesubject
 ready
-ready_backup
-ready_backup_script</span>
+smalldata
+test-2020-09-04</span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== (Setup for running views or tasks etc) Install the example plugin from src ===</span>
+<span class="ansi34">=== (Setup for running views or tasks etc) Install the example plugin from src ===</span>
 &gt;encapsia plugins --force dev-update $EXAMPLE_PLUGIN_SRC
 <span class="ansi33">Including: tasks</span>
 <span class="ansi33">Including: views</span>
 <span class="ansi33">Including: wheels</span>
 <span class="ansi33">Including: schedules</span>
-<span class="ansi33">Uploading to server</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
-<span class="ansi33">Status: ok</span>
-<span class="ansi32">Extracted /tmp/ice/tmp1tz0ql5_ into /tmp/tmpywfv5oo1
+<span class="ansi33">Uploading to server</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
+<span class="ansi32">Extracted /tmp/ice/tmps0gv79wj into /tmp/tmp_ga0d_bc
+/home/ice/inf-ice-pluginsmanager/icepluginsmanager/plugins.py:218: FutureWarning: reset_on_install is deprecated and will be treated as always true in the future
+  category=FutureWarning,
 Installing plugin example (0.0.1)
 Made webfiles directory: /var/share/nginx/iceplugins/example
 Installing web files in to namespace example
 Installed manifest /var/share/nginx/iceplugins/example/plugin.toml
 pew new -d example
-Using base prefix '/home/ice/.pyenv/versions/3.6.7'
-New python executable in /home/ice/.local/share/virtualenvs/example/bin/python3.6
-Also creating executable in /home/ice/.local/share/virtualenvs/example/bin/python
-Installing setuptools, pip, wheel...
-done.
-pew in example pip install redis==2.10.6 rq==0.12.0
-Collecting redis==2.10.6
-  Using cached redis-2.10.6-py2.py3-none-any.whl (64 kB)
-Collecting rq==0.12.0
-  Using cached rq-0.12.0-py2.py3-none-any.whl (54 kB)
-Collecting click&gt;=5.0
-  Using cached click-7.1.1-py2.py3-none-any.whl (82 kB)
-Installing collected packages: redis, click, rq
-Successfully installed click-7.1.1 redis-2.10.6 rq-0.12.0
+created virtual environment CPython3.7.7.final.0-64 in 212ms
+  creator CPython3Posix(dest=/home/ice/.local/share/virtualenvs/example, clear=False, global=False)
+  seeder FromAppData(download=False, pip=latest, setuptools=latest, wheel=latest, via=copy, app_data_dir=/home/ice/.local/share/virtualenv/seed-app-data/v1.0.1)
+  activators BashActivator,CShellActivator,FishActivator,PowerShellActivator,PythonActivator,XonshActivator
+pew in example pip install -c /home/ice/inf-ice-pluginsmanager/requirements.txt redis rq
+Collecting redis==3.5.2
+  Using cached redis-3.5.2-py2.py3-none-any.whl (71 kB)
+Collecting rq==1.4.2
+  Using cached rq-1.4.2-py2.py3-none-any.whl (60 kB)
+Collecting click==7.1.2
+  Using cached click-7.1.2-py2.py3-none-any.whl (82 kB)
+Installing collected packages: click, redis, rq
+Successfully installed click-7.1.2 redis-3.5.2 rq-1.4.2
+WARNING: You are using pip version 20.1.1; however, version 20.2 is available.
+You should consider upgrading via the '/home/ice/.local/share/virtualenvs/example/bin/python -m pip install --upgrade pip' command.
 Made virtualenv: example
 Installing wheels in to namespace example
-pew in example pip install --find-links /tmp/tmpywfv5oo1/tmpvqlewzgg/wheels --requirement /tmp/tmpywfv5oo1/tmpvqlewzgg/wheels/requirements.txt
-Looking in links: /tmp/tmpywfv5oo1/tmpvqlewzgg/wheels
+pew in example pip install --find-links /tmp/tmp_ga0d_bc/tmpdadt186n/wheels --requirement /tmp/tmp_ga0d_bc/tmpdadt186n/wheels/requirements.txt
+Looking in links: /tmp/tmp_ga0d_bc/tmpdadt186n/wheels
 Collecting encapsia-api
-  Using cached encapsia_api-0.1.22-py3-none-any.whl (11 kB)
+  Using cached encapsia_api-0.1.25-py3-none-any.whl (16 kB)
 Collecting toml&lt;0.11.0,&gt;=0.10.0
-  Using cached toml-0.10.0-py2.py3-none-any.whl (25 kB)
+  Using cached toml-0.10.1-py2.py3-none-any.whl (19 kB)
 Collecting requests[security]&lt;3.0,&gt;=2.20
-  Using cached requests-2.23.0-py2.py3-none-any.whl (58 kB)
+  Using cached requests-2.24.0-py2.py3-none-any.whl (61 kB)
+Collecting arrow&lt;0.14.0,&gt;=0.13.1
+  Using cached arrow-0.13.2-py2.py3-none-any.whl (37 kB)
+Collecting urllib3!=1.25.0,!=1.25.1,&lt;1.26,&gt;=1.21.1
+  Using cached urllib3-1.25.10-py2.py3-none-any.whl (127 kB)
 Collecting chardet&lt;4,&gt;=3.0.2
   Using cached chardet-3.0.4-py2.py3-none-any.whl (133 kB)
 Collecting certifi&gt;=2017.4.17
-  Using cached certifi-2019.11.28-py2.py3-none-any.whl (156 kB)
-Collecting urllib3!=1.25.0,!=1.25.1,&lt;1.26,&gt;=1.21.1
-  Using cached urllib3-1.25.8-py2.py3-none-any.whl (125 kB)
+  Using cached certifi-2020.6.20-py2.py3-none-any.whl (156 kB)
 Collecting idna&lt;3,&gt;=2.5
-  Using cached idna-2.9-py2.py3-none-any.whl (58 kB)
-Processing ./.cache/pip/wheels/8d/f1/0f/7a44efed707005d6df5b9823293aff1e1fbd69b1649f125a8b/cryptography-2.8-cp36-cp36m-linux_x86_64.whl
+  Using cached idna-2.10-py2.py3-none-any.whl (58 kB)
 Collecting pyOpenSSL&gt;=0.14; extra == "security"
   Using cached pyOpenSSL-19.1.0-py2.py3-none-any.whl (53 kB)
-Collecting six&gt;=1.4.1
-  Using cached six-1.14.0-py2.py3-none-any.whl (10 kB)
-Processing ./.cache/pip/wheels/6c/6b/5c/30ce64a958139dc1f16109f1393d258aa13057d266b58cb486/cffi-1.14.0-cp36-cp36m-linux_x86_64.whl
+Processing ./.cache/pip/wheels/2b/60/6f/01f97e3a90d25fad9ca48294524b2e2f82d0396075ba3a8b59/cryptography-3.0-cp37-cp37m-linux_x86_64.whl
+Collecting python-dateutil
+  Using cached python_dateutil-2.8.1-py2.py3-none-any.whl (227 kB)
+Collecting six&gt;=1.5.2
+  Using cached six-1.15.0-py2.py3-none-any.whl (10 kB)
+Processing ./.cache/pip/wheels/48/ac/cf/5d51b590111b6887edbcbc7ecafa179b868108736fb5f7b1b0/cffi-1.14.1-cp37-cp37m-linux_x86_64.whl
 Collecting pycparser
   Using cached pycparser-2.20-py2.py3-none-any.whl (112 kB)
-Installing collected packages: toml, chardet, certifi, urllib3, idna, six, pycparser, cffi, cryptography, pyOpenSSL, requests, encapsia-api
-Successfully installed certifi-2019.11.28 cffi-1.14.0 chardet-3.0.4 cryptography-2.8 encapsia-api-0.1.22 idna-2.9 pyOpenSSL-19.1.0 pycparser-2.20 requests-2.23.0 six-1.14.0 toml-0.10.0 urllib3-1.25.8
+Installing collected packages: toml, urllib3, chardet, certifi, idna, six, pycparser, cffi, cryptography, pyOpenSSL, requests, python-dateutil, arrow, encapsia-api
+Successfully installed arrow-0.13.2 certifi-2020.6.20 cffi-1.14.1 chardet-3.0.4 cryptography-3.0 encapsia-api-0.1.25 idna-2.10 pyOpenSSL-19.1.0 pycparser-2.20 python-dateutil-2.8.1 requests-2.24.0 six-1.15.0 toml-0.10.1 urllib3-1.25.10
+WARNING: You are using pip version 20.1.1; however, version 20.2 is available.
+You should consider upgrading via the '/home/ice/.local/share/virtualenvs/example/bin/python -m pip install --upgrade pip' command.
 Installing tasks in to namespace example
 Installed task file /home/ice/example/test_module.py
 Configuring 1 task workers for namespace example
@@ -765,10 +1001,17 @@ Created PostgreSQL schema: example
 Installing views in to namespace example
 Installing view permissions.sql
 Installing view test_views.sql
-Not publishing empty tags list.
-Installing schedules in to namespace example</span>
+Created/updated system user example with capabilities: ['login.transfer.from', 'login.again', 'values.read', 'values.write', 'task.run.example']
+Publishing permissions in to pluginsmanager
+Permission: example-admin
+Permission: example-minimal
+Publishing plugin tags (example,test) in to pluginsmanager
+Installing schedules in to namespace example
+Created schedule: Test scheduled task
+Created schedule: Test scheduled task to be run with a system user
+Timeout calling hook example.test_module.test_function_with_meta_as_fixed_arg</span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Run view with no arguments ===</span>
+<span class="ansi34">=== Run view with no arguments ===</span>
 &gt;encapsia run view example test_no_args
 <span class="ansi32">[
     {
@@ -776,14 +1019,14 @@ Installing schedules in to namespace example</span>
     }
 ]</span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Run view and save result to file ===</span>
+<span class="ansi34">=== Run view and save result to file ===</span>
 &gt;encapsia run view example test_no_args --save-as /tmp/encapsia_test_save_from_view.txt
 <span class="ansi33">Response saved to: /tmp/encapsia_test_save_from_view.txt (mime_type=application/json)</span>
 &gt;echo $(cat /tmp/encapsia_test_save_from_view.txt)
 [{"answer": "function with no arguments"}]
 &gt;rm /tmp/encapsia_test_save_from_view.txt
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Run view with one argument ===</span>
+<span class="ansi34">=== Run view with one argument ===</span>
 &gt;encapsia run view example test_one_arg hello
 <span class="ansi32">[
     {
@@ -791,7 +1034,7 @@ Installing schedules in to namespace example</span>
     }
 ]</span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Run view with two arguments ===</span>
+<span class="ansi34">=== Run view with two arguments ===</span>
 &gt;encapsia run view example test_two_args "hello" " world"
 <span class="ansi32">[
     {
@@ -799,7 +1042,7 @@ Installing schedules in to namespace example</span>
     }
 ]</span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Run view with no arguments to return meta ===</span>
+<span class="ansi34">=== Run view with no arguments to return meta ===</span>
 &gt;encapsia run view example test_only_meta
 <span class="ansi32">[
     {
@@ -809,22 +1052,22 @@ Installing schedules in to namespace example</span>
             ],
             "device": null,
             "email": "system@root.encapsia.com",
-            "expires_at": "2021-03-10T16:31:18.118559+00:00",
-            "id": 95,
-            "issued_at": "2020-03-10T16:31:18.118559+00:00",
+            "expires_at": "2021-08-04T15:52:25.382954+00:00",
+            "id": 103,
+            "issued_at": "2020-08-04T15:52:25.382954+00:00",
             "name": "Root Superuser",
             "namespace": "example",
             "notification_token": null,
             "role": null,
             "role_alias": null,
             "site_id": "",
-            "token": "eeab0effbb6b484ba4d9b6b9b1f1cddc",
-            "url": "https://analytics1.icethree.com/v1/views/example/test_only_meta"
+            "token": "310dc47f3bc24d1aaf803244e9cd21ac",
+            "url": "https://localhost.icethree.com/v1/views/example/test_only_meta"
         }
     }
 ]</span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Run view with one optional argument ===</span>
+<span class="ansi34">=== Run view with one optional argument ===</span>
 &gt;encapsia run view example test_one_optional_arg
 <span class="ansi32">[
     {
@@ -838,7 +1081,7 @@ Installing schedules in to namespace example</span>
     }
 ]</span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Run view with mixture of argument types ===</span>
+<span class="ansi34">=== Run view with mixture of argument types ===</span>
 &gt;encapsia run view example test_mixture hello limit=123
 <span class="ansi32">[
     {
@@ -851,27 +1094,27 @@ Installing schedules in to namespace example</span>
                 ],
                 "device": null,
                 "email": "system@root.encapsia.com",
-                "expires_at": "2021-03-10T16:31:18.118559+00:00",
-                "id": 95,
-                "issued_at": "2020-03-10T16:31:18.118559+00:00",
+                "expires_at": "2021-08-04T15:52:25.382954+00:00",
+                "id": 103,
+                "issued_at": "2020-08-04T15:52:25.382954+00:00",
                 "name": "Root Superuser",
                 "namespace": "example",
                 "notification_token": null,
                 "role": null,
                 "role_alias": null,
                 "site_id": "",
-                "token": "eeab0effbb6b484ba4d9b6b9b1f1cddc",
-                "url": "https://analytics1.icethree.com/v1/views/example/test_mixture/hello?limit=123"
+                "token": "310dc47f3bc24d1aaf803244e9cd21ac",
+                "url": "https://localhost.icethree.com/v1/views/example/test_mixture/hello?limit=123"
             }
         }
     }
 ]</span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Run view which returns CSV directly ===</span>
+<span class="ansi34">=== Run view which returns CSV directly ===</span>
 &gt;encapsia run view --post example example_view_function_as_csv_file
 <span class="ansi32">"x,y\n\"1\",\"2\"\n\"3\",\"4\"\n"</span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Run view which populates table from CSV file ===</span>
+<span class="ansi34">=== Run view which populates table from CSV file ===</span>
 &gt;encapsia run view --post example example_create_and_populate_table --upload treaties.csv
 <span class="ansi32">[
     {
@@ -879,7 +1122,7 @@ Installing schedules in to namespace example</span>
     }
 ]</span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Run view and use save as ===</span>
+<span class="ansi34">=== Run view and use save as ===</span>
 &gt;encapsia run view example test_one_optional_arg --save-as=/tmp/test_view_download.json
 <span class="ansi33">Response saved to: /tmp/test_view_download.json (mime_type=application/json)</span>
 &gt;echo -n '[{"test_one_optional_arg": 1000}]'
@@ -887,7 +1130,7 @@ Installing schedules in to namespace example</span>
 Files /tmp/test_view_download.json and - are identical
 &gt;rm /tmp/test_view_download.json
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Run view which returns CSV directly and use save as ===</span>
+<span class="ansi34">=== Run view which returns CSV directly and use save as ===</span>
 &gt;encapsia run view --post example example_view_function_as_csv_file --save-as=/tmp/test_view_download.csv
 <span class="ansi33">Response saved to: /tmp/test_view_download.csv (mime_type=text/csv)</span>
 &gt;cat /tmp/test_view_download.csv
@@ -896,12 +1139,12 @@ x,y
 "3","4"
 &gt;rm /tmp/test_view_download.csv
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Run basic test task function ===</span>
+<span class="ansi34">=== Run basic test task function ===</span>
 &gt;encapsia run task example test_module.test_function name=tim
-<span class="ansi33">Running task example</span><span class="ansi33">.</span><span class="ansi33">..</span><span class="ansi33">Done</span>
+<span class="ansi33">Running task example</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
 <span class="ansi32">"hello tim"</span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Run basic test task function and save result to file ===</span>
+<span class="ansi34">=== Run basic test task function and save result to file ===</span>
 &gt;encapsia run task example test_module.test_function --save-as /tmp/encapsia_test_save_from_task.txt name=tim
 <span class="ansi33">Running task example</span><span class="ansi33">.</span><span class="ansi33">..</span><span class="ansi33">Done</span>
 <span class="ansi33">Response saved to: /tmp/encapsia_test_save_from_task.txt (mime_type=application/json)</span>
@@ -909,17 +1152,17 @@ x,y
 "hello tim"
 &gt;rm /tmp/encapsia_test_save_from_task.txt
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Run basic test task function with blank argument ===</span>
+<span class="ansi34">=== Run basic test task function with blank argument ===</span>
 &gt;encapsia run task example test_module.test_function name=
-<span class="ansi33">Running task example</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
+<span class="ansi33">Running task example</span><span class="ansi33">.</span><span class="ansi33">..</span><span class="ansi33">Done</span>
 <span class="ansi32">"hello "</span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Run test task function written with fixed arguments ===</span>
+<span class="ansi34">=== Run test task function written with fixed arguments ===</span>
 &gt;encapsia run task example test_module.test_function_with_fixed_args name=tim
 <span class="ansi33">Running task example</span><span class="ansi33">.</span><span class="ansi33">..</span><span class="ansi33">Done</span>
 <span class="ansi32">"hello tim"</span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Run test task function accepting any arguments ===</span>
+<span class="ansi34">=== Run test task function accepting any arguments ===</span>
 &gt;encapsia run task example test_module.test_function_with_any_args a=1 b=2 c=3
 <span class="ansi33">Running task example</span><span class="ansi33">.</span><span class="ansi33">..</span><span class="ansi33">Done</span>
 <span class="ansi32">{
@@ -932,72 +1175,72 @@ x,y
         ],
         "device": null,
         "email": "system@root.encapsia.com",
-        "expires_at": "2020-03-10T16:44:28.167590+00:00",
-        "id": 95,
-        "issued_at": "2020-03-10T16:34:28.167590+00:00",
+        "expires_at": "2020-08-04T16:06:42.156872+00:00",
+        "id": 103,
+        "issued_at": "2020-08-04T15:56:42.156872+00:00",
         "name": "Root Superuser",
         "namespace": "example",
         "notification_token": null,
         "role": null,
         "role_alias": null,
         "site_id": "",
-        "token": "cafd107058d540ffa1ec28cca4a407d5",
-        "url": "https://analytics1.icethree.com/v1/tasks/example/test_module.test_function_with_any_args?a=1&amp;b=2&amp;c=3"
+        "token": "6d701f0ff08d40ffad4a6483e550aa93",
+        "url": "https://localhost.icethree.com/v1/tasks/example/test_module.test_function_with_any_args?a=1&amp;b=2&amp;c=3"
     }
 }</span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Run test task function which only takes meta as a fixed argument ===</span>
+<span class="ansi34">=== Run test task function which only takes meta as a fixed argument ===</span>
 &gt;encapsia run task example test_module.test_function_with_meta_as_fixed_arg
-<span class="ansi33">Running task example</span><span class="ansi33">.</span><span class="ansi33">..</span><span class="ansi33">Done</span>
+<span class="ansi33">Running task example</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
 <span class="ansi32">{
     "capabilities": [
         "superuser"
     ],
     "device": null,
     "email": "system@root.encapsia.com",
-    "expires_at": "2020-03-10T16:44:29.217117+00:00",
-    "id": 95,
-    "issued_at": "2020-03-10T16:34:29.217117+00:00",
+    "expires_at": "2020-08-04T16:06:42.841650+00:00",
+    "id": 103,
+    "issued_at": "2020-08-04T15:56:42.841650+00:00",
     "name": "Root Superuser",
     "namespace": "example",
     "notification_token": null,
     "role": null,
     "role_alias": null,
     "site_id": "",
-    "token": "da3efdce446a4d0d9a54f1e188693c27",
-    "url": "https://analytics1.icethree.com/v1/tasks/example/test_module.test_function_with_meta_as_fixed_arg"
+    "token": "175f3dd70b1d4da3afd1ec261eca6899",
+    "url": "https://localhost.icethree.com/v1/tasks/example/test_module.test_function_with_meta_as_fixed_arg"
 }</span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Run task function with uploaded text data. ===</span>
+<span class="ansi34">=== Run task function with uploaded text data. ===</span>
 &gt;encapsia run task example test_module.test_function_for_posted_data --upload=example_data.txt
 <span class="ansi33">Running task example</span><span class="ansi33">.</span><span class="ansi33">..</span><span class="ansi33">Done</span>
 <span class="ansi32">"I've been uploaded from a file!"</span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Run task function with uploaded json data. ===</span>
+<span class="ansi34">=== Run task function with uploaded json data. ===</span>
 &gt;encapsia run task example test_module.test_function_for_posted_data --upload=example_data.json
 <span class="ansi33">Running task example</span><span class="ansi33">.</span><span class="ansi33">..</span><span class="ansi33">Done</span>
 <span class="ansi32">{
     "name": "Father Christmas"
 }</span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Run task function with uploaded jpg data. ===</span>
+<span class="ansi34">=== Run task function with uploaded jpg data. ===</span>
 &gt;encapsia run task example test_module.test_function_for_posted_data --upload=example_data.jpg
-<span class="ansi33">Running task example</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
+<span class="ansi33">Running task example</span><span class="ansi33">.</span><span class="ansi33">..</span><span class="ansi33">Done</span>
 <span class="ansi32">"\u042a\u044c\u042a\u0448\u0000C\u0000\u0003\u0002\u0002\u0002\u0002\u0002\u0003\u0002\u0002\u0002\u0003\u0003\u0003\u0003\u0004\u0006\u0004\u0004\u0004\u0004\u0004\b\u0006\u0006\u0005\u0006\t\b\n\n\t\b\t\t\n\f\u000f\f\n\u000b\u000e\u000b\t\t\r\u0011\r\u000e\u000f\u0010\u0010\u0011\u0010\n\f\u0012\u0013\u0012\u0010\u0013\u000f\u0010\u0010\u0010\u042a\u0438\u0000\u000b\b\u0000\u0001\u0000\u0001\u0001\u0001\u0011\u0000\u042a\u043b\u0000\u0006\u0000\u0010\u0010\u0005\u042a\u0437\u0000\b\u0001\u0001\u0000\u0000?\u0000\u0440\u043e \u042a\u044b"</span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Run task function with uploaded json data. ===</span>
+<span class="ansi34">=== Run task function with uploaded json data. ===</span>
 &gt;encapsia run task example test_module.test_function_for_posted_data --upload=example_data.json
 <span class="ansi33">Running task example</span><span class="ansi33">.</span><span class="ansi33">..</span><span class="ansi33">Done</span>
 <span class="ansi32">{
     "name": "Father Christmas"
 }</span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Run task function with uploaded jpg data. ===</span>
+<span class="ansi34">=== Run task function with uploaded jpg data. ===</span>
 &gt;encapsia run task example test_module.test_function_for_posted_data --upload=example_data.jpg
-<span class="ansi33">Running task example</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
+<span class="ansi33">Running task example</span><span class="ansi33">.</span><span class="ansi33">..</span><span class="ansi33">Done</span>
 <span class="ansi32">"\u042a\u044c\u042a\u0448\u0000C\u0000\u0003\u0002\u0002\u0002\u0002\u0002\u0003\u0002\u0002\u0002\u0003\u0003\u0003\u0003\u0004\u0006\u0004\u0004\u0004\u0004\u0004\b\u0006\u0006\u0005\u0006\t\b\n\n\t\b\t\t\n\f\u000f\f\n\u000b\u000e\u000b\t\t\r\u0011\r\u000e\u000f\u0010\u0010\u0011\u0010\n\f\u0012\u0013\u0012\u0010\u0013\u000f\u0010\u0010\u0010\u042a\u0438\u0000\u000b\b\u0000\u0001\u0000\u0001\u0001\u0001\u0011\u0000\u042a\u043b\u0000\u0006\u0000\u0010\u0010\u0005\u042a\u0437\u0000\b\u0001\u0001\u0000\u0000?\u0000\u0440\u043e \u042a\u044b"</span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Run task function with uploaded text data and use save as. ===</span>
+<span class="ansi34">=== Run task function with uploaded text data and use save as. ===</span>
 &gt;encapsia run task example test_module.test_function_for_posted_data --upload=example_data.txt --save-as=/tmp/example_data.txt
 <span class="ansi33">Running task example</span><span class="ansi33">.</span><span class="ansi33">..</span><span class="ansi33">Done</span>
 <span class="ansi33">Response saved to: /tmp/example_data.txt (mime_type=application/json)</span>
@@ -1006,159 +1249,164 @@ x,y
 Files /tmp/example_data.txt and - are identical
 &gt;rm /tmp/example_data.txt
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Run task function with uploaded json data and use save as. ===</span>
+<span class="ansi34">=== Run task function with uploaded json data and use save as. ===</span>
 &gt;encapsia run task example test_module.test_function_for_posted_data --upload=example_data.json --save-as=/tmp/example_data.json
-<span class="ansi33">Running task example</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
+<span class="ansi33">Running task example</span><span class="ansi33">.</span><span class="ansi33">..</span><span class="ansi33">Done</span>
 <span class="ansi33">Response saved to: /tmp/example_data.json (mime_type=application/json)</span>
 &gt;diff -s example_data.json /tmp/example_data.json
 Files example_data.json and /tmp/example_data.json are identical
 &gt;rm /tmp/example_data.json
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Run task function with uploaded jpg data and use save as. ===</span>
+<span class="ansi34">=== Run task function with uploaded jpg data and use save as. ===</span>
 &gt;encapsia run task example test_module.test_function_for_posted_data --upload=example_data.jpg --save-as=/tmp/example_data.jpg
-<span class="ansi33">Running task example</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
+<span class="ansi33">Running task example</span><span class="ansi33">.</span><span class="ansi33">..</span><span class="ansi33">Done</span>
 <span class="ansi33">Response saved to: /tmp/example_data.jpg (mime_type=image/jpeg)</span>
 &gt;diff -s example_data.jpg /tmp/example_data.jpg
 Files example_data.jpg and /tmp/example_data.jpg are identical
 &gt;rm /tmp/example_data.jpg
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Run task function which takes no arguments. This *should* fail!!! ===</span>
+<span class="ansi34">=== Run task function which takes no arguments. This *should* fail!!! ===</span>
 &gt;encapsia run task example test_module.test_function_with_no_args
 <span class="ansi33">Running task example</span><span class="ansi33">.</span><span class="ansi31">
 Status: failed</span>
 <span class="ansi31">Traceback (most recent call last):
-  File "/home/ice/.local/share/virtualenvs/example/lib/python3.6/site-packages/rq/worker.py", line 793, in perform_job
+  File "/home/ice/.local/share/virtualenvs/example/lib/python3.7/site-packages/rq/worker.py", line 883, in perform_job
     rv = job.perform()
-  File "/home/ice/.local/share/virtualenvs/example/lib/python3.6/site-packages/rq/job.py", line 599, in perform
+  File "/home/ice/.local/share/virtualenvs/example/lib/python3.7/site-packages/rq/job.py", line 645, in perform
     self._result = self._execute()
-  File "/home/ice/.local/share/virtualenvs/example/lib/python3.6/site-packages/rq/job.py", line 605, in _execute
+  File "/home/ice/.local/share/virtualenvs/example/lib/python3.7/site-packages/rq/job.py", line 651, in _execute
     return self.func(*self.args, **self.kwargs)
 TypeError: test_function_with_no_args() got an unexpected keyword argument 'meta'
 </span>
 Aborted!
 &gt;true
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Run task function with fixed arg and no meta. This *should* fail!!! ===</span>
+<span class="ansi34">=== Run task function with fixed arg and no meta. This *should* fail!!! ===</span>
 &gt;encapsia run task example test_module.test_function_with_single_arg_and_no_meta name=tim
 <span class="ansi33">Running task example</span><span class="ansi33">.</span><span class="ansi31">
 Status: failed</span>
 <span class="ansi31">Traceback (most recent call last):
-  File "/home/ice/.local/share/virtualenvs/example/lib/python3.6/site-packages/rq/worker.py", line 793, in perform_job
+  File "/home/ice/.local/share/virtualenvs/example/lib/python3.7/site-packages/rq/worker.py", line 883, in perform_job
     rv = job.perform()
-  File "/home/ice/.local/share/virtualenvs/example/lib/python3.6/site-packages/rq/job.py", line 599, in perform
+  File "/home/ice/.local/share/virtualenvs/example/lib/python3.7/site-packages/rq/job.py", line 645, in perform
     self._result = self._execute()
-  File "/home/ice/.local/share/virtualenvs/example/lib/python3.6/site-packages/rq/job.py", line 605, in _execute
+  File "/home/ice/.local/share/virtualenvs/example/lib/python3.7/site-packages/rq/job.py", line 651, in _execute
     return self.func(*self.args, **self.kwargs)
 TypeError: test_function_with_single_arg_and_no_meta() got an unexpected keyword argument 'meta'
 </span>
 Aborted!
 &gt;true
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Run task function with arg and no meta. This *should* fail!!! ===</span>
+<span class="ansi34">=== Run task function with arg and no meta. This *should* fail!!! ===</span>
 &gt;encapsia run task example test_module.test_function_with_single_kwarg name=tim
 <span class="ansi33">Running task example</span><span class="ansi33">.</span><span class="ansi31">
 Status: failed</span>
 <span class="ansi31">Traceback (most recent call last):
-  File "/home/ice/.local/share/virtualenvs/example/lib/python3.6/site-packages/rq/worker.py", line 793, in perform_job
+  File "/home/ice/.local/share/virtualenvs/example/lib/python3.7/site-packages/rq/worker.py", line 883, in perform_job
     rv = job.perform()
-  File "/home/ice/.local/share/virtualenvs/example/lib/python3.6/site-packages/rq/job.py", line 599, in perform
+  File "/home/ice/.local/share/virtualenvs/example/lib/python3.7/site-packages/rq/job.py", line 645, in perform
     self._result = self._execute()
-  File "/home/ice/.local/share/virtualenvs/example/lib/python3.6/site-packages/rq/job.py", line 605, in _execute
+  File "/home/ice/.local/share/virtualenvs/example/lib/python3.7/site-packages/rq/job.py", line 651, in _execute
     return self.func(*self.args, **self.kwargs)
 TypeError: test_function_with_single_kwarg() got an unexpected keyword argument 'meta'
 </span>
 Aborted!
 &gt;true
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Run task function expecting uploaded data but without any data. This *should* fail!!! ===</span>
+<span class="ansi34">=== Run task function expecting uploaded data but without any data. This *should* fail!!! ===</span>
 &gt;encapsia run task example test_module.test_function_for_posted_data
 <span class="ansi33">Running task example</span><span class="ansi33">.</span><span class="ansi31">
 Status: failed</span>
 <span class="ansi31">Traceback (most recent call last):
-  File "/home/ice/.local/share/virtualenvs/example/lib/python3.6/site-packages/rq/worker.py", line 793, in perform_job
+  File "/home/ice/.local/share/virtualenvs/example/lib/python3.7/site-packages/rq/worker.py", line 883, in perform_job
     rv = job.perform()
-  File "/home/ice/.local/share/virtualenvs/example/lib/python3.6/site-packages/rq/job.py", line 599, in perform
+  File "/home/ice/.local/share/virtualenvs/example/lib/python3.7/site-packages/rq/job.py", line 645, in perform
     self._result = self._execute()
-  File "/home/ice/.local/share/virtualenvs/example/lib/python3.6/site-packages/rq/job.py", line 605, in _execute
+  File "/home/ice/.local/share/virtualenvs/example/lib/python3.7/site-packages/rq/job.py", line 651, in _execute
     return self.func(*self.args, **self.kwargs)
-  File "./test_module.py", line 70, in test_function_for_posted_data
+  File "./test_module.py", line 72, in test_function_for_posted_data
     with open(posted_data_filename, "rb") as f_read:
 TypeError: expected str, bytes or os.PathLike object, not NoneType
 </span>
 Aborted!
 &gt;true
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Run job function and return (JSON) result ===</span>
+<span class="ansi34">=== Run job function and return (JSON) result ===</span>
 &gt;encapsia run job example test_module.test_function_for_a_job name=Tim
-<span class="ansi33">Running job example</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
+<span class="ansi33">Running job example</span><span class="ansi33">.</span><span class="ansi33">..</span><span class="ansi33">Done</span>
 <span class="ansi32">"Hello Tim"</span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Run job function and save (JSON) result ===</span>
+<span class="ansi34">=== Run job function and save (JSON) result ===</span>
 &gt;encapsia run job example test_module.test_function_for_a_job name=Tim --save-as=/tmp/test_job_result.json
-<span class="ansi33">Running job example</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
+<span class="ansi33">Running job example</span><span class="ansi33">.</span><span class="ansi33">..</span><span class="ansi33">Done</span>
 <span class="ansi33">Response saved to: /tmp/test_job_result.json (mime_type=application/json)</span>
 &gt;echo $(cat /tmp/test_job_result.json)
 "Hello Tim"
 &gt;rm /tmp/test_job_result.json
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Add superuser ===</span>
+<span class="ansi34">=== Add superuser ===</span>
 &gt;encapsia users add-superuser tcorbettclark@cmedtechnology.com Timothy Corbett-Clark
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== List all superusers ===</span>
+<span class="ansi34">=== List all superusers ===</span>
 &gt;encapsia users list --super-users
 <span class="ansi32">[Super users]</span>
-<span class="ansi32">email                              first_name    last_name
----------------------------------  ------------  -------------
-azuresuperuser@cmedtechnology.com  Azure         Superuser
-cmedice.superuser@gmail.com        CmedIce       Superuser
-tcorbettclark@cmedtechnology.com   Timothy       Corbett-Clark</span>
+<span class="ansi32">email                             first_name    last_name
+--------------------------------  ------------  -------------
+timothy.corbettclark@gmail.com    Timothy       Corbett-Clark
+tcorbettclark@cmedtechnology.com  Timothy       Corbett-Clark</span>
 <span class="ansi32"></span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Delete superuser ===</span>
+<span class="ansi34">=== Delete superuser ===</span>
 &gt;encapsia users delete tcorbettclark@cmedtechnology.com
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Add system user ===</span>
+<span class="ansi34">=== Add system user ===</span>
 &gt;encapsia users add-systemuser a-description cap1,cap2,cap3
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== List all system users ===</span>
+<span class="ansi34">=== List all system users ===</span>
 &gt;encapsia users list --system-users
 <span class="ansi32">[System users]</span>
 <span class="ansi32">email                              description    capabilities
----------------------------------  -------------  ------------------------
+---------------------------------  -------------  -----------------------------------------------------------------------------------------
+system@example.encapsia.com        Example        ('login.transfer.from', 'login.again', 'values.read', 'values.write', 'task.run.example')
 system@a-description.encapsia.com  A-description  ('cap1', 'cap2', 'cap3')</span>
 <span class="ansi32"></span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Delete system user ===</span>
+<span class="ansi34">=== Delete system user ===</span>
 &gt;encapsia users delete system@a-description.encapsia.com
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== List all users ===</span>
+<span class="ansi34">=== List all users ===</span>
 &gt;encapsia users list --all-users
 <span class="ansi32">[All users]</span>
-<span class="ansi32">email                              first_name    last_name    role       enabled    is_site_user
----------------------------------  ------------  -----------  ---------  ---------  --------------
-azuresuperuser@cmedtechnology.com  Azure         Superuser    Superuser  True       False
-cmedice.superuser@gmail.com        CmedIce       Superuser    Superuser  True       False</span>
+<span class="ansi32">email                           first_name    last_name      role              enabled    is_site_user
+------------------------------  ------------  -------------  ----------------  ---------  --------------
+timothy.corbettclark@gmail.com  Timothy       Corbett-Clark  Superuser         True       False
+system@example.encapsia.com     System        Example        System - Example  True       False</span>
 <span class="ansi32"></span>
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Export all users and roles ===</span>
+<span class="ansi34">=== Export all users and roles ===</span>
 &gt;encapsia users export /tmp/test_encapsia_users.toml
-<span class="ansi32">Exported 2 users and 2 roles to /tmp/test_encapsia_users.toml</span>
+<span class="ansi32">Exported 2 users and 3 roles to /tmp/test_encapsia_users.toml</span>
 &gt;cat /tmp/test_encapsia_users.toml
 [[users]]
-email = "azuresuperuser@cmedtechnology.com"
-first_name = "Azure"
-last_name = "Superuser"
+email = "timothy.corbettclark@gmail.com"
+first_name = "Timothy"
+last_name = "Corbett-Clark"
 is_site_user = false
 role = "Superuser"
 enabled = true
 
 [[users]]
-email = "cmedice.superuser@gmail.com"
-first_name = "CmedIce"
-last_name = "Superuser"
+email = "system@example.encapsia.com"
+first_name = "System"
+last_name = "Example"
 is_site_user = false
-role = "Superuser"
+role = "System - Example"
 enabled = true
+
+[[roles]]
+name = "System - Example"
+alias = "System - Example"
+capabilities = [ "login.transfer.from", "login.again", "values.read", "values.write", "task.run.example",]
 
 [[roles]]
 name = "Superuser"
@@ -1171,12 +1419,12 @@ alias = "System - A-description"
 capabilities = [ "cap1", "cap2", "cap3",]
 
 
-<span class="ansi93"></span><span class="ansi1 ansi93">=== Import users and roles ===</span>
+<span class="ansi34">=== Import users and roles ===</span>
 &gt;encapsia users import /tmp/test_encapsia_users.toml
-<span class="ansi32">Imported 2 users and 2 roles from /tmp/test_encapsia_users.toml</span>
+<span class="ansi32">Imported 2 users and 3 roles from /tmp/test_encapsia_users.toml</span>
 &gt;rm /tmp/test_encapsia_users.toml
 
-<span class="ansi34"></span><span class="ansi1 ansi34">&lt;&lt;&lt; End of tests &gt;&gt;&gt;</span>
+<span class="ansi36">&lt;&lt;&lt; End of tests &gt;&gt;&gt;</span>
 
 </pre>
 </body>

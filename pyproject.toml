@@ -16,7 +16,6 @@ python = "^3.6"
 requests = {version = "^2.20",extras = ["security"]}
 click = "^7.0"
 toml = "^0.10.0"
-awscli = "^1.16"
 click-completion = "^0.5.0"
 click-shell = "^1.0"
 tabulate = "^0.8.3"
@@ -24,6 +23,8 @@ httpie = "^1.0"
 # encapsia-api = {path = "../encapsia-api/"} # Only needed during development against unreleased versions of encapsia-api
 encapsia-api = "^0.1.23"
 http-prompt = {version = "^1.0",optional = true}
+boto3 = "^1.14.29"
+semver = "^2.10.2"
 
 [tool.poetry.extras]
 httpie-shell = ["http-prompt"]

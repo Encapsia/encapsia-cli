@@ -2,8 +2,8 @@
 import os
 
 import click
-
 from encapsia_api import CredentialsStore, EncapsiaApiError
+
 from encapsia_cli import lib
 
 main = lib.make_main(__doc__)
