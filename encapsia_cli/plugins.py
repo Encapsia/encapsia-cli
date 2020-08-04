@@ -442,7 +442,7 @@ def uninstall(obj, show_logs, namespace):
         api,
         "uninstall_plugin",
         dict(namespace=namespace),
-        f"Uninstalling {namespace}",
+        "Uninstalling",
         print_output=show_logs,
     )
 
