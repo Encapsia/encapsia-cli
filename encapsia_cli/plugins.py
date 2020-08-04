@@ -1,5 +1,6 @@
 """Install, uninstall, create, and update plugins."""
 
+import collections
 import datetime
 import operator
 import re
@@ -9,15 +10,14 @@ import urllib.request
 from contextlib import contextmanager
 from pathlib import Path
 
-import collections
-
-import boto3
+import botocore
 import click
-import semver
 import toml
+from encapsia_cli import lib
 from tabulate import tabulate
 
-from encapsia_cli import lib
+import boto3
+import semver
 
 main = lib.make_main(__doc__, for_plugins=True)
 
@@ -26,19 +26,38 @@ def _format_datetime(dt):
     return datetime.datetime.fromisoformat(dt).strftime("%a %d %b %Y %H:%M:%S")
 
 
-def _add_to_local_store(plugins_local_dir, uri, force=False):
+def _log_message_explaining_semver():
+    lib.log(
+        "\n(Equivalent semver versions are shown in brackets when non-semver version is used)"
+    )
+
+
+def _add_to_local_store_from_uri(plugins_local_dir, uri, force=False):
     full_name = uri.rsplit("/", 1)[-1]
     m = re.match(r"plugin-([^-]*)-([^-]*).tar.gz", full_name)
     if m:
-        output_filename = plugins_local_dir / full_name
-        if not force and output_filename.exists():
-            lib.log(f"Found: {output_filename} (Skipping)")
+        store_filename = plugins_local_dir / full_name
+        if not force and store_filename.exists():
+            lib.log(f"Found: {store_filename} (Skipping)")
         else:
             filename, headers = urllib.request.urlretrieve(uri, tempfile.mkstemp()[1])
-            shutil.move(filename, output_filename)
-            lib.log(f"Created: {output_filename}")
+            shutil.move(filename, store_filename)
+            lib.log(f"Added to local store: {store_filename}")
     else:
         lib.log_error("That doesn't look like a plugin. Aborting!", abort=True)
+
+
+def _add_to_local_store_from_s3(plugins_s3_bucket, plugins_local_dir, pi, force=False):
+    filename = Path(plugins_local_dir, pi.get_as_filename())
+    if not force and filename.exists():
+        lib.log(f"Found: {filename} (Skipping)")
+    else:
+        s3 = boto3.client("s3")
+        try:
+            s3.download_file(plugins_s3_bucket, pi.get_as_s3_name(), str(filename))
+        except botocore.exceptions.ClientError:
+            lib.log_error(f"Unable to download: {pi.get_as_s3_name()}")
+        lib.log(f"Added to local store: {filename}")
 
 
 def _install_plugin(api, filename, print_output=False):
@@ -58,12 +77,6 @@ def _install_plugin(api, filename, print_output=False):
 
 def _read_versions_toml(filename):
     return lib.read_toml(Path(filename)).items()
-
-
-def _download_plugin_from_s3(plugins_s3_bucket, name, filename):
-    s3 = boto3.client("s3")
-    with open(filename, "wb") as f:
-        s3.download_fileobj(plugins_s3_bucket, name, f)
 
 
 class PluginInfo:
@@ -88,18 +101,20 @@ class PluginInfo:
 
     def parse_version(self, version):
         # Consider a 4th digit to be a SemVer pre-release.
+        # E.g. 1.2.3.4 is 1.2.3-4
         m = self.FOUR_DIGIT_VERSION_REGEX.match(version)
         if m:
             major, minor, patch, prerelease = m.groups()
             return semver.VersionInfo(
                 major=major, minor=minor, patch=patch, prerelease=prerelease
             )
-        # E.g. 0.0.209dev12 is build 12.
+        # Consider a "dev" build to be a SemVer pre-release.
+        # E.g. 0.0.209dev12 is 0.0.209-12
         m = self.DEV_VERSION_REGEX.match(version)
         if m:
-            major, minor, patch, build = m.groups()
+            major, minor, patch, prerelease = m.groups()
             return semver.VersionInfo(
-                major=major, minor=minor, patch=patch, build=build
+                major=major, minor=minor, patch=patch, prerelease=prerelease
             )
         # Otherwise hope that the semver package can deal with it.
         try:
@@ -122,7 +137,15 @@ class PluginInfo:
     def get_as_s3_name(self):
         return f"{self.name}/{self.get_as_filename()}"
 
-    def matches(self, name, version_prefix=""):
+    @staticmethod
+    def _split_spec(spec):
+        if "-" in spec:
+            return spec.split("-", 1)
+        else:
+            return spec, ""
+
+    def matches(self, spec):
+        name, version_prefix = self._split_spec(spec)
         return self.name == name and self.version.startswith(version_prefix)
 
     def __str__(self):
@@ -152,22 +175,20 @@ class PluginInfos:
             ]
         )
 
+    @staticmethod
+    def make_from_encapsia(host):
+        api = lib.get_api(host=host)
+        raw_info = api.run_view("pluginsmanager", "installed_plugins_with_tags")
+        return PluginInfos([PluginInfo((i["name"], i["version"])) for i in raw_info])
+
     def latest(self):
         try:
             return max(self.pis, key=operator.attrgetter("key"),)
         except ValueError:
             return None
 
-    @staticmethod
-    def _split_spec(spec):
-        if "-" in spec:
-            return spec.split("-")
-        else:
-            return spec, ""
-
     def filter_to_spec(self, spec):
-        name, version_prefix = self._split_spec(spec)
-        return PluginInfos([pi for pi in self.pis if pi.matches(name, version_prefix)])
+        return PluginInfos([pi for pi in self.pis if pi.matches(spec)])
 
     def filter_to_specs(self, specs):
         return PluginInfos(
@@ -235,6 +256,10 @@ def logs(obj, plugins):
         else:
             lib.log_error(i["output"].strip())
         lib.log("")
+    if len(raw_info) == 0 and len(plugins) > 0:
+        lib.log(
+            "No logs found. Note that any plugins must be exact name matches without version info."
+        )
 
 
 @main.command()
@@ -247,25 +272,36 @@ def status(obj, plugins):
     ).filter_to_latest()
     api = lib.get_api(**obj)
     raw_info = api.run_view("pluginsmanager", "installed_plugins_with_tags")
+
+    plugin_infos = []
+    for i in raw_info:
+        pi = PluginInfo((i["name"], i["version"]))
+
+        available_pi = local_versions.latest_version_matching_spec(i["name"])
+        if available_pi:
+            temp = available_pi.formatted_version()
+            available = "<same>" if temp == pi.formatted_version() else temp
+        else:
+            available = ""
+
+        pi.extras = {
+            "description": i["description"],
+            "plugin-tags": (
+                ", ".join(sorted(i["plugin_tags"]))
+                if isinstance(i["plugin_tags"], list)
+                else ""
+            ),
+            "installed": _format_datetime(i["when"]),
+            "available": available,
+        }
+
+        plugin_infos.append(pi)
+
     if plugins:
-        # Filter to specified plugins.
-        raw_info = [i for i in raw_info if i["name"] in plugins]
-    # Tidy formatting
+        plugin_infos = PluginInfos(plugin_infos).filter_to_specs(plugins).pis
+
     for i in raw_info:
         i["version"] = PluginInfo((i["name"], i["version"])).formatted_version()
-        plugin_tags = i.pop("plugin_tags")
-        if isinstance(plugin_tags, list):
-            i["plugin-tags"] = ", ".join(sorted(plugin_tags))
-        else:
-            i["plugin-tags"] = ""
-        i["installed"] = _format_datetime(i.pop("when"))
-        available = local_versions.latest_version_matching_spec(i["name"])
-        if available:
-            i["available"] = available.formatted_version()
-            if i["available"] == i["version"]:
-                i["available"] = "<same>"
-        else:
-            i["available"] = ""
     headers = [
         "name",
         "version",
@@ -274,9 +310,19 @@ def status(obj, plugins):
         "installed",
         "plugin-tags",
     ]
-    info = ([p[h] for h in headers] for p in raw_info)
+    info = (
+        [
+            pi.name,
+            pi.formatted_version(),
+            pi.extras["available"],
+            pi.extras["description"],
+            pi.extras["installed"],
+            pi.extras["plugin-tags"],
+        ]
+        for pi in plugin_infos
+    )
     lib.log(tabulate(info, headers=headers))
-    lib.log("\n(Equivalent semver versions in brackets, if any and if required)")
+    _log_message_explaining_semver()
 
 
 @main.command()
@@ -284,55 +330,103 @@ def status(obj, plugins):
     "--versions", default=None, help="TOML file containing plugin names and versions."
 )
 @click.option(
-    "--show-logs/--no-show-logs", default=False, help="Print installation logs."
+    "--show-logs", is_flag=True, default=False, help="Print installation logs."
+)
+@click.option(
+    "--latest-existing", is_flag=True, default=False, help="Upgrade existing plugins.",
 )
 @click.argument("plugins", nargs=-1)
 @click.pass_obj
-def install(obj, versions, show_logs, plugins):
-    """Install plugins by name, from files, or from a versions.toml file.
+def install(obj, versions, show_logs, latest_existing, plugins):
+    """Install/upgrade plugins by name, from files, or from a versions.toml file.
 
-    Plugins provided as files are put in the local before being installed.
+    Plugins provided as files are put in the local store before being installed.
 
-    When described by name alone, the latest plugin of that name in the local will be used.
+    When described by name alone, the latest plugin of that name in the local store will be used.
 
-    And plugins specified in the versions.toml file will be taken from the local.
+    Plugins specified in the versions.toml file will be taken from the local store.
 
     """
     plugins_local_dir = obj["plugins_local_dir"]
+    force = obj["force"]
 
-    # First, create a list of plugin files to install.
-    filenames = []
+    # Create a list of installation candidates.
+    to_install_candidates = []
     for plugin in plugins:
         plugin_filename = Path(plugin).resolve()
         if plugin_filename.is_file():
             # If it looks like a file then just add it.
-            _add_to_local_store(plugins_local_dir, plugin_filename.as_uri(), force=True)
-            filenames.append(plugins_local_dir / plugin_filename.name)
+            _add_to_local_store_from_uri(
+                plugins_local_dir, plugin_filename.as_uri(), force=True
+            )
+            to_install_candidates.append(PluginInfo(plugin_filename))
         else:
             # Else assume it is a spec for a plugin already in the local store.
             pi = PluginInfos.make_from_local_store(
                 plugins_local_dir
             ).latest_version_matching_spec(plugin)
             if pi:
-                plugin_filename = pi.get_as_filename()
-                filenames.append(plugins_local_dir / plugin_filename)
+                to_install_candidates.append(pi)
             else:
-                lib.log_error(f"Cannot find plugin with name: {plugin}", abort=True)
+                lib.log_error(f"Cannot find plugin: {plugin}", abort=True)
     if versions:
         for name, version in _read_versions_toml(versions):
-            filenames.append(
-                plugins_local_dir / PluginInfo((name, version)).get_as_filename()
-            )
+            to_install_candidates.append(PluginInfo((name, version)))
+    if latest_existing:
+        available = PluginInfos.make_from_local_store(
+            plugins_local_dir
+        ).filter_to_latest()
+        for pi in PluginInfos.make_from_encapsia(obj["host"]).as_sorted_list():
+            a = available.latest_version_matching_spec(pi.name)
+            if a:
+                to_install_candidates.append(a)
 
-    # Second, install them.
-    api = lib.get_api(**obj)
-    for filename in filenames:
-        _install_plugin(api, filename, print_output=show_logs)
+    # Work out and list installation plan.
+    to_install_candidates = PluginInfos(to_install_candidates).as_sorted_list()
+    to_install = []
+    installed = PluginInfos.make_from_encapsia(obj["host"])
+    headers = ["name", "existing version", "new version", "action"]
+    info = []
+    for pi in to_install_candidates:
+        current = installed.latest_version_matching_spec(pi.name)
+        if current:
+            current_version = current.formatted_version()
+            if current.semver < pi.semver:
+                action = "upgrade"
+            elif current.semver > pi.semver:
+                action = "downgrade"
+            else:
+                action = "reinstall" if force else "skip"
+        else:
+            current_version = ""
+            action = "install"
+        info.append([pi.name, current_version, pi.formatted_version(), action])
+        if action != "skip":
+            to_install.append(pi)
+    lib.log(tabulate(info, headers=headers))
+    _log_message_explaining_semver()
+
+    # Seek confirmation unless force.
+    if to_install and not force:
+        click.confirm(
+            "Do you wish to proceed with the above plan?", abort=True,
+        )
+
+    # Install them.
+    lib.log("")
+    if to_install:
+        api = lib.get_api(**obj)
+        for pi in to_install:
+            _install_plugin(
+                api, plugins_local_dir / pi.get_as_filename(), print_output=show_logs
+            )
+    else:
+        lib.log("Nothing to do!")
 
 
 @main.command()
 @click.option(
-    "--show-logs/--no-show-logs", default=False, help="Print installation logs."
+    "--show-logs", is_flag=True, default=False, help="Print installation logs."
 )
 @click.argument("namespace")
 @click.pass_obj
@@ -340,8 +434,7 @@ def uninstall(obj, show_logs, namespace):
     """Uninstall named plugin."""
     if not obj["force"]:
         click.confirm(
-            "Are you sure you want to uninstall the plugin "
-            + f"(delete all!) from namespace {namespace}",
+            f"Are you sure you want to uninstall the plugin from namespace: {namespace} ",
             abort=True,
         )
     api = lib.get_api(**obj)
@@ -512,13 +605,14 @@ def dev_build(obj, sources):
                         else:
                             shutil.copytree(source_t, base_dir / t)
                 lib.create_targz(base_dir, output_filename)
-                lib.log(f"Created: {output_filename}")
+                lib.log(f"Added to local store: {output_filename}")
 
 
 @main.command()
 @click.argument("plugins", nargs=-1)
 @click.option(
-    "--all-versions/--latest-versions",
+    "--all-versions",
+    is_flag=True,
     default=False,
     help="List all versions, not just the latest.",
 )
@@ -533,16 +627,19 @@ def upstream(obj, plugins, all_versions):
         plugin_infos = plugin_infos.filter_to_specs(plugins)
     info = ([r.name, r.formatted_version()] for r in plugin_infos.as_sorted_list())
     lib.log(tabulate(info, headers=["name", "version"]))
-    lib.log("\n(Equivalent semver versions in brackets, if any and if required)")
+    _log_message_explaining_semver()
 
 
 @main.command()
 @click.option(
     "--versions", default=None, help="TOML file containing plugin names and versions."
 )
+@click.option(
+    "--latest-existing", is_flag=True, default=False, help="Upgrade existing plugins.",
+)
 @click.argument("plugins", nargs=-1)
 @click.pass_obj
-def add(obj, versions, plugins):
+def add(obj, versions, latest_existing, plugins):
     """Add plugin(s) to local store from file, URL, or S3."""
     plugins_local_dir = obj["plugins_local_dir"]
     plugins_s3_bucket = obj["plugins_s3_bucket"]
@@ -551,40 +648,50 @@ def add(obj, versions, plugins):
     s3_versions = None  # For performance, only fetch if/when first needed.
     for plugin in plugins:
         if Path(plugin).is_file():
-            _add_to_local_store(
+            _add_to_local_store_from_uri(
                 plugins_local_dir, Path(plugin).resolve().as_uri(), force
             )
         elif urllib.parse.urlparse(plugin).scheme != "":
-            _add_to_local_store(plugins_local_dir, plugin, force)
+            _add_to_local_store_from_uri(plugins_local_dir, plugin, force)
         else:
             if s3_versions is None:
                 s3_versions = PluginInfos.make_from_s3(plugins_s3_bucket)
             pi = s3_versions.latest_version_matching_spec(plugin)
             if pi is None:
-                lib.log_error(f"Unable to find plugin from: {plugin}", abort=True)
+                lib.log_error(f"Cannot find plugin: {plugin}", abort=True)
             else:
                 to_download_from_s3.append(pi)
     if versions:
         for name, version in _read_versions_toml(versions):
             to_download_from_s3.append(PluginInfo((name, version)))
+    if latest_existing:
+        to_download_from_s3.extend(
+            PluginInfos.make_from_encapsia(obj["host"]).as_sorted_list()
+        )
     for pi in to_download_from_s3:
-        filename = Path(plugins_local_dir, pi.get_as_filename())
-        if not force and filename.exists():
-            lib.log(f"Found: {filename} (Skipping)")
-        else:
-            _download_plugin_from_s3(plugins_s3_bucket, pi.get_as_s3_name(), filename)
-            lib.log(f"Created: {filename}")
+        _add_to_local_store_from_s3(
+            plugins_s3_bucket, plugins_local_dir, pi, force=force
+        )
 
 
 @main.command()
 @click.option(
-    "--all-versions/--latest-versions",
+    "--all-versions",
+    is_flag=True,
     default=False,
     help="List all versions, not just the latest.",
 )
+@click.option(
+    "-l",
+    "--long",
+    "long_format",
+    is_flag=True,
+    default=False,
+    help="Long format with extra info (takes a few seconds).",
+)
 @click.argument("plugins", nargs=-1)
 @click.pass_obj
-def ls(obj, all_versions, plugins):
+def ls(obj, all_versions, long_format, plugins):
     """Print information about plugins in local store. By default, only includes latest versions."""
     plugins_local_dir = obj["plugins_local_dir"]
     plugin_infos = PluginInfos.make_from_local_store(plugins_local_dir)
@@ -592,61 +699,26 @@ def ls(obj, all_versions, plugins):
         plugin_infos = plugin_infos.filter_to_latest()
     if plugins:
         plugin_infos = plugin_infos.filter_to_specs(plugins)
-    info = ([pi.name, pi.formatted_version()] for pi in plugin_infos.as_sorted_list())
-    lib.log(tabulate(info, headers=["name", "version"]))
-    lib.log("\n(Equivalent semver versions in brackets, if any and if required)")
 
+    def _read_description(pi):
+        filename = plugins_local_dir / pi.get_as_filename()
+        try:
+            with lib.temp_directory() as tmp_dir:
+                lib.extract_targz(filename, tmp_dir)
+                manifests = list(tmp_dir.glob("**/plugin.toml"))
+                return lib.read_toml(manifests[0])["description"]
+        except Exception:
+            lib.log_error(f"Malformed? Unable to read: {filename}")
 
-@main.command()
-@click.option(
-    "--refresh-from-s3/--no-refresh-from-s3",
-    default=False,
-    help="First fetch latest versions from S3 before checking.",
-)
-@click.option(
-    "--dry-run/--no-dry-run",
-    default=False,
-    help="Report what will be done but don't change anything.",
-)
-@click.option(
-    "--show-logs/--no-show-logs", default=False, help="Print installation logs."
-)
-@click.argument("plugins", nargs=-1)
-@click.pass_obj
-@click.pass_context
-def upgrade(ctx, obj, refresh_from_s3, dry_run, show_logs, plugins):
-    """Install latest plugin versions from local, optionally limited to particular plugins."""
-    plugins_local_dir = obj["plugins_local_dir"]
-    force = obj["force"]
-    if refresh_from_s3:
-        ctx.invoke(add)
-    local_plugin_infos = PluginInfos.make_from_local_store(
-        plugins_local_dir
-    ).filter_to_latest()
-    api = lib.get_api(**obj)
-    raw_info = api.run_view("pluginsmanager", "installed_plugins_with_tags")
-    installed_versions = [PluginInfo((i["name"], i["version"])) for i in raw_info]
-    for pi in installed_versions:
-        if len(plugins) > 0 and pi.name not in plugins:
-            continue
-        local_pi = local_plugin_infos.latest_version_matching_spec(pi.name)
-        if local_pi is None:
-            lib.log(f"Skipping because plugin not in local: {pi.name}")
-            continue
-        if force or pi.semver < local_pi.semver:
-            lib.log(
-                f"Upgrading plugin: {pi.name} from {pi.formatted_version()} to {local_pi.formatted_version()}"
-            )
-            if not dry_run:
-                _install_plugin(
-                    api,
-                    plugins_local_dir / local_pi.get_as_filename(),
-                    print_output=show_logs,
-                )
-        else:
-            lib.log(
-                f"Skipping because already current: {pi.name} {pi.formatted_version()}"
-            )
-    for p in plugins:
-        if p not in set(pi.name for pi in installed_versions):
-            lib.log_error(f"Skipping because requested plugin is not installed: {p}")
+    if long_format:
+        info = (
+            [pi.name, pi.formatted_version(), _read_description(pi)]
+            for pi in plugin_infos.as_sorted_list()
+        )
+        lib.log(tabulate(info, headers=["name", "version", "description"]))
+    else:
+        info = (
+            [pi.name, pi.formatted_version()] for pi in plugin_infos.as_sorted_list()
+        )
+        lib.log(tabulate(info, headers=["name", "version"]))
+    _log_message_explaining_semver()

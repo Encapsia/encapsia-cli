@@ -184,6 +184,11 @@ def create_targz_as_bytes(directory):
     return data.getvalue()
 
 
+def extract_targz(filename, directory):
+    with tarfile.open(filename) as tar:
+        tar.extractall(directory)
+
+
 def parse(obj, format):
     if format == "json":
         return json.loads(obj)
