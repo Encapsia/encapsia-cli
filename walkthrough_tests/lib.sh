@@ -26,12 +26,12 @@ set -- "${saved_args[@]}"
 
 # Pretty print a banner separator.
 function banner() {
-    echo -e "\n<<< $1 >>>"
+    echo -e "\n$(tput setaf 6)<<< $1 >>>$(tput sgr0)"
 }
 
 # Pretty print the test descriptions.
 function test() {
-    echo -e "\n=== $1 ==="
+    echo -e "\n$(tput setaf 4)=== $1 ===$(tput sgr0)"
 }
 
 
