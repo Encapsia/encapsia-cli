@@ -13,17 +13,17 @@ cd $(dirname "$0")
 start_tests
 
 test "Build the example plugin from src"
-encapsia plugins --force build-from-src $EXAMPLE_PLUGIN_SRC
+encapsia plugins --force dev-build $EXAMPLE_PLUGIN_SRC
 
 test "Request a build again, but this time it should be skipped over because it already exists in the local store"
-encapsia plugins build-from-src $EXAMPLE_PLUGIN_SRC
+encapsia plugins dev-build $EXAMPLE_PLUGIN_SRC
 
 test "Move the example plugin out of the local store and then add it back in directly"
 mv ~/.encapsia/plugins/plugin-example-0.0.1.tar.gz /tmp/
-encapsia plugins local-add file:///tmp/plugin-example-0.0.1.tar.gz
+encapsia plugins add file:///tmp/plugin-example-0.0.1.tar.gz
 
 test "Install the example plugin from the local store, then uninstall it"
-encapsia plugins install --versions=example.toml --show-logs
+encapsia plugins --force install --versions=example.toml --show-logs
 encapsia plugins --force uninstall example --show-logs
 
 test "Dev update the example plugin from scratch"
@@ -38,7 +38,7 @@ encapsia plugins dev-update $EXAMPLE_PLUGIN_SRC
 rm $EXAMPLE_PLUGIN_SRC/tasks/test_new_module.py
 
 test "Install the non-dev version of the example plugin so we can uninstall it (to be tidy)."
-encapsia plugins install --versions=example.toml
+encapsia plugins --force install --versions=example.toml
 encapsia plugins --force uninstall example
 
 test "Create and destroy new namespace"
@@ -46,20 +46,21 @@ encapsia plugins dev-create-namespace testing123
 encapsia plugins dev-destroy-namespace testing123
 
 test "Fetch latest plugins from S3, install launch, and show the logs"
-rm -f ~/.encapsia/plugins/plugin-launch-*.tar.gz
-encapsia plugins local-add-from-s3
-encapsia plugins install launch
-encapsia plugins latest-log launch
+encapsia plugins add --latest-existing
+encapsia plugins --force install launch
+encapsia plugins logs launch
 
 test "Uninstall launch and show the logs"
 encapsia plugins --force uninstall launch
-encapsia plugins latest-log launch
+encapsia plugins logs launch
 
-test "Get info on all installed plugins"
-encapsia plugins info
+test "Get status on all installed plugins"
+encapsia plugins status
 
 test "Get info on latest plugins in the local store"
-encapsia plugins local-info
+encapsia plugins ls
+encapsia plugins ls -l
 
-test "Get info on all S3 plugins"
-encapsia plugins s3-info
+test "Get info on upstream plugins"
+encapsia plugins upstream
+encapsia plugins upstream conduct-1.6 --all-versions
