@@ -212,14 +212,6 @@ class PluginInfos:
 
 @main.command()
 @click.pass_obj
-def dev_list_namespaces(obj):
-    """Print information about the namespace usage of installed plugins."""
-    api = lib.get_api(**obj)
-    lib.run_plugins_task(api, "list_namespaces", dict(), "Fetching list of namespaces")
-
-
-@main.command()
-@click.pass_obj
 def freeze(obj):
     """Print currently installed plugins as versions TOML."""
     api = lib.get_api(**obj)
@@ -428,23 +420,32 @@ def install(obj, versions, show_logs, latest_existing, plugins):
 @click.option(
     "--show-logs", is_flag=True, default=False, help="Print installation logs."
 )
-@click.argument("namespace")
+@click.argument("namespaces", nargs=-1)
 @click.pass_obj
-def uninstall(obj, show_logs, namespace):
-    """Uninstall named plugin."""
-    if not obj["force"]:
+def uninstall(obj, show_logs, namespaces):
+    """Uninstall named plugin(s)."""
+    if namespaces and not obj["force"]:
+        lib.log("Preparing to uninstall: " + ", ".join(namespaces))
         click.confirm(
-            f"Are you sure you want to uninstall the plugin from namespace: {namespace} ",
-            abort=True,
+            f"Are you sure?", abort=True,
         )
     api = lib.get_api(**obj)
-    lib.run_plugins_task(
-        api,
-        "uninstall_plugin",
-        dict(namespace=namespace),
-        "Uninstalling",
-        print_output=show_logs,
-    )
+    for namespace in namespaces:
+        lib.run_plugins_task(
+            api,
+            "uninstall_plugin",
+            dict(namespace=namespace),
+            f"Uninstalling {namespace}",
+            print_output=show_logs,
+        )
+
+
+@main.command()
+@click.pass_obj
+def dev_list(obj):
+    """Print information about the namespace usage of installed plugins."""
+    api = lib.get_api(**obj)
+    lib.run_plugins_task(api, "list_namespaces", dict(), "Fetching list of namespaces")
 
 
 class LastUploadedVsModifiedTracker:
@@ -545,11 +546,11 @@ def dev_update(obj, directory):
             lib.log("Nothing to do.")
 
 
-@main.command("dev-create-namespace")
+@main.command("dev-create")
 @click.argument("namespace")
 @click.argument("n_task_workers", default=1)
 @click.pass_obj
-def dev_create_namespace(obj, namespace, n_task_workers):
+def dev_create(obj, namespace, n_task_workers):
     """Create namespace of given name. Only useful during developmment."""
     api = lib.get_api(**obj)
     lib.run_plugins_task(
@@ -560,15 +561,19 @@ def dev_create_namespace(obj, namespace, n_task_workers):
     )
 
 
-@main.command("dev-destroy-namespace")
-@click.argument("namespace")
+@main.command("dev-destroy")
+@click.argument("namespaces", nargs=-1)
 @click.pass_obj
-def dev_destroy_namespace(obj, namespace):
-    """Destroy namespace of given name. Only useful during development"""
+def dev_destroy(obj, namespaces):
+    """Destroy namespace(s) of given name. Only useful during development"""
     api = lib.get_api(**obj)
-    lib.run_plugins_task(
-        api, "dev_destroy_namespace", dict(namespace=namespace), "Destroying namespace"
-    )
+    for namespace in namespaces:
+        lib.run_plugins_task(
+            api,
+            "dev_destroy_namespace",
+            dict(namespace=namespace),
+            f"Destroying namespace: {namespace}",
+        )
 
 
 @main.command()
