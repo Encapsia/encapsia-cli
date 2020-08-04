@@ -42,8 +42,8 @@ encapsia plugins --force install --versions=example.toml
 encapsia plugins --force uninstall example
 
 test "Create and destroy new namespace"
-encapsia plugins dev-create-namespace testing123
-encapsia plugins dev-destroy-namespace testing123
+encapsia plugins dev-create testing123
+encapsia plugins dev-destroy testing123
 
 test "Fetch latest plugins from S3, install launch, and show the logs"
 encapsia plugins add --latest-existing
