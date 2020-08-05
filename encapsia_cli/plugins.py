@@ -562,18 +562,27 @@ def dev_create(obj, namespace, n_task_workers):
 
 
 @main.command("dev-destroy")
+@click.option("--all", is_flag=True, default=False, help="Destroy all namespaces!")
 @click.argument("namespaces", nargs=-1)
 @click.pass_obj
-def dev_destroy(obj, namespaces):
+def dev_destroy(obj, all, namespaces):
     """Destroy namespace(s) of given name. Only useful during development"""
     api = lib.get_api(**obj)
-    for namespace in namespaces:
-        lib.run_plugins_task(
-            api,
-            "dev_destroy_namespace",
-            dict(namespace=namespace),
-            f"Destroying namespace: {namespace}",
+    if all:
+        click.confirm(
+            f"Are you sure you want to destroy all namespaces?", abort=True,
         )
+        lib.run_plugins_task(
+            api, "dev_wipe", dict(), "Destroying all namespaces",
+        )
+    else:
+        for namespace in namespaces:
+            lib.run_plugins_task(
+                api,
+                "dev_destroy_namespace",
+                dict(namespace=namespace),
+                f"Destroying namespace: {namespace}",
+            )
 
 
 @main.command()
