@@ -57,7 +57,8 @@ def _add_to_local_store_from_s3(plugins_s3_bucket, plugins_local_dir, pi, force=
             s3.download_file(plugins_s3_bucket, pi.get_as_s3_name(), str(filename))
         except botocore.exceptions.ClientError:
             lib.log_error(f"Unable to download: {pi.get_as_s3_name()}")
-        lib.log(f"Added to local store: {filename}")
+        else:
+            lib.log(f"Added to local store: {filename}")
 
 
 def _install_plugin(api, filename, print_output=False):
