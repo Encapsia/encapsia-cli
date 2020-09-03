@@ -18,19 +18,19 @@ click = "^7.0"
 toml = "^0.10.0"
 awscli = "^1.16"
 click-completion = "^0.5.0"
-click-shell = "^1.0"
+click-shell = "^2.0"
 tabulate = "^0.8.3"
-httpie = "^1.0"
+httpie = "^2.2"
 # encapsia-api = {path = "../encapsia-api/"} # Only needed during development against unreleased versions of encapsia-api
-encapsia-api = "^0.1.23"
+encapsia-api = "^0.2.3"
 http-prompt = {version = "^1.0",optional = true}
 
 [tool.poetry.extras]
 httpie-shell = ["http-prompt"]
 
 [tool.poetry.dev-dependencies]
-black = {version = "^19.10b0",allow-prereleases = true}
-isort = "^4.3"
+black = {version = "^20.8b1",allow-prereleases = true}
+isort = "^5.5"
 flake8 = "^3.7"
 ansi2html = "^1.5"
 
