@@ -13,25 +13,18 @@ cd $(dirname "$0")
 start_tests
 
 test "Build the example plugin from src"
-encapsia plugins --force build-from-src $EXAMPLE_PLUGIN_SRC
+encapsia plugins --force dev-build $EXAMPLE_PLUGIN_SRC
 
-test "Request a build again, but this time it should be skipped over because it already exists in the cache"
-encapsia plugins build-from-src $EXAMPLE_PLUGIN_SRC
+test "Request a build again, but this time it should be skipped over because it already exists in the local store"
+encapsia plugins dev-build $EXAMPLE_PLUGIN_SRC
 
-test "Move the example plugin out of the cache and then add it back in directly"
-mv ~/.encapsia/plugins-cache/plugin-example-0.0.1.tar.gz /tmp/
-encapsia plugins fetch-from-url file:///tmp/plugin-example-0.0.1.tar.gz
+test "Move the example plugin out of the local store and then add it back in directly"
+mv ~/.encapsia/plugins/plugin-example-0.0.1.tar.gz /tmp/
+encapsia plugins add file:///tmp/plugin-example-0.0.1.tar.gz
 
-test "Build the launch plugin from legacy S3 (after first removing from the cache)"
-rm -f ~/.encapsia/plugins-cache/plugin-launch-*.tar.gz
-encapsia plugins build-from-legacy-s3 --versions=s3_plugins.toml --email=test_user@encapsia.com
-
-test "Second time should be skipped over because it is already in the cache"
-encapsia plugins build-from-legacy-s3 --versions=s3_plugins.toml --email=test_user@encapsia.com
-
-test "Install the example plugin from the cache, then uninstall it"
-encapsia plugins install --versions=example.toml
-encapsia plugins --force uninstall example
+test "Install the example plugin from the local store, then uninstall it"
+encapsia plugins --force install --versions=example.toml --show-logs
+encapsia plugins --force uninstall example --show-logs
 
 test "Dev update the example plugin from scratch"
 encapsia plugins --force dev-update $EXAMPLE_PLUGIN_SRC
@@ -45,12 +38,29 @@ encapsia plugins dev-update $EXAMPLE_PLUGIN_SRC
 rm $EXAMPLE_PLUGIN_SRC/tasks/test_new_module.py
 
 test "Install the non-dev version of the example plugin so we can uninstall it (to be tidy)."
-encapsia plugins install --versions=example.toml
+encapsia plugins --force install --versions=example.toml
 encapsia plugins --force uninstall example
 
 test "Create and destroy new namespace"
-encapsia plugins dev-create-namespace testing123
-encapsia plugins dev-destroy-namespace testing123
+encapsia plugins dev-create testing123
+encapsia plugins dev-destroy testing123
 
-test "Get info on all plugins"
-encapsia plugins info
+test "Fetch latest plugins from S3, install launch, and show the logs"
+encapsia plugins add --latest-existing
+encapsia plugins --force install launch
+encapsia plugins logs launch
+
+test "Uninstall launch and show the logs"
+encapsia plugins --force uninstall launch
+encapsia plugins logs launch
+
+test "Get status on all installed plugins"
+encapsia plugins status
+
+test "Get info on latest plugins in the local store"
+encapsia plugins ls
+encapsia plugins ls -l
+
+test "Get info on upstream plugins"
+encapsia plugins upstream
+encapsia plugins upstream conduct-1.6 --all-versions

@@ -11,9 +11,8 @@ import time
 from pathlib import Path
 
 import click
-import toml
-
 import encapsia_api
+import toml
 
 
 def log(message="", nl=True):
@@ -80,21 +79,32 @@ def make_main(docstring, for_plugins=False):
         @colour_option
         @host_option
         @click.option(
-            "--plugins-cache-dir",
+            "--plugins-local-dir",
             type=click.Path(),
-            default="~/.encapsia/plugins-cache",
-            help="Name of directory used to cache plugins.",
+            default="~/.encapsia/plugins",
+            help="Name of local directory used to store plugins.",
+        )
+        @click.option(
+            "--plugins-s3-bucket",
+            type=str,
+            default="ice-plugins",
+            help="Name of AWS S3 bucket containing plugins.",
         )
         @click.option(
             "--force/--no-force", default=False, help="Always fetch/build/etc again."
         )
         @click.pass_context
         @add_docstring(docstring)
-        def main(ctx, colour, host, plugins_cache_dir, force):
+        def main(ctx, colour, host, plugins_local_dir, plugins_s3_bucket, force):
             ctx.color = {"always": True, "never": False, "auto": None}[colour]
-            plugins_cache_dir = Path(plugins_cache_dir).expanduser()
-            plugins_cache_dir.mkdir(parents=True, exist_ok=True)
-            ctx.obj = dict(host=host, plugins_cache_dir=plugins_cache_dir, force=force)
+            plugins_local_dir = Path(plugins_local_dir).expanduser()
+            plugins_local_dir.mkdir(parents=True, exist_ok=True)
+            ctx.obj = dict(
+                host=host,
+                plugins_local_dir=plugins_local_dir,
+                plugins_s3_bucket=plugins_s3_bucket,
+                force=force,
+            )
 
     else:
 
@@ -174,6 +184,11 @@ def create_targz_as_bytes(directory):
     return data.getvalue()
 
 
+def extract_targz(filename, directory):
+    with tarfile.open(filename) as tar:
+        tar.extractall(directory)
+
+
 def parse(obj, format):
     if format == "json":
         return json.loads(obj)
@@ -209,7 +224,7 @@ def run_task(api, namespace, name, params, message, upload=None, download=None):
         log_error(result.get("exc_info"), abort=True)
 
 
-def run_plugins_task(api, name, params, message, data=None):
+def run_plugins_task(api, name, params, message, data=None, print_output=True):
     """Log the result from pluginmanager, which will either be successful or not."""
     reply = run_task(
         api,
@@ -219,11 +234,12 @@ def run_plugins_task(api, name, params, message, data=None):
         message,
         upload=data,
     )
-    log(f"Status: {reply['status']}")
     if reply["status"] == "ok":
-        log_output(reply["output"].strip())
+        if print_output:
+            log_output(reply["output"].strip())
         return True
     else:
+        log_error(f"Status: {reply['status']}")
         log_error(reply["output"].strip())
         return False
 
