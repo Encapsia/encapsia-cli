@@ -59,7 +59,7 @@ def run_task(obj, namespace, function, args, upload, save_as):
         namespace,
         function,
         params,
-        f"Running task {namespace}",
+        f"Running task {namespace}.{function}",
         upload=upload,
         download=save_as,
     )
@@ -103,7 +103,7 @@ def run_job(obj, namespace, function, args, upload, save_as):
         namespace,
         function,
         params,
-        f"Running job {namespace}",
+        f"Running job {namespace}.{function}",
         upload=upload,
         download=save_as,
     )
