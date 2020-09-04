@@ -10,14 +10,14 @@ import urllib.request
 from contextlib import contextmanager
 from pathlib import Path
 
+import boto3
 import botocore
 import click
+import semver
 import toml
-from encapsia_cli import lib
 from tabulate import tabulate
 
-import boto3
-import semver
+from encapsia_cli import lib
 
 main = lib.make_main(__doc__, for_plugins=True)
 
@@ -184,7 +184,10 @@ class PluginInfos:
 
     def latest(self):
         try:
-            return max(self.pis, key=operator.attrgetter("key"),)
+            return max(
+                self.pis,
+                key=operator.attrgetter("key"),
+            )
         except ValueError:
             return None
 
@@ -326,7 +329,10 @@ def status(obj, plugins):
     "--show-logs", is_flag=True, default=False, help="Print installation logs."
 )
 @click.option(
-    "--latest-existing", is_flag=True, default=False, help="Upgrade existing plugins.",
+    "--latest-existing",
+    is_flag=True,
+    default=False,
+    help="Upgrade existing plugins.",
 )
 @click.argument("plugins", nargs=-1)
 @click.pass_obj
@@ -402,7 +408,8 @@ def install(obj, versions, show_logs, latest_existing, plugins):
     # Seek confirmation unless force.
     if to_install and not force:
         click.confirm(
-            "Do you wish to proceed with the above plan?", abort=True,
+            "Do you wish to proceed with the above plan?",
+            abort=True,
         )
 
     # Install them.
@@ -428,7 +435,8 @@ def uninstall(obj, show_logs, namespaces):
     if namespaces and not obj["force"]:
         lib.log("Preparing to uninstall: " + ", ".join(namespaces))
         click.confirm(
-            f"Are you sure?", abort=True,
+            "Are you sure?",
+            abort=True,
         )
     api = lib.get_api(**obj)
     for namespace in namespaces:
@@ -571,10 +579,14 @@ def dev_destroy(obj, all, namespaces):
     api = lib.get_api(**obj)
     if all:
         click.confirm(
-            f"Are you sure you want to destroy all namespaces?", abort=True,
+            "Are you sure you want to destroy all namespaces?",
+            abort=True,
         )
         lib.run_plugins_task(
-            api, "dev_wipe", dict(), "Destroying all namespaces",
+            api,
+            "dev_wipe",
+            dict(),
+            "Destroying all namespaces",
         )
     else:
         for namespace in namespaces:
@@ -650,7 +662,10 @@ def upstream(obj, plugins, all_versions):
     "--versions", default=None, help="TOML file containing plugin names and versions."
 )
 @click.option(
-    "--latest-existing", is_flag=True, default=False, help="Upgrade existing plugins.",
+    "--latest-existing",
+    is_flag=True,
+    default=False,
+    help="Upgrade existing plugins.",
 )
 @click.argument("plugins", nargs=-1)
 @click.pass_obj
