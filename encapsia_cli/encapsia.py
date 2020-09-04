@@ -15,6 +15,7 @@ but cannot find a correct entry.
 import click
 import click_completion
 
+import encapsia_cli.completion
 import encapsia_cli.config
 import encapsia_cli.database
 import encapsia_cli.fixtures
@@ -34,6 +35,7 @@ click_completion.init()
 
 
 COMMANDS = {
+    "completion": encapsia_cli.completion.main,
     "config": encapsia_cli.config.main,
     "database": encapsia_cli.database.main,
     "fixtures": encapsia_cli.fixtures.main,
