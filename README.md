@@ -16,7 +16,11 @@ See the `walkthrough_tests` directory for bash scripts which exercise the CLI.
 
 Run them e.g. with:
 
-    bash walkthrough_tests/all.sh --host <host> --example-plugin-src ../inf-ice-example-plugin/
+    bash walkthrough_tests/all.sh
+
+or test specific subcommands with:
+
+    bash walkthrough_tests/token.sh
 
 Note that these tests are *not* self-verifying; they just provide helpful coverage, assurance, and working documentation.
 

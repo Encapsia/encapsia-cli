@@ -1,0 +1,8 @@
+description = "Test scheduled task to be run with a system user"
+host = "me"
+system_user_name = "walkthrough_test"
+capabilities = ["task.run.walkthrough_test"]
+task = "test_module.test_function"
+params = {name = "walkthrough_test guy"}
+cron = "*/1 * * * *"
+jitter = 10

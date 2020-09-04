@@ -1,0 +1,59 @@
+name = "walkthrough_test"
+description = "Test plugin for Encapsia CLI walkthrough tests"
+version = "0.0.1"
+created_by = "timothy.corbettclark@gmail.com"
+n_task_workers = 1
+pre_uninstall_task = "test_module.test_function"
+post_install_task = "test_module.test_function_with_meta_as_fixed_arg"
+tags = ["walkthrough_test", "test"]
+
+[[system_users]]
+name = "walkthrough_test"
+capabilities = [
+    "login.transfer.from",
+    "login.again",
+    "values.read",
+    "values.write",
+    "task.run.walkthrough_test"
+]
+
+[[permissions]]
+name = "walkthrough_test-admin"
+display_name = "Walkthrough Test Admin"
+description = "Plugin administration for Walkthrough Test"
+capabilities = [
+    "task.run.walkthrough_test",
+    "config.read.walkthrough_test",
+    "config.write.walkthrough_test",
+    "login.again", "login.transfer.to",  # for creating schedule tokens
+]
+
+[[permissions]]
+name = "walkthrough_test-minimal"
+display_name = "Walkthrough Test Minimal"
+description = "Minimal for Walkthrough Test"
+capabilities = [
+    "task.run.walkthrough_test.test_module",
+]
+
+
+
+# Walkthrough Test Public API
+
+[[views]]
+name = "test_overloaded"
+capabilities = ["view.run.walkthrough_test.test_no_args"]
+arguments = []
+options = []
+
+[[views]]
+name = "test_overloaded"
+capabilities = ["view.run.walkthrough_test.test_no_args"]
+arguments = ["arg1"]
+options = []
+
+[[tasks]]
+name = "module.foo"
+capabilities = ["view.run.walkthrough_test.test_no_args"]
+arguments = []
+options = []
