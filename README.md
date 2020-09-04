@@ -25,6 +25,7 @@ Note that these tests are *not* self-verifying; they just provide helpful covera
 * Run: `black .`
 * Run: `isort`
 * Run: `flake8 .`
+* Run: `mypy .`
 * Ensure "tests" run ok (see above). Also capture output and commit with:
     `bash walkthrough_tests/all.sh --host localhost --example-plugin-src ../inf-ice-example-plugin/ 2>&1 | ansi2html -f 80% >WALKTHROUGH.html`
 * Run: `poetry export -f requirements.txt >requirements.txt` (for snyk scanning)
