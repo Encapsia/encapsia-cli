@@ -3,17 +3,13 @@
 # Load "library" code
 source $(dirname "$0")/lib.sh
 
-# Validate input arguments.
-[ -z "$ENCAPSIA_HOST" ] && echo "Please provide host using --host argument" && exit 1
-[ -z "$EXAMPLE_PLUGIN_SRC" ] && echo "Please provide example plugin src directory --example-plugin-src argument" && exit 1
-
 # Change directory to this test directory for relative paths.
 cd $(dirname "$0")
 
 start_tests
 
-test "(Setup for running views or tasks etc) Install the example plugin from src"
-encapsia plugins --force dev-update $EXAMPLE_PLUGIN_SRC
+test "(Setup for running views or tasks etc) Install the test plugin from src"
+encapsia plugins --force dev-update test_plugin
 
 # The views
 

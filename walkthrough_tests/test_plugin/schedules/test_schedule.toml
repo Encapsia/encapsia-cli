@@ -1,0 +1,7 @@
+description = "Test scheduled task"
+host = "me"
+capabilities = ["task.run.walkthrough_test"]
+task = "test_module.test_function"
+params = {name = "plugin installer guy"}
+cron = "*/1 * * * *"
+jitter = 10
