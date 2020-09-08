@@ -30,7 +30,7 @@ Note that these tests are *not* self-verifying; they just provide helpful covera
 * Run: `isort`
 * Run: `flake8 .`
 * Run: `mypy .`
-* Ensure "tests" run ok (see above). Also capture output and commit with:
-    `bash walkthrough_tests/all.sh --host localhost --example-plugin-src ../inf-ice-example-plugin/ 2>&1 | ansi2html -f 80% >WALKTHROUGH.html`
-* Run: `poetry export -f requirements.txt >requirements.txt` (for snyk scanning)
+* Ensure "tests" run ok (see above).
+* Capture test output and commit with: `bash walkthrough_tests/all.sh 2>&1 | ansi2html -f 80% >WALKTHROUGH.html`
+* Create `requirements.txt` for Snyk scanning with: `poetry export -f requirements.txt >requirements.txt`
 * Ensure git tag, package version, and `enacpsia_cli.__version__` are all equal.
