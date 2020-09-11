@@ -1,4 +1,3 @@
-"""Manage users, including superuser and system users."""
 from pathlib import Path
 
 import click
@@ -6,7 +5,10 @@ import tabulate
 
 from encapsia_cli import lib
 
-main = lib.make_main(__doc__)
+
+@click.group("users")
+def main():
+    """Manage users, including superuser and system users."""
 
 
 @main.command()

@@ -1,9 +1,11 @@
-"""Manage database fixtures."""
 import click
 
 from encapsia_cli import lib
 
-main = lib.make_main(__doc__)
+
+@click.group("fixtures")
+def main():
+    """Manage database fixtures."""
 
 
 @main.command("list")

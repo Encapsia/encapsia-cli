@@ -4,12 +4,10 @@ from encapsia_cli import lib
 
 
 @click.command("help")
-@lib.colour_option
 @click.argument("command", required=False)
 @click.pass_context
-def main(ctx, colour, command):
+def main(ctx, command):
     """Print longer help information about the CLI."""
-    ctx.color = {"always": True, "never": False, "auto": None}[colour]
     root_command = ctx.parent.command
     if command:
         lib.log(root_command.get_command(ctx, command).get_help(ctx))

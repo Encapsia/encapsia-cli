@@ -1,17 +1,5 @@
-"""CLI to talk to an encapsia host.
+import pathlib
 
-The following steps are used to determine the server URL and token:
-
-\b
-  If provided, use the --host option to reference an entry in ~/.encapsia/credentials.toml
-  Else if set, use ENCAPSIA_HOST to reference an entry in ~/.encapsia/credentials.toml
-  Else if set, use ENCAPSIA_URL and ENCAPSIA_TOKEN directly.
-  Else abort.
-
-The tool will also abort if instructed to lookup in ~/.encapsia/credentials.toml
-but cannot find a correct entry.
-
-"""
 import click
 import click_completion
 
@@ -34,34 +22,109 @@ from encapsia_cli import lib
 click_completion.init()
 
 
-COMMANDS = {
-    "completion": encapsia_cli.completion.main,
-    "config": encapsia_cli.config.main,
-    "database": encapsia_cli.database.main,
-    "fixtures": encapsia_cli.fixtures.main,
-    "help": encapsia_cli.help.main,
-    "httpie": encapsia_cli.httpie.main,
-    "plugins": encapsia_cli.plugins.main,
-    "run": encapsia_cli.run.main,
-    "schedule": encapsia_cli.schedule.main,
-    "shell": encapsia_cli.shell.main,
-    "token": encapsia_cli.token.main,
-    "users": encapsia_cli.users.main,
-    "version": encapsia_cli.version.main,
-}
+def create_default_config_file_if_needed(filename):
+    filename.parent.mkdir(parents=True, exist_ok=True)
+    if not filename.exists():
+        with filename.open("w") as f:
+            f.write(
+                """
+# Encapsia CLI config file
+
+# Unlikely to want to fix the host here, but you can.
+# host = "localhost"
+
+# Control colour output to console.
+colour = "auto" 
+
+[plugins]
+# Always fetch/build/etc again.
+force = false
+
+# Name of local directory used to store plugins.
+local_dir = "~/.encapsia/plugins"
+
+# List of AWS S3 buckets in which to search for plugins.
+s3_buckets = ["ice-plugins"]
+                """.strip()
+            )
+        log(f"Created default user configuration file in: {str(filename)}")
 
 
-class EncapsiaCli(click.MultiCommand):
-    def list_commands(self, ctx):
-        return sorted(COMMANDS.keys())
+def get_user_config():
+    filename = pathlib.Path("~/.encapsia/config.toml").expanduser()
+    create_default_config_file_if_needed(filename)
+    config = lib.read_toml(filename)
 
-    def get_command(self, ctx, name):
-        try:
-            return COMMANDS[name]
-        except KeyError:
-            lib.log_error(ctx.get_help())
-            lib.log_error()
-            raise click.UsageError(f"Unknown command {name}")
+    # Make directories into Path directories which exist.
+    for d in ["plugins-local-dir"]:
+        config[d] = pathlib.Path(d).expanduser()
+        config[d].mkdir(parents=True, exist_ok=True)
+
+    return config
 
 
-main = EncapsiaCli(help=__doc__)
+@click.group(context_settings=dict(default_map=get_user_config()))
+@click.option(
+    "--colour",
+    type=click.Choice(["always", "never", "auto"]),
+    default="auto",
+    help="Control colour on stdout.",
+)
+@click.option(
+    "--host",
+    help="Name to use to lookup credentials in .encapsia/credentials.toml",
+)
+@click.pass_context
+def main(ctx, colour, host):
+    """CLI to talk to an encapsia host.
+
+    Options can be provided in one of three ways, in this priority order:
+
+    \b
+    1. On the command line as an --option.
+    2. In an environment variable as ENCAPSIA_<OPTION> or ENCAPSIA_<SUBCOMMAND>_<OPTION>.
+    3. In your config file located at ~/.encapsia/config.toml
+
+    If the config file does not exist then it will be created with documentation and defaults.
+
+    A few options are taken from the top level because they are common. For example, --host.
+
+    When needed, the following steps are used to determine the server URL and token:
+
+    \b
+    If provided, use the --host option to reference an entry in ~/.encapsia/credentials.toml
+    Else if set, use ENCAPSIA_HOST to reference an entry in ~/.encapsia/credentials.toml
+    Else if set, take the top level `host` option from ~/.encapsia/config.toml
+    Else if set, use ENCAPSIA_URL and ENCAPSIA_TOKEN directly.
+    Else abort.
+
+    The tool will also abort if instructed to lookup in ~/.encapsia/credentials.toml
+    but cannot find a correct entry.
+
+    """
+    ctx.color = {"always": True, "never": False, "auto": None}[colour]
+    ctx.obj = dict(host=host)
+
+
+COMMANDS = [
+    encapsia_cli.completion.main,
+    encapsia_cli.config.main,
+    encapsia_cli.database.main,
+    encapsia_cli.fixtures.main,
+    encapsia_cli.help.main,
+    encapsia_cli.httpie.main,
+    encapsia_cli.plugins.main,
+    encapsia_cli.run.main,
+    encapsia_cli.schedule.main,
+    # encapsia_cli.shell.main,
+    encapsia_cli.token.main,
+    encapsia_cli.users.main,
+    encapsia_cli.version.main,
+]
+
+for command in COMMANDS:
+    main.add_command(command)
+
+
+def encapsia():
+    main(auto_envvar_prefix="ENCAPSIA")
