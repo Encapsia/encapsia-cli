@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-(Nothing yet)
+### Fixed
+
+- Don't use datetime.datetime.fromisoformat because it is not present in 3.6.
 
 ## [0.2.3] - 2020-09-08
 
