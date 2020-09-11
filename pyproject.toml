@@ -9,7 +9,7 @@ keywords = ["encapsia", "eSource", "EDC", "Clinical Trials"]
 homepage = "https://github.com/tcorbettclark/encapsia-cli"
 
 [tool.poetry.scripts]
-encapsia = "encapsia_cli.encapsia:main"
+encapsia = "encapsia_cli.encapsia:encapsia"
 
 [tool.poetry.dependencies]
 python = "^3.6"

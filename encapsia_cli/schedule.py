@@ -1,9 +1,11 @@
-"""Manage task schedules."""
 import click
 
 from encapsia_cli import lib
 
-main = lib.make_main(__doc__)
+
+@click.group("schedule")
+def main():
+    """Manage task schedules."""
 
 
 @main.command("list")

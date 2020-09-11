@@ -1,9 +1,11 @@
-"""Get/set server configuration."""
 import click
 
 from encapsia_cli import lib
 
-main = lib.make_main(__doc__)
+
+@click.group("config")
+def main():
+    """Get/set server configuration."""
 
 
 @main.command()

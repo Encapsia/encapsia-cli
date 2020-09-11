@@ -1,10 +1,12 @@
-"""Manage shell completions."""
 import click
 import click_completion
 
 from encapsia_cli import lib
 
-main = lib.make_main(__doc__)
+
+@click.group("completion")
+def main():
+    """Manage shell completions."""
 
 
 @main.command()

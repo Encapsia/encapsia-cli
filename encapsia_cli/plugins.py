@@ -1,8 +1,7 @@
-"""Install, uninstall, create, and update plugins."""
-
 import collections
 import datetime
 import operator
+import pathlib
 import re
 import shutil
 import tempfile
@@ -20,7 +19,34 @@ from tabulate import tabulate
 
 from encapsia_cli import lib
 
-main = lib.make_main(__doc__, for_plugins=True)
+
+@click.group("plugins")
+@click.option(
+    "--local-dir",
+    type=click.Path(),
+    default="~/.encapsia/plugins",
+    help="Name of local directory used to store plugins.",
+)
+@click.option(
+    "--s3-bucket",
+    "s3_buckets",
+    type=str,
+    multiple=True,
+    default="ice-plugins",
+    help="Name of AWS S3 bucket containing plugins (may be provided multiple times).",
+)
+@click.option(
+    "--force/--no-force",
+    default=False,
+    help="Always fetch/build/etc again.",
+)
+@click.pass_context
+def main(ctx, force, s3_buckets, local_dir):
+    """Install, uninstall, create, and update plugins."""
+    ctx.obj["plugins_local_dir"] = pathlib.Path(local_dir).expanduser()
+    print(s3_buckets)
+    ctx.obj["plugins_s3_buckets"] = s3_buckets
+    ctx.obj["plugins_force"] = force
 
 
 def _format_datetime(dt):
@@ -166,18 +192,19 @@ class PluginInfos:
         return PluginInfos([PluginInfo(raw) for raw in result])
 
     @staticmethod
-    def make_from_s3(plugins_s3_bucket):
+    def make_from_s3_buckets(plugins_s3_buckets):
         s3 = boto3.client("s3")
-        paginator = s3.get_paginator("list_objects_v2")
-        response = paginator.paginate(Bucket=plugins_s3_bucket)
-        return PluginInfos(
-            [
-                PluginInfo(x["Key"])
+        tmp = []
+        for bucket in plugins_s3_buckets:
+            paginator = s3.get_paginator("list_objects_v2")
+            response = paginator.paginate(Bucket=bucket)
+            tmp.extend(
+                PluginInfo(x["Key"])  # TODO add the bucket name
                 for r in response
                 for x in r.get("Contents", [])
                 if x["Key"].endswith(".tar.gz")
-            ]
-        )
+            )
+        return PluginInfos(tmp)
 
     @staticmethod
     def make_from_encapsia(host):
@@ -271,7 +298,6 @@ def status(obj, plugins):
     ).filter_to_latest()
     api = lib.get_api(**obj)
     raw_info = api.run_view("pluginsmanager", "installed_plugins_with_tags")
-
     plugin_infos = []
     for i in raw_info:
         pi = PluginInfo((i["name"], i["version"]))
@@ -350,7 +376,7 @@ def install(obj, versions, show_logs, latest_existing, plugins):
 
     """
     plugins_local_dir = obj["plugins_local_dir"]
-    force = obj["force"]
+    plugins_force = obj["plugins_force"]
 
     # Create a list of installation candidates.
     to_install_candidates = []
@@ -398,7 +424,7 @@ def install(obj, versions, show_logs, latest_existing, plugins):
             elif current.semver > pi.semver:
                 action = "downgrade"
             else:
-                action = "reinstall" if force else "skip"
+                action = "reinstall" if plugins_force else "skip"
         else:
             current_version = ""
             action = "install"
@@ -409,7 +435,7 @@ def install(obj, versions, show_logs, latest_existing, plugins):
     _log_message_explaining_semver()
 
     # Seek confirmation unless force.
-    if to_install and not force:
+    if to_install and not plugins_force:
         click.confirm(
             "Do you wish to proceed with the above plan?",
             abort=True,
@@ -435,7 +461,7 @@ def install(obj, versions, show_logs, latest_existing, plugins):
 @click.pass_obj
 def uninstall(obj, show_logs, namespaces):
     """Uninstall named plugin(s)."""
-    if namespaces and not obj["force"]:
+    if namespaces and not obj["plugins_force"]:
         lib.log("Preparing to uninstall: " + ", ".join(namespaces))
         click.confirm(
             "Are you sure?",
@@ -535,7 +561,7 @@ def dev_update(obj, directory):
         lib.log_error("Not in a plugin directory.", abort=True)
 
     with get_modified_plugin_directories(
-        directory, reset=obj["force"]
+        directory, reset=obj["plugins_force"]
     ) as modified_plugin_directories:
         if modified_plugin_directories:
             with lib.temp_directory() as temp_directory:
@@ -607,14 +633,14 @@ def dev_destroy(obj, all, namespaces):
 def dev_build(obj, sources):
     """Build plugins from given source directories."""
     plugins_local_dir = obj["plugins_local_dir"]
-    force = obj["force"]
+    plugins_force = obj["plugins_force"]
     for source_directory in sources:
         source_directory = Path(source_directory)
         manifest = lib.read_toml(source_directory / "plugin.toml")
         name = manifest["name"]
         version = manifest["version"]
         output_filename = plugins_local_dir / f"plugin-{name}-{version}.tar.gz"
-        if not force and output_filename.exists():
+        if not plugins_force and output_filename.exists():
             lib.log(f"Found: {output_filename} (Skipping)")
         else:
             with lib.temp_directory() as temp_directory:
@@ -649,8 +675,8 @@ def dev_build(obj, sources):
 @click.pass_obj
 def upstream(obj, plugins, all_versions):
     """Print information about plugins on S3. By default, only includes latest versions."""
-    plugins_s3_bucket = obj["plugins_s3_bucket"]
-    plugin_infos = PluginInfos.make_from_s3(plugins_s3_bucket)
+    plugins_s3_buckets = obj["plugins_s3_buckets"]
+    plugin_infos = PluginInfos.make_from_s3_buckets(plugins_s3_buckets)
     if not all_versions:
         plugin_infos = plugin_infos.filter_to_latest()
     if plugins:
@@ -676,19 +702,19 @@ def add(obj, versions, latest_existing, plugins):
     """Add plugin(s) to local store from file, URL, or S3."""
     plugins_local_dir = obj["plugins_local_dir"]
     plugins_s3_bucket = obj["plugins_s3_bucket"]
-    force = obj["force"]
+    plugins_force = obj["plugins_force"]
     to_download_from_s3 = []
     s3_versions = None  # For performance, only fetch if/when first needed.
     for plugin in plugins:
         if Path(plugin).is_file():
             _add_to_local_store_from_uri(
-                plugins_local_dir, Path(plugin).resolve().as_uri(), force
+                plugins_local_dir, Path(plugin).resolve().as_uri(), plugins_force
             )
         elif urllib.parse.urlparse(plugin).scheme != "":
-            _add_to_local_store_from_uri(plugins_local_dir, plugin, force)
+            _add_to_local_store_from_uri(plugins_local_dir, plugin, plugins_force)
         else:
             if s3_versions is None:
-                s3_versions = PluginInfos.make_from_s3(plugins_s3_bucket)
+                s3_versions = PluginInfos.make_from_s3_buckets(plugins_s3_bucket)
             pi = s3_versions.latest_version_matching_spec(plugin)
             if pi is None:
                 lib.log_error(f"Cannot find plugin: {plugin}", abort=True)
@@ -703,7 +729,7 @@ def add(obj, versions, latest_existing, plugins):
         )
     for pi in to_download_from_s3:
         _add_to_local_store_from_s3(
-            plugins_s3_bucket, plugins_local_dir, pi, force=force
+            plugins_s3_bucket, plugins_local_dir, pi, force=plugins_force
         )
 
 

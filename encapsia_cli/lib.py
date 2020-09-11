@@ -2,13 +2,13 @@ import contextlib
 import datetime
 import io
 import json
+import pathlib
 import re
 import shutil
 import subprocess
 import tarfile
 import tempfile
 import time
-from pathlib import Path
 
 import click
 import encapsia_api
@@ -41,6 +41,13 @@ def pretty_print(obj, format, output=None):
 
 
 def get_api(**obj):
+    host = obj.get("host")
+    if host is None:
+        log_error("Unable to determine host.")
+        log_error(
+            "Please specify via the command line, env variable, or ~/.encapsia/config.toml file.",
+            abort=True,
+        )
     try:
         url, token = encapsia_api.discover_credentials(obj["host"])
     except encapsia_api.EncapsiaApiError as e:
@@ -56,68 +63,6 @@ def add_docstring(value):
         return func
 
     return _doc
-
-
-colour_option = click.option(
-    "--colour",
-    type=click.Choice(["always", "never", "auto"]),
-    default="auto",
-    help="Control colour on stdout.",
-    envvar="ENCAPSIA_COLOUR",
-)
-
-
-host_option = click.option(
-    "--host", help="Name to use to lookup credentials in .encapsia/credentials.toml"
-)
-
-
-def make_main(docstring, for_plugins=False):
-    if for_plugins:
-
-        @click.group()
-        @colour_option
-        @host_option
-        @click.option(
-            "--plugins-local-dir",
-            type=click.Path(),
-            default="~/.encapsia/plugins",
-            help="Name of local directory used to store plugins.",
-        )
-        @click.option(
-            "--plugins-s3-bucket",
-            type=str,
-            default="ice-plugins",
-            help="Name of AWS S3 bucket containing plugins.",
-        )
-        @click.option(
-            "--force/--no-force", default=False, help="Always fetch/build/etc again."
-        )
-        @click.pass_context
-        @add_docstring(docstring)
-        def main(ctx, colour, host, plugins_local_dir, plugins_s3_bucket, force):
-            ctx.color = {"always": True, "never": False, "auto": None}[colour]
-            plugins_local_dir = Path(plugins_local_dir).expanduser()
-            plugins_local_dir.mkdir(parents=True, exist_ok=True)
-            ctx.obj = dict(
-                host=host,
-                plugins_local_dir=plugins_local_dir,
-                plugins_s3_bucket=plugins_s3_bucket,
-                force=force,
-            )
-
-    else:
-
-        @click.group()
-        @colour_option
-        @host_option
-        @click.pass_context
-        @add_docstring(docstring)
-        def main(ctx, colour, host):
-            ctx.color = {"always": True, "never": False, "auto": None}[colour]
-            ctx.obj = dict(host=host)
-
-    return main
 
 
 # See http://www.regular-expressions.info/email.html
@@ -143,7 +88,7 @@ def temp_directory():
     """
     directory = tempfile.mkdtemp()
     try:
-        yield Path(directory)
+        yield pathlib.Path(directory)
     finally:
         shutil.rmtree(directory)
 

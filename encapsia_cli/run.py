@@ -1,4 +1,3 @@
-"""Run an Encapsia task, job, or view."""
 import json
 
 import click
@@ -6,7 +5,10 @@ from encapsia_api import FileDownloadResponse
 
 from encapsia_cli import lib
 
-main = lib.make_main(__doc__)
+
+@click.group("run")
+def main():
+    """Run an Encapsia task, job, or view."""
 
 
 def _log_result(result):

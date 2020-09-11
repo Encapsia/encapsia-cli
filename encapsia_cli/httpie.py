@@ -1,4 +1,3 @@
-"""Helper to use httpie with the URL and credentials passed in."""
 import importlib
 import subprocess
 
@@ -6,7 +5,10 @@ import click
 
 from encapsia_cli import lib
 
-main = lib.make_main(__doc__)
+
+@click.group("httpie")
+def main():
+    """Helper to use httpie with the URL and credentials passed in."""
 
 
 @main.command("shell")

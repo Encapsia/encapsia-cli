@@ -1,11 +1,13 @@
-"""Backups and Restore encapsia databases."""
 from pathlib import Path
 
 import click
 
 from encapsia_cli import lib
 
-main = lib.make_main(__doc__)
+
+@click.group("database")
+def main():
+    """Backups and Restore encapsia databases."""
 
 
 @main.command()
