@@ -10,6 +10,7 @@ import urllib.request
 from contextlib import contextmanager
 from pathlib import Path
 
+import arrow
 import boto3
 import botocore
 import click
@@ -23,7 +24,9 @@ main = lib.make_main(__doc__, for_plugins=True)
 
 
 def _format_datetime(dt):
-    return datetime.datetime.fromisoformat(dt).strftime("%a %d %b %Y %H:%M:%S")
+    return arrow.get(dt).strftime("%a %d %b %Y %H:%M:%S")
+    # In Python 3.7 and beyond we could do the following. But we want to support Python 3.6.
+    # return datetime.datetime.fromisoformat(dt).strftime("%a %d %b %Y %H:%M:%S")
 
 
 def _log_message_explaining_semver():
