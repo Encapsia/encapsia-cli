@@ -27,15 +27,17 @@ def create_default_config_file_if_needed(filename):
     if not filename.exists():
         with filename.open("w") as f:
             f.write(
-                """
+                f"""
 # Encapsia CLI config file
+# Automatically created by encapsia-cli=={encapsia_cli.__version__}
 
 # Unlikely to want to fix the host here, but you can.
-# host = "localhost"
+host = None
 
 # Control colour output to console.
-colour = "auto" 
+colour = "auto"
 
+# Options for the plugins subcommand.
 [plugins]
 # Always fetch/build/etc again.
 force = false
@@ -47,7 +49,7 @@ local_dir = "~/.encapsia/plugins"
 s3_buckets = ["ice-plugins"]
                 """.strip()
             )
-        log(f"Created default user configuration file in: {str(filename)}")
+        lib.log(f"Created default user configuration file in: {str(filename)}")
 
 
 def get_user_config():
@@ -87,7 +89,8 @@ def main(ctx, colour, host):
 
     If the config file does not exist then it will be created with documentation and defaults.
 
-    A few options are taken from the top level because they are common. For example, --host.
+    Although not needed by all the sub-commands, the host is so frequently used that it
+    is a top level option.
 
     When needed, the following steps are used to determine the server URL and token:
 
@@ -116,7 +119,7 @@ COMMANDS = [
     encapsia_cli.plugins.main,
     encapsia_cli.run.main,
     encapsia_cli.schedule.main,
-    # encapsia_cli.shell.main,
+    encapsia_cli.shell.main,
     encapsia_cli.token.main,
     encapsia_cli.users.main,
     encapsia_cli.version.main,

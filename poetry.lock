@@ -60,10 +60,10 @@ description = "The AWS SDK for Python"
 name = "boto3"
 optional = false
 python-versions = "*"
-version = "1.14.59"
+version = "1.14.60"
 
 [package.dependencies]
-botocore = ">=1.17.59,<1.18.0"
+botocore = ">=1.17.60,<1.18.0"
 jmespath = ">=0.7.1,<1.0.0"
 s3transfer = ">=0.3.0,<0.4.0"
 
@@ -73,7 +73,7 @@ description = "Low-level, data-driven core of boto 3."
 name = "botocore"
 optional = false
 python-versions = "*"
-version = "1.17.59"
+version = "1.17.60"
 
 [package.dependencies]
 docutils = ">=0.10,<0.16"
@@ -199,7 +199,7 @@ description = "Client API for talking to an Encapsia system."
 name = "encapsia-api"
 optional = false
 python-versions = ">=3.6,<4.0"
-version = "0.2.4"
+version = "0.2.6"
 
 [package.dependencies]
 arrow = ">=0.16,<0.17"
@@ -586,7 +586,7 @@ testing = ["jaraco.itertools", "func-timeout"]
 httpie-shell = ["http-prompt"]
 
 [metadata]
-content-hash = "0fdbe2f5cb0a2f4c69d16f4c1efdeea7b8806ff05d5b7e46f60e8e2157f9597e"
+content-hash = "525041d44911c27fe6371d58d7e7db7b9d3b609bf41843253c13e95d02c50664"
 lock-version = "1.0"
 python-versions = "^3.6"
 
@@ -607,12 +607,12 @@ black = [
     {file = "black-20.8b1.tar.gz", hash = "sha256:1c02557aa099101b9d21496f8a914e9ed2222ef70336404eeeac8edba836fbea"},
 ]
 boto3 = [
-    {file = "boto3-1.14.59-py2.py3-none-any.whl", hash = "sha256:b596a80181fecd775ccc009286400f4d785136f250967895cb34beeeef65eb1f"},
-    {file = "boto3-1.14.59.tar.gz", hash = "sha256:20edd03ae4c4e141b0d8a9a9afc773af4345d54b68202b6aa502956b57b18b3f"},
+    {file = "boto3-1.14.60-py2.py3-none-any.whl", hash = "sha256:79e95f428c485ea817969a78e77a311d2ec4d82e0955639d6126189c990ddad3"},
+    {file = "boto3-1.14.60.tar.gz", hash = "sha256:d8ca27ee13deeb1a9e79f2fe5f923effa60947ed49bbdfbc2a9f5790aef64217"},
 ]
 botocore = [
-    {file = "botocore-1.17.59-py2.py3-none-any.whl", hash = "sha256:9736ff0c2a27e800864953c812be2f41fb9a6247350db4f052ef5e5b200a1ac4"},
-    {file = "botocore-1.17.59.tar.gz", hash = "sha256:47aa4683597b5b20bbaeee31f583d9ad701a6dd51ed56e1b61708a2057bbb1ae"},
+    {file = "botocore-1.17.60-py2.py3-none-any.whl", hash = "sha256:e55a4fc652537f5ccb2362133f3928ebeafb04ee9fe15ea11c2df80ba4ef8a12"},
+    {file = "botocore-1.17.60.tar.gz", hash = "sha256:193f193a66ac79106725e14dd73e28ed36bcec99b37156538a2202d061056a58"},
 ]
 certifi = [
     {file = "certifi-2020.6.20-py2.py3-none-any.whl", hash = "sha256:8fc0819f1f30ba15bdb34cceffb9ef04d99f420f68eb75d901e9560b8749fc41"},
@@ -701,8 +701,8 @@ docutils = [
     {file = "docutils-0.15.2.tar.gz", hash = "sha256:a2aeea129088da402665e92e0b25b04b073c04b2dce4ab65caaa38b7ce2e1a99"},
 ]
 encapsia-api = [
-    {file = "encapsia-api-0.2.4.tar.gz", hash = "sha256:24a919b9d58eb50d0d40ec7d423a60d12fba7788e79081c54a838f1b52a8302b"},
-    {file = "encapsia_api-0.2.4-py3-none-any.whl", hash = "sha256:ac3633a3ba75c9927f8081ac49c21c1c1f718bd0aa763d345afe6a9aa99fecc0"},
+    {file = "encapsia-api-0.2.6.tar.gz", hash = "sha256:a32691df4d6b0adfdc59dd7b0e64f0d1417f90b41d4c851c81e516f40dbcd74b"},
+    {file = "encapsia_api-0.2.6-py3-none-any.whl", hash = "sha256:740bfa022d75c030e6a1187bedbed5a3954dead7a8d8848f908b5683bdd12e8a"},
 ]
 flake8 = [
     {file = "flake8-3.8.3-py2.py3-none-any.whl", hash = "sha256:15e351d19611c887e482fb960eae4d44845013cc142d42896e9862f775d8cf5c"},

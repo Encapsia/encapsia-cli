@@ -36,7 +36,8 @@ from encapsia_cli import lib
     help="Name of AWS S3 bucket containing plugins (may be provided multiple times).",
 )
 @click.option(
-    "--force/--no-force",
+    "--force",
+    is_flag=True,
     default=False,
     help="Always fetch/build/etc again.",
 )
@@ -44,7 +45,6 @@ from encapsia_cli import lib
 def main(ctx, force, s3_buckets, local_dir):
     """Install, uninstall, create, and update plugins."""
     ctx.obj["plugins_local_dir"] = pathlib.Path(local_dir).expanduser()
-    print(s3_buckets)
     ctx.obj["plugins_s3_buckets"] = s3_buckets
     ctx.obj["plugins_force"] = force
 
@@ -76,14 +76,16 @@ def _add_to_local_store_from_uri(plugins_local_dir, uri, force=False):
         lib.log_error("That doesn't look like a plugin. Aborting!", abort=True)
 
 
-def _add_to_local_store_from_s3(plugins_s3_bucket, plugins_local_dir, pi, force=False):
+def _add_to_local_store_from_s3(pi, plugins_local_dir, force=False):
     filename = Path(plugins_local_dir, pi.get_as_filename())
     if not force and filename.exists():
         lib.log(f"Found: {filename} (Skipping)")
     else:
         s3 = boto3.client("s3")
         try:
-            s3.download_file(plugins_s3_bucket, pi.get_as_s3_name(), str(filename))
+            s3.download_file(
+                plugins_s3_bucket, pi.get_as_s3_name(), str(filename)
+            )  # TODO the pi should contain the s3_bucket name.
         except botocore.exceptions.ClientError:
             lib.log_error(f"Unable to download: {pi.get_as_s3_name()}")
         else:
@@ -701,7 +703,7 @@ def upstream(obj, plugins, all_versions):
 def add(obj, versions, latest_existing, plugins):
     """Add plugin(s) to local store from file, URL, or S3."""
     plugins_local_dir = obj["plugins_local_dir"]
-    plugins_s3_bucket = obj["plugins_s3_bucket"]
+    plugins_s3_buckets = obj["plugins_s3_buckets"]
     plugins_force = obj["plugins_force"]
     to_download_from_s3 = []
     s3_versions = None  # For performance, only fetch if/when first needed.
@@ -714,7 +716,7 @@ def add(obj, versions, latest_existing, plugins):
             _add_to_local_store_from_uri(plugins_local_dir, plugin, plugins_force)
         else:
             if s3_versions is None:
-                s3_versions = PluginInfos.make_from_s3_buckets(plugins_s3_bucket)
+                s3_versions = PluginInfos.make_from_s3_buckets(plugins_s3_buckets)
             pi = s3_versions.latest_version_matching_spec(plugin)
             if pi is None:
                 lib.log_error(f"Cannot find plugin: {plugin}", abort=True)
@@ -728,9 +730,7 @@ def add(obj, versions, latest_existing, plugins):
             PluginInfos.make_from_encapsia(obj["host"]).as_sorted_list()
         )
     for pi in to_download_from_s3:
-        _add_to_local_store_from_s3(
-            plugins_s3_bucket, plugins_local_dir, pi, force=plugins_force
-        )
+        _add_to_local_store_from_s3(pi, plugins_local_dir, force=plugins_force)
 
 
 @main.command()

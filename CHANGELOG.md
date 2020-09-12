@@ -7,9 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Moved the `--host` option to the top level. So e.g. `encapsia users --host foo` is now `encapsia --host foo users`.
+- Changed all `--yes` options to `--force` for consistency.
+- Changed `encapsia httpie shell` to `encapsia httpie` because it can only launch interactive httpie.
+
+### Added
+
+- Added support for providing options in a `~/.encapsia/config.toml` file.
+- Added uniform support for providing options as env vars following click conventions. E.g.
+  `ENCAPSIA_HOST` and `ENCAPSIA_PLUGINS_LOCAL_DIR`.
+
 ### Fixed
 
-- Don't use datetime.datetime.fromisoformat because it is not present in 3.6.
+- Don't use `datetime.datetime.fromisoformat` because it is not present in Python 3.6.
 
 ## [0.2.3] - 2020-09-08
 

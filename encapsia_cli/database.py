@@ -1,5 +1,4 @@
-from pathlib import Path
-
+import pathlib
 import click
 
 from encapsia_cli import lib
@@ -18,23 +17,21 @@ def main():
 def backup(obj, filename):
     """Backup database to given filename. (or create a temp one if not given)."""
     if filename:
-        filename = Path(filename)
+        filename = pathlib.Path(filename)
     api = lib.get_api(**obj)
     handle = lib.dbctl_action(api, "backup_database", dict(), "Backing up database")
-    filename = Path(
-        api.dbctl_download_data(handle, filename)
-    )  # TODO remove Path() once encapsia_api switched over to pathlib
+    filename = api.dbctl_download_data(handle, filename)
     lib.log(f"Downloaded {filename.stat().st_size} bytes to {filename}")
 
 
 @main.command()
 @click.argument("filename", type=click.Path(exists=True))
-@click.option("--yes", is_flag=True, help="Don't prompt the user for confirmation.")
+@click.option("--force", is_flag=True, help="Don't prompt the user for confirmation.")
 @click.pass_obj
-def restore(obj, filename, yes):
+def restore(obj, filename, force):
     """Restore database from given backup file."""
-    filename = Path(filename)
-    if not yes:
+    filename = pathlib.Path(filename)
+    if not force:
         click.confirm(
             f'Are you sure you want to restore the database from "{filename}"?',
             abort=True,
