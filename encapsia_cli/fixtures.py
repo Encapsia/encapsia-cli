@@ -33,11 +33,11 @@ def create_fixture(obj, name):
 
 @main.command("use")
 @click.argument("name")
-@click.option("--yes", is_flag=True, help="Don't prompt the user for confirmation.")
+@click.option("--force", is_flag=True, help="Don't prompt the user for confirmation.")
 @click.pass_obj
-def use_fixture(obj, name, yes):
+def use_fixture(obj, name, force):
     """Switch to fixture with given name."""
-    if not yes:
+    if not force:
         click.confirm(
             f'Are you sure you want to change the database to fixture "{name}"?',
             abort=True,
@@ -50,11 +50,11 @@ def use_fixture(obj, name, yes):
 
 @main.command("delete")
 @click.argument("name")
-@click.option("--yes", is_flag=True, help="Don't prompt the user for confirmation.")
+@click.option("--force", is_flag=True, help="Don't prompt the user for confirmation.")
 @click.pass_obj
-def delete_fixture(obj, name, yes):
+def delete_fixture(obj, name, force):
     """Delete fixture with given name."""
-    if not yes:
+    if not force:
         click.confirm(f'Are you sure you want to delete fixture "{name}"?', abort=True)
     api = lib.get_api(**obj)
     lib.log_output(

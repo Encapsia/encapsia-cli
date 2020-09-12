@@ -6,14 +6,9 @@ import click
 from encapsia_cli import lib
 
 
-@click.group("httpie")
-def main():
-    """Helper to use httpie with the URL and credentials passed in."""
-
-
-@main.command("shell")
+@click.command("httpie")
 @click.pass_obj
-def shell(obj):
+def main(obj):
     """Launch an httpie interactive shell with passed-in credentials."""
     try:
         importlib.import_module("http_prompt")

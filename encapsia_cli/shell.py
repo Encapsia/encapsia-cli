@@ -5,17 +5,10 @@ import click_shell
 
 
 @click.command("shell")
-@click.option(
-    "--host", help="Name to use to lookup credentials in .encapsia/credentials.toml"
-)
 @click.pass_context
-def main(ctx, host):
-    """Start an interactive shell for running the encapsia commands.
-
-    The --host option internally sets the ENCAPSIA_HOST environment variable,
-    which subsequent commands will pick up if a --host option is not set again.
-
-    """
+def main(ctx):
+    """Start an interactive shell for running the encapsia commands."""
+    host = ctx.obj.get("host")
     if host:
         os.environ["ENCAPSIA_HOST"] = host
         prompt = f"encapsia {host}> "

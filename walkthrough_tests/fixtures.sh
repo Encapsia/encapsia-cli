@@ -10,11 +10,11 @@ encapsia fixtures create test_fixture
 
 # Don't test using a fixture because too disruptive of target server
 test "Use a fixture (DISABLED: to be less invasive on test server)"
-# encapsia fixtures use --yes test_fixture
+# encapsia fixtures use --force test_fixture
 # sleep 5
 
 test "Delete a fixture"
-encapsia fixtures delete --yes test_fixture
+encapsia fixtures delete --force test_fixture
 
 test "List all fixtures"
 encapsia fixtures list
