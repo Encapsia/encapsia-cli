@@ -413,7 +413,7 @@ def install(obj, versions, show_logs, latest_existing, plugins):
             _add_to_local_store_from_uri(
                 plugins_local_dir, plugin_filename.as_uri(), force=True
             )
-            to_install_candidates.append(PluginInfo(plugin_filename))
+            to_install_candidates.append(PluginInfo.make_from_filename(plugin_filename))
         else:
             # Else assume it is a spec for a plugin already in the local store.
             pi = PluginInfos.make_from_local_store(
@@ -425,7 +425,9 @@ def install(obj, versions, show_logs, latest_existing, plugins):
                 lib.log_error(f"Cannot find plugin: {plugin}", abort=True)
     if versions:
         for name, version in _read_versions_toml(versions):
-            to_install_candidates.append(PluginInfo((name, version)))
+            to_install_candidates.append(
+                PluginInfo.make_from_name_version(name, version)
+            )
     if latest_existing:
         available = PluginInfos.make_from_local_store(
             plugins_local_dir
@@ -751,7 +753,7 @@ def add(obj, versions, latest_existing, plugins):
                 to_download_from_s3.append(pi)
     if versions:
         for name, version in _read_versions_toml(versions):
-            to_download_from_s3.append(PluginInfo((name, version)))
+            to_download_from_s3.append(PluginInfo.make_from_name_version(name, version))
     if latest_existing:
         to_download_from_s3.extend(
             PluginInfos.make_from_encapsia(obj["host"]).as_sorted_list()
