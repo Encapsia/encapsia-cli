@@ -11,6 +11,6 @@ ls -l /tmp/test_encapsia_backup
 
 test "Restore from the backup"
 encapsia database restore --force /tmp/test_encapsia_backup
-sleep 5
+sleep 10
 # Cleanup
 rm /tmp/test_encapsia_backup
