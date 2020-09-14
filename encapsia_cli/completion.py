@@ -1,8 +1,6 @@
 import click
 import click_completion
 
-from encapsia_cli import lib
-
 
 @click.group("completion")
 def main():

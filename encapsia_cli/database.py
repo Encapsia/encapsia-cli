@@ -1,4 +1,5 @@
 import pathlib
+
 import click
 
 from encapsia_cli import lib

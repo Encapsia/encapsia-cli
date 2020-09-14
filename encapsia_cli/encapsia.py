@@ -32,13 +32,14 @@ def create_default_config_file_if_needed(filename):
 # Automatically created by encapsia-cli=={encapsia_cli.__version__}
 
 # Unlikely to want to fix the host here, but you can.
-host = None
+# host = "localhost"
 
 # Control colour output to console.
 colour = "auto"
 
 # Options for the plugins subcommand.
 [plugins]
+
 # Always fetch/build/etc again.
 force = false
 
