@@ -1,5 +1,3 @@
-import os
-
 import click
 from encapsia_api import CredentialsStore, EncapsiaApiError
 
