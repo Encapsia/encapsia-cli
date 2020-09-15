@@ -207,12 +207,12 @@ class PluginInfos:
     @staticmethod
     def make_from_s3_buckets(plugins_s3_buckets):
         s3 = boto3.client("s3")
-        tmp = []
+        plugin_infos = []
         for bucket in plugins_s3_buckets:
             try:
                 paginator = s3.get_paginator("list_objects_v2")
                 response = paginator.paginate(Bucket=bucket)
-                tmp.extend(
+                plugin_infos.extend(
                     PluginInfo.make_from_s3_path(bucket, x["Key"])
                     for r in response
                     for x in r.get("Contents", [])
@@ -221,7 +221,7 @@ class PluginInfos:
             except botocore.exceptions.ClientError as e:
                 lib.log_error(f"Unable to search bucket: {bucket}")
                 lib.log_error(str(e), abort=True)
-        return PluginInfos(tmp)
+        return PluginInfos(plugin_infos)
 
     @staticmethod
     def make_from_encapsia(host):
