@@ -44,6 +44,7 @@ from encapsia_cli import lib
 def main(ctx, force, s3_buckets, local_dir):
     """Install, uninstall, create, and update plugins."""
     ctx.obj["plugins_local_dir"] = Path(local_dir).expanduser()
+    ctx.obj["plugins_local_dir"].mkdir(parents=True, exist_ok=True)
     ctx.obj["plugins_s3_buckets"] = s3_buckets
     ctx.obj["plugins_force"] = force
 
@@ -76,7 +77,7 @@ def _add_to_local_store_from_uri(plugins_local_dir, uri, force=False):
 
 
 def _add_to_local_store_from_s3(pi, plugins_local_dir, force=False):
-    filename = Path(plugins_local_dir, pi.get_filename())
+    filename = plugins_local_dir / pi.get_filename()
     if not force and filename.exists():
         lib.log(f"Found: {filename} (Skipping)")
     else:
@@ -201,7 +202,7 @@ class PluginInfos:
 
     @staticmethod
     def make_from_local_store(plugins_local_dir):
-        result = Path(plugins_local_dir).glob("plugin-*-*.tar.gz")
+        result = plugins_local_dir.glob("plugin-*-*.tar.gz")
         return PluginInfos([PluginInfo.make_from_filename(p) for p in result])
 
     @staticmethod
