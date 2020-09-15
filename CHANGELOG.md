@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+(nothing yet)
+
+## [0.3.0] - 2020-09-15
+
 ### Changed
 
 - Moved the `--host` option to the top level. So e.g. `encapsia users --host foo` is now `encapsia --host foo users`.
