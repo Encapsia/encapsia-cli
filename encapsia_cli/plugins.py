@@ -1,7 +1,6 @@
 import collections
 import datetime
 import operator
-import pathlib
 import re
 import shutil
 import tempfile
@@ -44,7 +43,7 @@ from encapsia_cli import lib
 @click.pass_context
 def main(ctx, force, s3_buckets, local_dir):
     """Install, uninstall, create, and update plugins."""
-    ctx.obj["plugins_local_dir"] = pathlib.Path(local_dir).expanduser()
+    ctx.obj["plugins_local_dir"] = Path(local_dir).expanduser()
     ctx.obj["plugins_s3_buckets"] = s3_buckets
     ctx.obj["plugins_force"] = force
 
@@ -739,7 +738,9 @@ def add(obj, versions, latest_existing, plugins):
     for plugin in plugins:
         if Path(plugin).is_file():
             _add_to_local_store_from_uri(
-                plugins_local_dir, Path(plugin).resolve().as_uri(), plugins_force
+                plugins_local_dir,
+                Path(plugin).resolve().as_uri(),
+                plugins_force,
             )
         elif urllib.parse.urlparse(plugin).scheme != "":
             _add_to_local_store_from_uri(plugins_local_dir, plugin, plugins_force)
