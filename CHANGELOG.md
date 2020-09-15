@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for providing options in a `~/.encapsia/config.toml` file.
 - Added uniform support for providing options as env vars following click conventions. E.g.
   `ENCAPSIA_HOST` and `ENCAPSIA_PLUGINS_LOCAL_DIR`.
+- Added support for upstream sources of plugins from multiple S3 buckets.
 
 ### Fixed
 
