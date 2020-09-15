@@ -55,7 +55,7 @@ def create_default_config_file_if_needed(filename):
 
 
 def get_user_config():
-    filename = pathlib.Path("~/.encapsia/config.toml").expanduser()
+    filename = pathlib.Path.home / ".encapsia" / "config.toml"
     create_default_config_file_if_needed(filename)
     config = lib.read_toml(filename)
 
