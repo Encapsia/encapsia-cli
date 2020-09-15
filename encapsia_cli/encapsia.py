@@ -22,12 +22,7 @@ from encapsia_cli import lib
 click_completion.init()
 
 
-def create_default_config_file_if_needed(filename):
-    filename.parent.mkdir(parents=True, exist_ok=True)
-    if not filename.exists():
-        with filename.open("w") as f:
-            f.write(
-                f"""
+DEFAULT_CONFIG_FILE = f"""
 # Encapsia CLI config file
 # Automatically created by encapsia-cli=={encapsia_cli.__version__}
 
@@ -48,8 +43,14 @@ local_dir = "~/.encapsia/plugins"
 
 # List of AWS S3 buckets in which to search for plugins.
 s3_buckets = ["ice-plugins"]
-                """.strip()
-            )
+""".strip()
+
+
+def create_default_config_file_if_needed(filename):
+    filename.parent.mkdir(parents=True, exist_ok=True)
+    if not filename.exists():
+        with filename.open("w") as f:
+            f.write(DEFAULT_CONFIG_FILE)
         lib.log(f"Created default user configuration file in: {str(filename)}")
 
 
