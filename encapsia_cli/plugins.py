@@ -129,10 +129,9 @@ class PluginInfo:
     @classmethod
     def make_from_filename(cls, filename):
         m = cls.PLUGIN_REGEX.match(str(filename))
-        if m:
-            return cls.make_from_name_version(m.group(1), m.group(2))
-        else:
+        if m is None:
             raise ValueError(f"Unable to parse: {filename}")
+        return cls.make_from_name_version(m.group(1), m.group(2))
 
     @classmethod
     def make_from_s3_path(cls, bucket, filename):
