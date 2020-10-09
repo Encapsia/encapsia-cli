@@ -41,6 +41,11 @@ test "Create and destroy new namespace"
 encapsia plugins dev-create testing123
 encapsia plugins dev-destroy testing123
 
+test "Fetch a few specific plugins from S3, install launch, and show the logs"
+encapsia plugins add --versions example_plugins.toml
+encapsia plugins --force install launch
+encapsia plugins logs launch
+
 test "Fetch latest plugins from S3, install launch, and show the logs"
 encapsia plugins add --latest-existing
 encapsia plugins --force install launch
