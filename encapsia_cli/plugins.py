@@ -753,8 +753,12 @@ def add(obj, versions, latest_existing, plugins):
             else:
                 to_download_from_s3.append(pi)
     if versions:
-        for name, version in _read_versions_toml(versions):
-            to_download_from_s3.append(PluginInfo.make_from_name_version(name, version))
+        if s3_versions is None:
+            s3_versions = PluginInfos.make_from_s3_buckets(plugins_s3_buckets)
+        to_download_from_s3.extend(
+            s3_versions.latest_version_matching_spec(f"{name}-{version}")
+            for name, version in _read_versions_toml(versions)
+        )
     if latest_existing:
         to_download_from_s3.extend(
             PluginInfos.make_from_encapsia(obj["host"]).as_sorted_list()
