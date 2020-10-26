@@ -60,9 +60,9 @@ def get_user_config():
     config = lib.read_toml(filename)
 
     # Make directories into Path directories which exist.
-    for d in ["plugins-local-dir"]:
-        config[d] = pathlib.Path(d).expanduser()
-        config[d].mkdir(parents=True, exist_ok=True)
+    for k, d in [("plugins", "local_dir")]:
+        config[k][d] = pathlib.Path(config[k][d]).expanduser()
+        config[k][d].mkdir(parents=True, exist_ok=True)
 
     return config
 
