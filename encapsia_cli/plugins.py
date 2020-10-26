@@ -63,7 +63,7 @@ def _log_message_explaining_semver():
 
 def _add_to_local_store_from_uri(plugins_local_dir, uri, force=False):
     full_name = uri.rsplit("/", 1)[-1]
-    m = re.match(r"plugin-([^-]*)-([^-]*).tar.gz", full_name)
+    m = PluginInfo.PLUGIN_REGEX.match(full_name)
     if m:
         store_filename = plugins_local_dir / full_name
         if not force and store_filename.exists():

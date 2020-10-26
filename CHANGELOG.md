@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed bug which prevented pre-release semver compatible version numbers for plugins. #46.
+
 ## [0.3.1] - 2020-10-15
 
 ### Fixed
