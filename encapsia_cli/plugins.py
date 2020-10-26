@@ -63,17 +63,17 @@ def _log_message_explaining_semver():
 
 def _add_to_local_store_from_uri(plugins_local_dir, uri, force=False):
     full_name = uri.rsplit("/", 1)[-1]
-    m = PluginInfo.PLUGIN_REGEX.match(full_name)
-    if m:
-        store_filename = plugins_local_dir / full_name
-        if not force and store_filename.exists():
-            lib.log(f"Found: {store_filename} (Skipping)")
-        else:
-            filename, headers = urllib.request.urlretrieve(uri, tempfile.mkstemp()[1])
-            shutil.move(filename, store_filename)
-            lib.log(f"Added to local store: {store_filename}")
-    else:
+    try:
+        PluginInfo.make_from_filename(full_name)  # Will raise if name is invalid.
+    except ValueError:
         lib.log_error("That doesn't look like a plugin. Aborting!", abort=True)
+    store_filename = plugins_local_dir / full_name
+    if not force and store_filename.exists():
+        lib.log(f"Found: {store_filename} (Skipping)")
+    else:
+        filename, headers = urllib.request.urlretrieve(uri, tempfile.mkstemp()[1])
+        shutil.move(filename, store_filename)
+        lib.log(f"Added to local store: {store_filename}")
 
 
 def _add_to_local_store_from_s3(pi, plugins_local_dir, force=False):
