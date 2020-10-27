@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "encapsia-cli"
-version = "0.3.2"
+version = "0.3.3"
 description = "Client CLI for talking to an Encapsia system."
 readme = "README.md"
 authors = ["Timothy Corbett-Clark <timothy.corbettclark@gmail.com>"]

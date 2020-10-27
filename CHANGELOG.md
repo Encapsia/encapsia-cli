@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+_None_
+
+## [0.3.3] - 2020-10-27
+
 ### Fixed
 
 - Fixed bug which created a `cwd/plugins-local-dir/` folder e.g. when running `encapsia plugins --force dev-update .`
