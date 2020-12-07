@@ -128,10 +128,6 @@ class PluginInfo:
         self.semver = self.parse_version(self.version)
         self.key = self.name, self.semver
 
-    @staticmethod
-    def make_from_name_version(name, version):
-        return PluginInfo(None, None, name, version)
-
     @classmethod
     def get_name_and_version_from_filename(cls, filename):
         m = cls.PLUGIN_REGEX.match(str(filename))
@@ -139,10 +135,14 @@ class PluginInfo:
             raise ValueError(f"Unable to parse: {filename}")
         return m.group(1), m.group(2)  # (name, version)
 
+    @staticmethod
+    def make_from_name_version(name, version):
+        return PluginInfo(None, None, name, version)
+
     @classmethod
     def make_from_filename(cls, filename):
         name, version = cls.get_name_and_version_from_filename(filename)
-        return cls.make_from_name_version(name, version)
+        return PluginInfo(None, None, name, version)
 
     @classmethod
     def make_from_s3(cls, s3_bucket, s3_path):
