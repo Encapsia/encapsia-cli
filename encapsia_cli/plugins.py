@@ -133,7 +133,7 @@ class PluginInfo:
         return PluginInfo(None, None, name, version)
 
     @classmethod
-    def get_name_version_from_filename(cls, filename):
+    def get_name_and_version_from_filename(cls, filename):
         m = cls.PLUGIN_REGEX.match(str(filename))
         if m is None:
             raise ValueError(f"Unable to parse: {filename}")
@@ -141,12 +141,12 @@ class PluginInfo:
 
     @classmethod
     def make_from_filename(cls, filename):
-        name, version = cls.get_name_version_from_filename(filename)
+        name, version = cls.get_name_and_version_from_filename(filename)
         return cls.make_from_name_version(name, version)
 
     @classmethod
     def make_from_s3(cls, s3_bucket, s3_path):
-        name, version = cls.get_name_version_from_filename(s3_path)
+        name, version = cls.get_name_and_version_from_filename(s3_path)
         s3_path_without_filename = "/".join(s3_path.split("/")[:-1])
         return PluginInfo(s3_bucket, s3_path_without_filename, name, version)
 
