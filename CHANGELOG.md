@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-_None_
+### Added
+
+- Support for searching S3 buckets for plugins below specified paths.
 
 ## [0.3.3] - 2020-10-27
 
