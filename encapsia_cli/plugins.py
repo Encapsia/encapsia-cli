@@ -85,9 +85,13 @@ def _add_to_local_store_from_s3(pi, plugins_local_dir, force=False):
         try:
             s3.download_file(pi.get_s3_bucket(), pi.get_s3_name(), str(filename))
         except botocore.exceptions.ClientError:
-            lib.log_error(f"Unable to download: {pi.get_s3_name()}")
+            lib.log_error(
+                f"Unable to download: {pi.get_s3_bucket()}/{pi.get_s3_name()}"
+            )
         else:
-            lib.log(f"Added to local store: {filename}")
+            lib.log(
+                f"Downloaded {pi.get_s3_bucket()}/{pi.get_s3_name()} and saved to {filename}"
+            )
 
 
 def _install_plugin(api, filename, print_output=False):
@@ -115,9 +119,10 @@ class PluginInfo:
     FOUR_DIGIT_VERSION_REGEX = re.compile(r"([0-9]+)\.([0-9]+)\.([0-9]+)\.([0-9]+)")
     DEV_VERSION_REGEX = re.compile(r"([0-9]+)\.([0-9]+)\.([0-9]+)dev([0-9]+)")
 
-    def __init__(self, bucket, name, version):
+    def __init__(self, s3_bucket, s3_path, name, version):
         """Private constructor. Use make_* factory methods instead."""
-        self.bucket = bucket
+        self.s3_bucket = s3_bucket
+        self.s3_path = s3_path
         self.name = name
         self.version = version
         self.semver = self.parse_version(self.version)
@@ -125,20 +130,25 @@ class PluginInfo:
 
     @staticmethod
     def make_from_name_version(name, version):
-        return PluginInfo(None, name, version)
+        return PluginInfo(None, None, name, version)
 
     @classmethod
-    def make_from_filename(cls, filename):
+    def get_name_version_from_filename(cls, filename):
         m = cls.PLUGIN_REGEX.match(str(filename))
         if m is None:
             raise ValueError(f"Unable to parse: {filename}")
-        return cls.make_from_name_version(m.group(1), m.group(2))
+        return m.group(1), m.group(2)  # (name, version)
 
     @classmethod
-    def make_from_s3_path(cls, bucket, filename):
-        pi = cls.make_from_filename(filename)
-        pi.bucket = bucket
-        return pi
+    def make_from_filename(cls, filename):
+        name, version = cls.get_name_version_from_filename(filename)
+        return cls.make_from_name_version(name, version)
+
+    @classmethod
+    def make_from_s3(cls, s3_bucket, s3_path):
+        name, version = cls.get_name_version_from_filename(s3_path)
+        s3_path_without_filename = "/".join(s3_path.split("/")[:-1])
+        return PluginInfo(s3_bucket, s3_path_without_filename, name, version)
 
     def parse_version(self, version):
         # Consider a 4th digit to be a SemVer pre-release.
@@ -176,10 +186,17 @@ class PluginInfo:
         return f"plugin-{self.name}-{self.version}.tar.gz"
 
     def get_s3_bucket(self):
-        return self.bucket
+        return self.s3_bucket
+
+    def get_s3_path(self):
+        return self.s3_path
 
     def get_s3_name(self):
-        return f"{self.name}/{self.get_filename()}"
+        if self.s3_path:
+            return f"{self.s3_path}/{self.get_filename()}"
+        else:
+            # In the unlikely scenario that plugin files are stored flat in a bucket.
+            return self.get_filename()
 
     @staticmethod
     def _split_spec(spec):
@@ -209,12 +226,16 @@ class PluginInfos:
     def make_from_s3_buckets(plugins_s3_buckets):
         s3 = boto3.client("s3")
         plugin_infos = []
-        for bucket in plugins_s3_buckets:
+        for bucket_path in plugins_s3_buckets:
+            if "/" in bucket_path:
+                bucket, path = bucket_path.split("/", 1)
+            else:
+                bucket, path = bucket_path, ""
             try:
                 paginator = s3.get_paginator("list_objects_v2")
-                response = paginator.paginate(Bucket=bucket)
+                response = paginator.paginate(Bucket=bucket, Prefix=path)
                 plugin_infos.extend(
-                    PluginInfo.make_from_s3_path(bucket, x["Key"])
+                    PluginInfo.make_from_s3(bucket, x["Key"])
                     for r in response
                     for x in r.get("Contents", [])
                     if x["Key"].endswith(".tar.gz")
@@ -710,9 +731,10 @@ def upstream(obj, plugins, all_versions):
     if not all_versions:
         plugin_infos = plugin_infos.filter_to_latest()
     info = (
-        [r.bucket, r.name, r.formatted_version()] for r in plugin_infos.as_sorted_list()
+        [r.get_s3_bucket(), r.get_s3_path(), r.name, r.formatted_version()]
+        for r in plugin_infos.as_sorted_list()
     )
-    lib.log(tabulate(info, headers=["bucket", "name", "version"]))
+    lib.log(tabulate(info, headers=["bucket", "path", "name", "version"]))
     _log_message_explaining_semver()
 
 

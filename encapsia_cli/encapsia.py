@@ -41,8 +41,9 @@ force = false
 # Name of local directory used to store plugins.
 local_dir = "~/.encapsia/plugins"
 
-# List of AWS S3 buckets in which to search for plugins.
-s3_buckets = ["ice-plugins"]
+# List of AWS S3 buckets (with optional paths) in which to search for plugins.
+# The ice-plugins bucket should be considered legacy, and will be removed.
+s3_buckets = ["encapsia-plugins/cmedtech/pd/staging/apps", "encapsia-plugins/cmedtech/pd/staging/middleware", "ice-plugins"]
 """.strip()
 
 
