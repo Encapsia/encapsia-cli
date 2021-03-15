@@ -27,7 +27,7 @@ Note that these tests are *not* self-verifying; they just provide helpful covera
 ## Release checklist
 
 * Run: `black .`
-* Run: `isort`
+* Run: `isort .`
 * Run: `flake8 .`
 * Run: `mypy .`
 * Ensure "tests" run ok (see above).
