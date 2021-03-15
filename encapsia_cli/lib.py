@@ -42,15 +42,13 @@ def pretty_print(obj, format, output=None):
 
 def get_api(**obj):
     host = obj.get("host")
-    if host is None:
-        log_error("Unable to determine host.")
-        log_error(
-            "Please specify via the command line, env variable, or ~/.encapsia/config.toml file.",
-            abort=True,
-        )
     try:
-        url, token = encapsia_api.discover_credentials(obj["host"])
+        url, token = encapsia_api.discover_credentials(host)
     except encapsia_api.EncapsiaApiError as e:
+        log_error("Unable to determine host (or URL/token).")
+        log_error(
+            "Try specifying via the command line, env variable, or ~/.encapsia/config.toml file."
+        )
         log_error(str(e), abort=True)
     return encapsia_api.EncapsiaApi(url, token)
 
