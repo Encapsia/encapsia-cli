@@ -154,7 +154,9 @@ def run_view(obj, namespace, function, args, post, upload, save_as):
         else:
             path_segments.append(arg)
 
-    result = api.run_view(
+    result = lib.resilient_call(
+        api.run_view,
+        f"api.run_view({namespace}, {function})",
         namespace,
         function,
         view_arguments=path_segments,
@@ -162,5 +164,6 @@ def run_view(obj, namespace, function, args, post, upload, save_as):
         use_post=post,
         upload=upload,
         download=save_as,
+        idempotent=not post,
     )
     _log_result(result)
