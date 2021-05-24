@@ -190,7 +190,7 @@ def run_plugins_task(
     reply = run_task(
         api,
         "pluginsmanager",
-        "icepluginsmanager.{}".format(name),
+        f"icepluginsmanager.{name}",
         params,
         message,
         upload=data,

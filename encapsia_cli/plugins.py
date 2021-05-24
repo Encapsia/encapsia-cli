@@ -100,7 +100,7 @@ def _install_plugin(api, filename, print_output=False):
         lib.log_error(f"Cannot find plugin: {filename}", abort=True)
     blob_id = lib.resilient_call(
         api.upload_file_as_blob,
-        "api.upload_file_as_blob({filename})",
+        f"api.upload_file_as_blob({filename})",
         filename.as_posix(),
         idempotent=True,  # re-uploading a blob is safe
     )
