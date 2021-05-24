@@ -152,10 +152,6 @@ def visual_poll(message, poll, NoTaskResultYet, wait=0.2):
             progress_char = click.style("T", fg="red")
         except requests.exceptions.ConnectionError:
             progress_char = click.style("C", fg="red")
-        # except Exception as e:
-        #     # TODO: should make more specific
-        #     log_error(f"Exception: {type(e)}", abort=False)
-        #     progress_char = click.style("E", fg="red")
         log(progress_char, nl=False)
         time.sleep(wait)
         count += 1
