@@ -167,10 +167,10 @@ def run_task(
     """Return the raw json result or log (HTTP) error and abort."""
     poll, NoTaskResultYet = resilient_call(
         api.run_task,
-        f"api.run_task({namespace}, {name})",
         namespace,
         name,
         params,
+        description=f"api.run_task({namespace}, {name})",
         upload=upload,
         download=download,
         idempotent=idempotent,
@@ -219,10 +219,10 @@ def run_job(
     """Run job, wait for it to complete, and log all joblogs; or log error from task."""
     poll, NoResultYet = resilient_call(
         api.run_job,
-        f"api.run_job({namespace}, {function})",
         namespace,
         function,
         params,
+        description=f"api.run_job({namespace}, {function})",
         upload=upload,
         download=download,
         idempotent=idempotent,
@@ -238,9 +238,9 @@ def run_job(
 def dbctl_action(api, name, params, message, idempotent=False):
     poll, NoTaskResultYet = resilient_call(
         api.dbctl_action,
-        f"api.dbctl_action({name})",
         name,
         params,
+        description=f"api.dbctl_action({name})",
         idempotent=idempotent,
     )
     result = visual_poll(message, poll, NoTaskResultYet)
@@ -253,8 +253,10 @@ class MaxRetriesExceededError(Exception):
     pass
 
 
-def resilient_call(fn, description, *args, idempotent=False, max_retries=10, **kwargs):
+def resilient_call(fn, *args, description=None, idempotent=False, max_retries=10, **kwargs):
     count = 1
+    if description is None:
+        description = f"{fn.__qualname__}(...)"
     while True:
         log(f"Calling: {description} (attempt {count}/{max_retries})")
         try:

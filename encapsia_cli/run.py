@@ -156,9 +156,9 @@ def run_view(obj, namespace, function, args, post, upload, save_as):
 
     result = lib.resilient_call(
         api.run_view,
-        f"api.run_view({namespace}, {function})",
         namespace,
         function,
+        description=f"api.run_view({namespace}, {function})",
         view_arguments=path_segments,
         view_options=query_args,
         use_post=post,

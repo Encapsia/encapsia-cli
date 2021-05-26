@@ -12,7 +12,7 @@ homepage = "https://github.com/tcorbettclark/encapsia-cli"
 encapsia = "encapsia_cli.encapsia:encapsia"
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = "^3.8"
 requests = {extras = ["security", "socks"], version = "^2.24.0"}
 click = "^7.0"
 toml = "^0.10.0"

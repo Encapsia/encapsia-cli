@@ -100,8 +100,8 @@ def _install_plugin(api, filename, print_output=False):
         lib.log_error(f"Cannot find plugin: {filename}", abort=True)
     blob_id = lib.resilient_call(
         api.upload_file_as_blob,
-        f"api.upload_file_as_blob({filename})",
         filename.as_posix(),
+        description=f"api.upload_file_as_blob({filename})",
         idempotent=True,  # re-uploading a blob is safe
     )
     lib.log(f"Uploaded {filename} to blob: {blob_id}")
@@ -256,9 +256,9 @@ class PluginInfos:
         api = lib.get_api(host=host)
         raw_info = lib.resilient_call(
             api.run_view,
-            "api.run_view('pluginsmanager', 'installed_plugins_with_tags')",
             "pluginsmanager",
             "installed_plugins_with_tags",
+            description="api.run_view('pluginsmanager', 'installed_plugins_with_tags')",
             idempotent=True,
         )
         return PluginInfos(
@@ -307,9 +307,9 @@ def freeze(obj):
     api = lib.get_api(**obj)
     raw_info = lib.resilient_call(
         api.run_view,
-        "api.run_view('pluginsmanager', 'installed_plugins_with_tags')",
         "pluginsmanager",
         "installed_plugins_with_tags",
+        description="api.run_view('pluginsmanager', 'installed_plugins_with_tags')",
         idempotent=True,
     )
     info = {i["name"]: i["version"] for i in raw_info}
@@ -325,9 +325,9 @@ def logs(obj, plugins):
     # Despite the name, this only fetches the latest log for each plugin, not all!
     raw_info = lib.resilient_call(
         api.run_view,
-        "api.run_view('pluginsmanager', 'all_plugin_logs')",
         "pluginsmanager",
         "all_plugin_logs",
+        description="api.run_view('pluginsmanager', 'all_plugin_logs')",
         idempotent=True,
     )
     if plugins:
@@ -367,9 +367,9 @@ def status(obj, plugins):
     api = lib.get_api(**obj)
     raw_info = lib.resilient_call(
         api.run_view,
-        "api.run_view('pluginsmanager', 'installed_plugins_with_tags')",
         "pluginsmanager",
         "installed_plugins_with_tags",
+        description="api.run_view('pluginsmanager', 'installed_plugins_with_tags')",
         idempotent=True,
     )
     plugin_infos = []
