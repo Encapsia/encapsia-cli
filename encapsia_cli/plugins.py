@@ -98,7 +98,12 @@ def _install_plugin(api, filename, print_output=False):
     """Use the API to install plugin directly from a file."""
     if not filename.is_file():
         lib.log_error(f"Cannot find plugin: {filename}", abort=True)
-    blob_id = api.upload_file_as_blob(filename.as_posix())
+    blob_id = lib.resilient_call(
+        api.upload_file_as_blob,
+        filename.as_posix(),
+        description=f"api.upload_file_as_blob({filename})",
+        idempotent=True,  # re-uploading a blob is safe
+    )
     lib.log(f"Uploaded {filename} to blob: {blob_id}")
     lib.run_plugins_task(
         api,
@@ -106,6 +111,7 @@ def _install_plugin(api, filename, print_output=False):
         dict(blob_id=blob_id),
         "Installing",
         print_output=print_output,
+        idempotent=True,  # re-installing a plugin should be safe
     )
 
 
@@ -248,7 +254,13 @@ class PluginInfos:
     @staticmethod
     def make_from_encapsia(host):
         api = lib.get_api(host=host)
-        raw_info = api.run_view("pluginsmanager", "installed_plugins_with_tags")
+        raw_info = lib.resilient_call(
+            api.run_view,
+            "pluginsmanager",
+            "installed_plugins_with_tags",
+            description="api.run_view('pluginsmanager', 'installed_plugins_with_tags')",
+            idempotent=True,
+        )
         return PluginInfos(
             [
                 PluginInfo.make_from_name_version(i["name"], i["version"])
@@ -293,7 +305,13 @@ class PluginInfos:
 def freeze(obj):
     """Print currently installed plugins as versions TOML."""
     api = lib.get_api(**obj)
-    raw_info = api.run_view("pluginsmanager", "installed_plugins_with_tags")
+    raw_info = lib.resilient_call(
+        api.run_view,
+        "pluginsmanager",
+        "installed_plugins_with_tags",
+        description="api.run_view('pluginsmanager', 'installed_plugins_with_tags')",
+        idempotent=True,
+    )
     info = {i["name"]: i["version"] for i in raw_info}
     lib.log_output(toml.dumps(info))
 
@@ -305,7 +323,13 @@ def logs(obj, plugins):
     """Print the latest install logs for given plugins."""
     api = lib.get_api(**obj)
     # Despite the name, this only fetches the latest log for each plugin, not all!
-    raw_info = api.run_view("pluginsmanager", "all_plugin_logs")
+    raw_info = lib.resilient_call(
+        api.run_view,
+        "pluginsmanager",
+        "all_plugin_logs",
+        description="api.run_view('pluginsmanager', 'all_plugin_logs')",
+        idempotent=True,
+    )
     if plugins:
         # Filter to specified plugins.
         raw_info = [i for i in raw_info if i["name"] in plugins]
@@ -341,7 +365,13 @@ def status(obj, plugins):
         obj["plugins_local_dir"]
     ).filter_to_latest()
     api = lib.get_api(**obj)
-    raw_info = api.run_view("pluginsmanager", "installed_plugins_with_tags")
+    raw_info = lib.resilient_call(
+        api.run_view,
+        "pluginsmanager",
+        "installed_plugins_with_tags",
+        description="api.run_view('pluginsmanager', 'installed_plugins_with_tags')",
+        idempotent=True,
+    )
     plugin_infos = []
     for i in raw_info:
         pi = PluginInfo.make_from_name_version(i["name"], i["version"])

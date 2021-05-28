@@ -12,3 +12,4 @@ dist/
 pip-wheel-metadata/
 .encapsia/
 .vscode/
+.idea/
