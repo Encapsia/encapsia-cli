@@ -12,6 +12,14 @@ Setup autocomplete using the instructions found on <https://github.com/click-con
 
 ## Tests
 
+### Unit tests
+
+Run:
+
+    poetry run pytest
+
+### Walkthrough Tests
+
 See the `walkthrough_tests` directory for bash scripts which exercise the CLI.
 
 Run them e.g. with:
@@ -26,10 +34,10 @@ Note that these tests are *not* self-verifying; they just provide helpful covera
 
 ## Release checklist
 
-* Run: `black .`
-* Run: `isort .`
-* Run: `flake8 .`
-* Run: `mypy .`
+* Run: `poetry run black .`
+* Run: `poetry run isort .`
+* Run: `poetry run flake8 .`
+* Run: `poetry run mypy .`
 * Ensure "tests" run ok (see above).
 * Capture test output and commit with: `bash walkthrough_tests/all.sh 2>&1 | ansi2html -f 80% >WALKTHROUGH.html`
 * Create `requirements.txt` for Snyk scanning with: `poetry export -f requirements.txt >requirements.txt`

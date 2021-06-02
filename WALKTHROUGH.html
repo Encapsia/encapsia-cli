@@ -148,33 +148,33 @@ Commands:
 
 <span class="ansi34">=== Print out the version ===</span>
 &gt;encapsia version
-<span class="ansi33">Encapsia CLI version: 0.4.1</span>
-<span class="ansi33">Encapsia API version: 0.2.7</span>
+<span class="ansi33">Encapsia CLI version: 0.5.0-beta.0</span>
+<span class="ansi33">Encapsia API version: 0.2.9</span>
 
 <span class="ansi34">=== Get whoami info about current token ===</span>
 &gt;encapsia token whoami
-<span class="ansi32">id = 18
+<span class="ansi32">id = 4138
 name = "Root Superuser"
 email = "system@root.encapsia.com"
 capabilities = [ "superuser",]
-expires_at = "2022-05-21T18:27:28.088442+00:00"
-issued_at = "2021-05-21T18:27:28.088442+00:00"
+expires_at = "2022-06-03T05:05:19.560887+00:00"
+issued_at = "2021-06-03T05:05:19.560887+00:00"
 site_id = ""
-token = "ca87574370ca4d67acb966e7ab982601"
+token = "4611156ee4ae4d62852c4a903776e407"
 </span>
 
 <span class="ansi34">=== Extend lifespan of token (changes the encapsia credentials) ===</span>
 &gt;encapsia token extend
 <span class="ansi33">Encapsia credentials file updated.</span>
 &gt;encapsia token whoami
-<span class="ansi32">id = 84
+<span class="ansi32">id = 4411
 name = "Root Superuser"
 email = "system@root.encapsia.com"
 capabilities = [ "superuser",]
-expires_at = "2022-05-21T18:37:46.771527+00:00"
-issued_at = "2021-05-21T18:37:46.771527+00:00"
+expires_at = "2022-06-03T06:57:48.677484+00:00"
+issued_at = "2021-06-03T06:57:48.677484+00:00"
 site_id = ""
-token = "940a462161074aeb9c17113f9be45a3a"
+token = "407c9ae27da845c5a347e2a21fd05fbd"
 </span>
 
 <span class="ansi34">=== Set a config value to a string ===</span>
@@ -258,19 +258,20 @@ token = "940a462161074aeb9c17113f9be45a3a"
 <span class="ansi34">=== Install the walkthrough_test plugin from the local store, then uninstall it ===</span>
 &gt;encapsia plugins --force install --versions=example.toml --show-logs
 <span class="ansi33">Calling: api.run_view('pluginsmanager', 'installed_plugins_with_tags') (attempt 1/10)</span>
-<span class="ansi33">name              existing version    new version    action
-----------------  ------------------  -------------  --------
-walkthrough_test                      0.0.1          install</span>
+<span class="ansi33">name*             existing version**    new version**    action
+----------------  --------------------  ---------------  --------
+walkthrough_test                        0.0.1            install</span>
 <span class="ansi33">
-(Equivalent semver versions are shown in brackets when non-semver version is used)</span>
+(*) Plugin variant shown in square brackets when defined.
+(**) Equivalent semver versions are shown in brackets when non-semver version is used.</span>
 <span class="ansi33"></span>
-<span class="ansi33">Calling: api.upload_file_as_blob({filename}) (attempt 1/10)</span>
-<span class="ansi33">Uploaded /Users/peter/.encapsia/plugins/plugin-walkthrough_test-0.0.1.tar.gz to blob: 3e24955f0201400690ce107ea579154d</span>
+<span class="ansi33">Calling: api.upload_file_as_blob(/Users/peter/.encapsia/plugins/plugin-walkthrough_test-0.0.1.tar.gz) (attempt 1/10)</span>
+<span class="ansi33">Uploaded /Users/peter/.encapsia/plugins/plugin-walkthrough_test-0.0.1.tar.gz to blob: b7a86a0300464947af7edca3d40b8b77</span>
 <span class="ansi33">Calling: api.run_task(pluginsmanager, icepluginsmanager.install_plugin) (attempt 1/10)</span>
 <span class="ansi33">Installing</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
-<span class="ansi32">Downloaded blob 3e24955f0201400690ce107ea579154d to /tmp/tmp18z2x_ne
-Extracted /tmp/tmp18z2x_ne into /tmp/tmpljp3foy4
-Registered plugin walkthrough_test (0.0.1) from blob 3e24955f0201400690ce107ea579154d with id 827474bfd7ac42b98a5a26c88ca21372
+<span class="ansi32">Downloaded blob b7a86a0300464947af7edca3d40b8b77 to /tmp/tmp460cgvpb
+Extracted /tmp/tmp460cgvpb into /tmp/tmpiakgj7ls
+Registered plugin walkthrough_test (0.0.1) from blob b7a86a0300464947af7edca3d40b8b77 with id 01993096c4554df0a52544c8c0d32ffa
 Removing all/any schedules from plugin namespace: walkthrough_test
 Calling pre_uninstall_task: test_module.test_function
 Task walkthrough_test.test_module.test_function finished with result:
@@ -301,12 +302,12 @@ Collecting click==7.1.2
   Using cached click-7.1.2-py2.py3-none-any.whl (82 kB)
 Installing collected packages: click, redis, rq, wheel
 Successfully installed click-7.1.2 redis-3.5.3 rq-1.8.0 wheel-0.36.2
-WARNING: You are using pip version 20.1.1; however, version 21.1.1 is available.
+WARNING: You are using pip version 20.1.1; however, version 21.1.2 is available.
 You should consider upgrading via the '/home/ice/.local/share/virtualenvs/walkthrough_test/bin/python -m pip install --upgrade pip' command.
 Made virtualenv: walkthrough_test
 Installing wheels in to namespace walkthrough_test
-/home/ice/.local/share/virtualenvs/walkthrough_test/bin/pip install --find-links /tmp/tmpljp3foy4/plugin-walkthrough_test-0.0.1/wheels --requirement /tmp/tmpljp3foy4/plugin-walkthrough_test-0.0.1/wheels/requirements.txt
-Looking in links: /tmp/tmpljp3foy4/plugin-walkthrough_test-0.0.1/wheels
+/home/ice/.local/share/virtualenvs/walkthrough_test/bin/pip install --find-links /tmp/tmpiakgj7ls/plugin-walkthrough_test-0.0.1/wheels --requirement /tmp/tmpiakgj7ls/plugin-walkthrough_test-0.0.1/wheels/requirements.txt
+Looking in links: /tmp/tmpiakgj7ls/plugin-walkthrough_test-0.0.1/wheels
 Collecting encapsia-api
   Using cached encapsia_api-0.2.9-py3-none-any.whl (19 kB)
 Collecting arrow&lt;0.17,&gt;=0.16
@@ -317,14 +318,14 @@ Collecting toml&lt;0.11,&gt;=0.10
   Using cached toml-0.10.2-py2.py3-none-any.whl (16 kB)
 Collecting python-dateutil&gt;=2.7.0
   Using cached python_dateutil-2.8.1-py2.py3-none-any.whl (227 kB)
-Collecting chardet&lt;5,&gt;=3.0.2
-  Using cached chardet-4.0.0-py2.py3-none-any.whl (178 kB)
+Collecting urllib3&lt;1.27,&gt;=1.21.1
+  Using cached urllib3-1.26.5-py2.py3-none-any.whl (138 kB)
 Collecting idna&lt;3,&gt;=2.5
   Using cached idna-2.10-py2.py3-none-any.whl (58 kB)
 Collecting certifi&gt;=2017.4.17
-  Using cached certifi-2020.12.5-py2.py3-none-any.whl (147 kB)
-Collecting urllib3&lt;1.27,&gt;=1.21.1
-  Using cached urllib3-1.26.4-py2.py3-none-any.whl (153 kB)
+  Using cached certifi-2021.5.30-py2.py3-none-any.whl (145 kB)
+Collecting chardet&lt;5,&gt;=3.0.2
+  Using cached chardet-4.0.0-py2.py3-none-any.whl (178 kB)
 Collecting cryptography&gt;=1.3.4; extra == "security"
   Using cached cryptography-3.4.7-cp36-abi3-manylinux2014_x86_64.whl (3.2 MB)
 Collecting pyOpenSSL&gt;=0.14; extra == "security"
@@ -335,9 +336,9 @@ Collecting cffi&gt;=1.12
   Using cached cffi-1.14.5-cp38-cp38-manylinux1_x86_64.whl (411 kB)
 Collecting pycparser
   Using cached pycparser-2.20-py2.py3-none-any.whl (112 kB)
-Installing collected packages: six, python-dateutil, arrow, chardet, idna, certifi, urllib3, pycparser, cffi, cryptography, pyOpenSSL, requests, toml, encapsia-api
-Successfully installed arrow-0.16.0 certifi-2020.12.5 cffi-1.14.5 chardet-4.0.0 cryptography-3.4.7 encapsia-api-0.2.9 idna-2.10 pyOpenSSL-20.0.1 pycparser-2.20 python-dateutil-2.8.1 requests-2.25.1 six-1.16.0 toml-0.10.2 urllib3-1.26.4
-WARNING: You are using pip version 20.1.1; however, version 21.1.1 is available.
+Installing collected packages: six, python-dateutil, arrow, urllib3, idna, certifi, chardet, pycparser, cffi, cryptography, pyOpenSSL, requests, toml, encapsia-api
+Successfully installed arrow-0.16.0 certifi-2021.5.30 cffi-1.14.5 chardet-4.0.0 cryptography-3.4.7 encapsia-api-0.2.9 idna-2.10 pyOpenSSL-20.0.1 pycparser-2.20 python-dateutil-2.8.1 requests-2.25.1 six-1.16.0 toml-0.10.2 urllib3-1.26.5
+WARNING: You are using pip version 20.1.1; however, version 21.1.2 is available.
 You should consider upgrading via the '/home/ice/.local/share/virtualenvs/walkthrough_test/bin/python -m pip install --upgrade pip' command.
 Creating views namespace walkthrough_test
 Created PostgreSQL schema: walkthrough_test
@@ -357,10 +358,10 @@ Created schedule: Test scheduled task
 Created schedule: Test scheduled task to be run with a system user
 Calling post_install_task: test_module.test_function_with_meta_as_fixed_arg
 Timeout calling hook walkthrough_test.test_module.test_function_with_meta_as_fixed_arg
-Installed plugin with id 827474bfd7ac42b98a5a26c88ca21372</span>
+Installed plugin with id 01993096c4554df0a52544c8c0d32ffa</span>
 &gt;encapsia plugins --force uninstall walkthrough_test --show-logs
 <span class="ansi33">Calling: api.run_task(pluginsmanager, icepluginsmanager.uninstall_plugin) (attempt 1/10)</span>
-<span class="ansi33">Uninstalling walkthrough_test</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
+<span class="ansi33">Uninstalling walkthrough_test</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
 <span class="ansi32">Removing all/any schedules from plugin namespace: walkthrough_test
 Calling pre_uninstall_task: test_module.test_function
 Task walkthrough_test.test_module.test_function finished with result:
@@ -382,8 +383,8 @@ Remove published manifest, if any</span>
 <span class="ansi33">Including: wheels</span>
 <span class="ansi33">Including: schedules</span>
 <span class="ansi33">Calling: api.run_task(pluginsmanager, icepluginsmanager.dev_update_plugin) (attempt 1/10)</span>
-<span class="ansi33">Uploading to server</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
-<span class="ansi32">Extracted /tmp/ice/tmposrn5pbc into /tmp/tmpvsrivi65
+<span class="ansi33">Uploading to server</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
+<span class="ansi32">Extracted /tmp/ice/tmp_2faiqp7 into /tmp/tmpsdtdo406
 Removing all/any schedules from plugin namespace: walkthrough_test
 Installing plugin walkthrough_test (0.0.1)
 Made webfiles directory: /var/share/nginx/iceplugins/walkthrough_test
@@ -402,43 +403,43 @@ Collecting click==7.1.2
   Using cached click-7.1.2-py2.py3-none-any.whl (82 kB)
 Installing collected packages: click, redis, rq, wheel
 Successfully installed click-7.1.2 redis-3.5.3 rq-1.8.0 wheel-0.36.2
-WARNING: You are using pip version 20.1.1; however, version 21.1.1 is available.
+WARNING: You are using pip version 20.1.1; however, version 21.1.2 is available.
 You should consider upgrading via the '/home/ice/.local/share/virtualenvs/walkthrough_test/bin/python -m pip install --upgrade pip' command.
 Made virtualenv: walkthrough_test
 Installing wheels in to namespace walkthrough_test
-/home/ice/.local/share/virtualenvs/walkthrough_test/bin/pip install --find-links /tmp/tmpvsrivi65/tmptcrxt7nr/wheels --requirement /tmp/tmpvsrivi65/tmptcrxt7nr/wheels/requirements.txt
-Looking in links: /tmp/tmpvsrivi65/tmptcrxt7nr/wheels
+/home/ice/.local/share/virtualenvs/walkthrough_test/bin/pip install --find-links /tmp/tmpsdtdo406/tmphl_d_bdq/wheels --requirement /tmp/tmpsdtdo406/tmphl_d_bdq/wheels/requirements.txt
+Looking in links: /tmp/tmpsdtdo406/tmphl_d_bdq/wheels
 Collecting encapsia-api
   Using cached encapsia_api-0.2.9-py3-none-any.whl (19 kB)
 Collecting requests[security]&lt;3.0,&gt;=2.24
   Using cached requests-2.25.1-py2.py3-none-any.whl (61 kB)
-Collecting toml&lt;0.11,&gt;=0.10
-  Using cached toml-0.10.2-py2.py3-none-any.whl (16 kB)
 Collecting arrow&lt;0.17,&gt;=0.16
   Using cached arrow-0.16.0-py2.py3-none-any.whl (50 kB)
-Collecting chardet&lt;5,&gt;=3.0.2
-  Using cached chardet-4.0.0-py2.py3-none-any.whl (178 kB)
+Collecting toml&lt;0.11,&gt;=0.10
+  Using cached toml-0.10.2-py2.py3-none-any.whl (16 kB)
+Collecting certifi&gt;=2017.4.17
+  Using cached certifi-2021.5.30-py2.py3-none-any.whl (145 kB)
 Collecting idna&lt;3,&gt;=2.5
   Using cached idna-2.10-py2.py3-none-any.whl (58 kB)
 Collecting urllib3&lt;1.27,&gt;=1.21.1
-  Using cached urllib3-1.26.4-py2.py3-none-any.whl (153 kB)
-Collecting certifi&gt;=2017.4.17
-  Using cached certifi-2020.12.5-py2.py3-none-any.whl (147 kB)
-Collecting cryptography&gt;=1.3.4; extra == "security"
-  Using cached cryptography-3.4.7-cp36-abi3-manylinux2014_x86_64.whl (3.2 MB)
+  Using cached urllib3-1.26.5-py2.py3-none-any.whl (138 kB)
+Collecting chardet&lt;5,&gt;=3.0.2
+  Using cached chardet-4.0.0-py2.py3-none-any.whl (178 kB)
 Collecting pyOpenSSL&gt;=0.14; extra == "security"
   Using cached pyOpenSSL-20.0.1-py2.py3-none-any.whl (54 kB)
+Collecting cryptography&gt;=1.3.4; extra == "security"
+  Using cached cryptography-3.4.7-cp36-abi3-manylinux2014_x86_64.whl (3.2 MB)
 Collecting python-dateutil&gt;=2.7.0
   Using cached python_dateutil-2.8.1-py2.py3-none-any.whl (227 kB)
-Collecting cffi&gt;=1.12
-  Using cached cffi-1.14.5-cp38-cp38-manylinux1_x86_64.whl (411 kB)
 Collecting six&gt;=1.5.2
   Using cached six-1.16.0-py2.py3-none-any.whl (11 kB)
+Collecting cffi&gt;=1.12
+  Using cached cffi-1.14.5-cp38-cp38-manylinux1_x86_64.whl (411 kB)
 Collecting pycparser
   Using cached pycparser-2.20-py2.py3-none-any.whl (112 kB)
-Installing collected packages: chardet, idna, urllib3, certifi, pycparser, cffi, cryptography, six, pyOpenSSL, requests, toml, python-dateutil, arrow, encapsia-api
-Successfully installed arrow-0.16.0 certifi-2020.12.5 cffi-1.14.5 chardet-4.0.0 cryptography-3.4.7 encapsia-api-0.2.9 idna-2.10 pyOpenSSL-20.0.1 pycparser-2.20 python-dateutil-2.8.1 requests-2.25.1 six-1.16.0 toml-0.10.2 urllib3-1.26.4
-WARNING: You are using pip version 20.1.1; however, version 21.1.1 is available.
+Installing collected packages: certifi, idna, urllib3, chardet, six, pycparser, cffi, cryptography, pyOpenSSL, requests, python-dateutil, arrow, toml, encapsia-api
+Successfully installed arrow-0.16.0 certifi-2021.5.30 cffi-1.14.5 chardet-4.0.0 cryptography-3.4.7 encapsia-api-0.2.9 idna-2.10 pyOpenSSL-20.0.1 pycparser-2.20 python-dateutil-2.8.1 requests-2.25.1 six-1.16.0 toml-0.10.2 urllib3-1.26.5
+WARNING: You are using pip version 20.1.1; however, version 21.1.2 is available.
 You should consider upgrading via the '/home/ice/.local/share/virtualenvs/walkthrough_test/bin/python -m pip install --upgrade pip' command.
 Creating views namespace walkthrough_test
 Created PostgreSQL schema: walkthrough_test
@@ -469,7 +470,7 @@ Timeout calling hook walkthrough_test.test_module.test_function_with_meta_as_fix
 <span class="ansi33">Including: tasks</span>
 <span class="ansi33">Calling: api.run_task(pluginsmanager, icepluginsmanager.dev_update_plugin) (attempt 1/10)</span>
 <span class="ansi33">Uploading to server</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
-<span class="ansi32">Extracted /tmp/ice/tmpfeu8q0ec into /tmp/tmpj3nporqc
+<span class="ansi32">Extracted /tmp/ice/tmprxp5kl3i into /tmp/tmpctyt9_gg
 Removing all/any schedules from plugin namespace: walkthrough_test
 Installing plugin walkthrough_test (0.0.1)
 Webfiles directory already exists: /var/share/nginx/iceplugins/walkthrough_test
@@ -492,24 +493,25 @@ Timeout calling hook walkthrough_test.test_module.test_function_with_meta_as_fix
 <span class="ansi34">=== Install the non-dev version of the walkthrough_test plugin so we can uninstall it (to be tidy). ===</span>
 &gt;encapsia plugins --force install --versions=example.toml
 <span class="ansi33">Calling: api.run_view('pluginsmanager', 'installed_plugins_with_tags') (attempt 1/10)</span>
-<span class="ansi33">name              existing version    new version    action
-----------------  ------------------  -------------  --------
-walkthrough_test                      0.0.1          install</span>
+<span class="ansi33">name*             existing version**    new version**    action
+----------------  --------------------  ---------------  --------
+walkthrough_test                        0.0.1            install</span>
 <span class="ansi33">
-(Equivalent semver versions are shown in brackets when non-semver version is used)</span>
+(*) Plugin variant shown in square brackets when defined.
+(**) Equivalent semver versions are shown in brackets when non-semver version is used.</span>
 <span class="ansi33"></span>
-<span class="ansi33">Calling: api.upload_file_as_blob({filename}) (attempt 1/10)</span>
-<span class="ansi33">Uploaded /Users/peter/.encapsia/plugins/plugin-walkthrough_test-0.0.1.tar.gz to blob: 77eb0732c18b4122810f8f6a396e0313</span>
+<span class="ansi33">Calling: api.upload_file_as_blob(/Users/peter/.encapsia/plugins/plugin-walkthrough_test-0.0.1.tar.gz) (attempt 1/10)</span>
+<span class="ansi33">Uploaded /Users/peter/.encapsia/plugins/plugin-walkthrough_test-0.0.1.tar.gz to blob: aa987c573db445328ac64470eb271ace</span>
 <span class="ansi33">Calling: api.run_task(pluginsmanager, icepluginsmanager.install_plugin) (attempt 1/10)</span>
-<span class="ansi33">Installing</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
+<span class="ansi33">Installing</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
 &gt;encapsia plugins --force uninstall walkthrough_test
 <span class="ansi33">Calling: api.run_task(pluginsmanager, icepluginsmanager.uninstall_plugin) (attempt 1/10)</span>
-<span class="ansi33">Uninstalling walkthrough_test</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
+<span class="ansi33">Uninstalling walkthrough_test</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
 
 <span class="ansi34">=== Create and destroy new namespace ===</span>
 &gt;encapsia plugins dev-create testing123
 <span class="ansi33">Calling: api.run_task(pluginsmanager, icepluginsmanager.dev_create_namespace) (attempt 1/10)</span>
-<span class="ansi33">Creating namespace</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
+<span class="ansi33">Creating namespace</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
 <span class="ansi32">Made webfiles directory: /var/share/nginx/iceplugins/testing123
 Made tasks directory: /home/ice/testing123
 python -m venv /home/ice/.local/share/virtualenvs/testing123
@@ -525,7 +527,7 @@ Collecting click==7.1.2
   Using cached click-7.1.2-py2.py3-none-any.whl (82 kB)
 Installing collected packages: click, redis, rq, wheel
 Successfully installed click-7.1.2 redis-3.5.3 rq-1.8.0 wheel-0.36.2
-WARNING: You are using pip version 20.1.1; however, version 21.1.1 is available.
+WARNING: You are using pip version 20.1.1; however, version 21.1.2 is available.
 You should consider upgrading via the '/home/ice/.local/share/virtualenvs/testing123/bin/python -m pip install --upgrade pip' command.
 Made virtualenv: testing123
 Configuring 1 task workers for namespace testing123
@@ -533,7 +535,7 @@ Creating views namespace testing123
 Created PostgreSQL schema: testing123</span>
 &gt;encapsia plugins dev-destroy testing123
 <span class="ansi33">Calling: api.run_task(pluginsmanager, icepluginsmanager.dev_destroy_namespace) (attempt 1/10)</span>
-<span class="ansi33">Destroying namespace: testing123</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
+<span class="ansi33">Destroying namespace: testing123</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
 <span class="ansi32">supervisorctl -c /home/ice/inf-ice-pluginsmanager/icepluginsmanager/supervisor.conf stop schedule
 schedule: stopped
 Removed 0 scheduled tasks in namespace testing123
@@ -551,18 +553,18 @@ Deleted PostgreSQL schema: testing123</span>
 <span class="ansi33">Found: /Users/peter/.encapsia/plugins/plugin-launch-1.2.3.tar.gz (Skipping)</span>
 <span class="ansi33">Found: /Users/peter/.encapsia/plugins/plugin-manager-1.2.7.tar.gz (Skipping)</span>
 &gt;encapsia plugins --force install launch
-<span class="ansi31">tools-0.0.1 is not valid SemVer string</span>
 <span class="ansi33">Calling: api.run_view('pluginsmanager', 'installed_plugins_with_tags') (attempt 1/10)</span>
-<span class="ansi33">name    existing version    new version    action
-------  ------------------  -------------  --------
-launch                      2.0.0-14       install</span>
+<span class="ansi33">name*    existing version**    new version**    action
+-------  --------------------  ---------------  --------
+launch                         2.0.0-14         install</span>
 <span class="ansi33">
-(Equivalent semver versions are shown in brackets when non-semver version is used)</span>
+(*) Plugin variant shown in square brackets when defined.
+(**) Equivalent semver versions are shown in brackets when non-semver version is used.</span>
 <span class="ansi33"></span>
-<span class="ansi33">Calling: api.upload_file_as_blob({filename}) (attempt 1/10)</span>
-<span class="ansi33">Uploaded /Users/peter/.encapsia/plugins/plugin-launch-2.0.0-14.tar.gz to blob: 24f75d382e424864b6016828f4d99814</span>
+<span class="ansi33">Calling: api.upload_file_as_blob(/Users/peter/.encapsia/plugins/plugin-launch-2.0.0-14.tar.gz) (attempt 1/10)</span>
+<span class="ansi33">Uploaded /Users/peter/.encapsia/plugins/plugin-launch-2.0.0-14.tar.gz to blob: 4d2816e0ded043e29e2e4206392a9182</span>
 <span class="ansi33">Calling: api.run_task(pluginsmanager, icepluginsmanager.install_plugin) (attempt 1/10)</span>
-<span class="ansi33">Installing</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
+<span class="ansi33">Installing</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
 &gt;encapsia plugins logs launch
 <span class="ansi33">Calling: api.run_view('pluginsmanager', 'all_plugin_logs') (attempt 1/10)</span>
 <span class="ansi33">Name: launch</span>
@@ -571,11 +573,11 @@ launch                      2.0.0-14       install</span>
 <span class="ansi33">Action: install</span>
 <span class="ansi33">Server: my_node</span>
 <span class="ansi33">Success: True</span>
-<span class="ansi33">When: 2021-05-21T18:41:23.464687+00:00</span>
+<span class="ansi33">When: 2021-06-03T07:01:32.838521+00:00</span>
 <span class="ansi33">Logs:</span>
-<span class="ansi32">Downloaded blob 24f75d382e424864b6016828f4d99814 to /tmp/tmp61om8pmn
-Extracted /tmp/tmp61om8pmn into /tmp/tmpmv_lxqus
-Registered plugin launch (2.0.0-14) from blob 24f75d382e424864b6016828f4d99814 with id 526b832d2f384e36a0a5cf345a618769
+<span class="ansi32">Downloaded blob 4d2816e0ded043e29e2e4206392a9182 to /tmp/tmpp0dwo_gz
+Extracted /tmp/tmpp0dwo_gz into /tmp/tmpaou3zj60
+Registered plugin launch (2.0.0-14) from blob 4d2816e0ded043e29e2e4206392a9182 with id e4b58b6c949048b98caf2586fbff58d5
 /home/ice/inf-ice-pluginsmanager/icepluginsmanager/plugins.py:240: FutureWarning: reset_on_install is deprecated and will be removed/replaced. This flag now only refers to the SQL schema, everything else is always cleaned up on install.
   warnings.warn(
 Removing all/any schedules from plugin namespace: launch
@@ -638,12 +640,12 @@ Collecting click==7.1.2
   Using cached click-7.1.2-py2.py3-none-any.whl (82 kB)
 Installing collected packages: click, redis, rq, wheel
 Successfully installed click-7.1.2 redis-3.5.3 rq-1.8.0 wheel-0.36.2
-WARNING: You are using pip version 20.1.1; however, version 21.1.1 is available.
+WARNING: You are using pip version 20.1.1; however, version 21.1.2 is available.
 You should consider upgrading via the '/home/ice/.local/share/virtualenvs/launch/bin/python -m pip install --upgrade pip' command.
 Made virtualenv: launch
 Installing wheels in to namespace launch
-/home/ice/.local/share/virtualenvs/launch/bin/pip install --find-links /tmp/tmpmv_lxqus/wheels --requirement /tmp/tmpmv_lxqus/wheels/requirements.txt
-Looking in links: /tmp/tmpmv_lxqus/wheels
+/home/ice/.local/share/virtualenvs/launch/bin/pip install --find-links /tmp/tmpaou3zj60/wheels --requirement /tmp/tmpaou3zj60/wheels/requirements.txt
+Looking in links: /tmp/tmpaou3zj60/wheels
 Collecting asn1crypto==0.24.0
   Using cached asn1crypto-0.24.0-py2.py3-none-any.whl (101 kB)
 Collecting certifi==2019.6.16
@@ -668,9 +670,9 @@ Collecting toml==0.10.0
   Using cached toml-0.10.0-py2.py3-none-any.whl (25 kB)
 Collecting urllib3==1.25.3
   Using cached urllib3-1.25.3-py2.py3-none-any.whl (150 kB)
-Installing collected packages: asn1crypto, certifi, pycparser, cffi, chardet, six, cryptography, urllib3, idna, requests, toml, encapsia-api, pyOpenSSL
+Installing collected packages: asn1crypto, certifi, pycparser, cffi, chardet, six, cryptography, toml, urllib3, idna, requests, encapsia-api, pyOpenSSL
 Successfully installed asn1crypto-0.24.0 certifi-2019.6.16 cffi-1.12.3 chardet-3.0.4 cryptography-2.7 encapsia-api-0.1.20 idna-2.8 pyOpenSSL-19.0.0 pycparser-2.19 requests-2.22.0 six-1.12.0 toml-0.10.0 urllib3-1.25.3
-WARNING: You are using pip version 20.1.1; however, version 21.1.1 is available.
+WARNING: You are using pip version 20.1.1; however, version 21.1.2 is available.
 You should consider upgrading via the '/home/ice/.local/share/virtualenvs/launch/bin/python -m pip install --upgrade pip' command.
 Creating views namespace launch
 Created PostgreSQL schema: launch
@@ -687,26 +689,28 @@ Task launch.ice_refresh_roles_caller.run finished with result:
 Calling manager.ice_refresh_roles.refresh_roles from launch task ...
 Request timed out after 10 seconds. The assumption is that Manager is not installed. The task will be picked up later when Manager will be installed.
 Finished calling manager.ice_refresh_roles.refresh_roles from launch task.
-Installed plugin with id 526b832d2f384e36a0a5cf345a618769</span>
+Installed plugin with id e4b58b6c949048b98caf2586fbff58d5</span>
 <span class="ansi33"></span>
 
 <span class="ansi34">=== Fetch latest plugins from S3, install launch, and show the logs ===</span>
 &gt;encapsia plugins add --latest-existing
 <span class="ansi33">Calling: api.run_view('pluginsmanager', 'installed_plugins_with_tags') (attempt 1/10)</span>
+<span class="ansi33">Found: /Users/peter/.encapsia/plugins/plugin-conduct-1.6.4.tar.gz (Skipping)</span>
+<span class="ansi33">Found: /Users/peter/.encapsia/plugins/plugin-entry-1.10.0.tar.gz (Skipping)</span>
 <span class="ansi33">Found: /Users/peter/.encapsia/plugins/plugin-launch-2.0.0-14.tar.gz (Skipping)</span>
 &gt;encapsia plugins --force install launch
-<span class="ansi31">tools-0.0.1 is not valid SemVer string</span>
 <span class="ansi33">Calling: api.run_view('pluginsmanager', 'installed_plugins_with_tags') (attempt 1/10)</span>
-<span class="ansi33">name    existing version    new version    action
-------  ------------------  -------------  ---------
-launch  2.0.0-14            2.0.0-14       reinstall</span>
+<span class="ansi33">name*    existing version**    new version**    action
+-------  --------------------  ---------------  ---------
+launch   2.0.0-14              2.0.0-14         reinstall</span>
 <span class="ansi33">
-(Equivalent semver versions are shown in brackets when non-semver version is used)</span>
+(*) Plugin variant shown in square brackets when defined.
+(**) Equivalent semver versions are shown in brackets when non-semver version is used.</span>
 <span class="ansi33"></span>
-<span class="ansi33">Calling: api.upload_file_as_blob({filename}) (attempt 1/10)</span>
-<span class="ansi33">Uploaded /Users/peter/.encapsia/plugins/plugin-launch-2.0.0-14.tar.gz to blob: 1f47b5cc54944e619d7391572902f3d1</span>
+<span class="ansi33">Calling: api.upload_file_as_blob(/Users/peter/.encapsia/plugins/plugin-launch-2.0.0-14.tar.gz) (attempt 1/10)</span>
+<span class="ansi33">Uploaded /Users/peter/.encapsia/plugins/plugin-launch-2.0.0-14.tar.gz to blob: 723295067bf34d85879cc27c2a90d2fe</span>
 <span class="ansi33">Calling: api.run_task(pluginsmanager, icepluginsmanager.install_plugin) (attempt 1/10)</span>
-<span class="ansi33">Installing</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
+<span class="ansi33">Installing</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
 &gt;encapsia plugins logs launch
 <span class="ansi33">Calling: api.run_view('pluginsmanager', 'all_plugin_logs') (attempt 1/10)</span>
 <span class="ansi33">Name: launch</span>
@@ -715,11 +719,11 @@ launch  2.0.0-14            2.0.0-14       reinstall</span>
 <span class="ansi33">Action: install</span>
 <span class="ansi33">Server: my_node</span>
 <span class="ansi33">Success: True</span>
-<span class="ansi33">When: 2021-05-21T18:41:49.558797+00:00</span>
+<span class="ansi33">When: 2021-06-03T07:02:03.435447+00:00</span>
 <span class="ansi33">Logs:</span>
-<span class="ansi32">Downloaded blob 1f47b5cc54944e619d7391572902f3d1 to /tmp/tmpv0rqs9ye
-Extracted /tmp/tmpv0rqs9ye into /tmp/tmpo1d70p9v
-Registered plugin launch (2.0.0-14) from blob 1f47b5cc54944e619d7391572902f3d1 with id 80bf717f8c7f4bf0887eb246e864029c
+<span class="ansi32">Downloaded blob 723295067bf34d85879cc27c2a90d2fe to /tmp/tmp261d65ws
+Extracted /tmp/tmp261d65ws into /tmp/tmpvrwuywul
+Registered plugin launch (2.0.0-14) from blob 723295067bf34d85879cc27c2a90d2fe with id 6409a350654d48e0a5402126704bf445
 /home/ice/inf-ice-pluginsmanager/icepluginsmanager/plugins.py:240: FutureWarning: reset_on_install is deprecated and will be removed/replaced. This flag now only refers to the SQL schema, everything else is always cleaned up on install.
   warnings.warn(
 Removing all/any schedules from plugin namespace: launch
@@ -782,12 +786,12 @@ Collecting click==7.1.2
   Using cached click-7.1.2-py2.py3-none-any.whl (82 kB)
 Installing collected packages: click, redis, rq, wheel
 Successfully installed click-7.1.2 redis-3.5.3 rq-1.8.0 wheel-0.36.2
-WARNING: You are using pip version 20.1.1; however, version 21.1.1 is available.
+WARNING: You are using pip version 20.1.1; however, version 21.1.2 is available.
 You should consider upgrading via the '/home/ice/.local/share/virtualenvs/launch/bin/python -m pip install --upgrade pip' command.
 Made virtualenv: launch
 Installing wheels in to namespace launch
-/home/ice/.local/share/virtualenvs/launch/bin/pip install --find-links /tmp/tmpo1d70p9v/wheels --requirement /tmp/tmpo1d70p9v/wheels/requirements.txt
-Looking in links: /tmp/tmpo1d70p9v/wheels
+/home/ice/.local/share/virtualenvs/launch/bin/pip install --find-links /tmp/tmpvrwuywul/wheels --requirement /tmp/tmpvrwuywul/wheels/requirements.txt
+Looking in links: /tmp/tmpvrwuywul/wheels
 Collecting asn1crypto==0.24.0
   Using cached asn1crypto-0.24.0-py2.py3-none-any.whl (101 kB)
 Collecting certifi==2019.6.16
@@ -812,9 +816,9 @@ Collecting toml==0.10.0
   Using cached toml-0.10.0-py2.py3-none-any.whl (25 kB)
 Collecting urllib3==1.25.3
   Using cached urllib3-1.25.3-py2.py3-none-any.whl (150 kB)
-Installing collected packages: asn1crypto, certifi, pycparser, cffi, chardet, six, cryptography, toml, urllib3, idna, requests, encapsia-api, pyOpenSSL
+Installing collected packages: asn1crypto, certifi, pycparser, cffi, chardet, six, cryptography, toml, idna, urllib3, requests, encapsia-api, pyOpenSSL
 Successfully installed asn1crypto-0.24.0 certifi-2019.6.16 cffi-1.12.3 chardet-3.0.4 cryptography-2.7 encapsia-api-0.1.20 idna-2.8 pyOpenSSL-19.0.0 pycparser-2.19 requests-2.22.0 six-1.12.0 toml-0.10.0 urllib3-1.25.3
-WARNING: You are using pip version 20.1.1; however, version 21.1.1 is available.
+WARNING: You are using pip version 20.1.1; however, version 21.1.2 is available.
 You should consider upgrading via the '/home/ice/.local/share/virtualenvs/launch/bin/python -m pip install --upgrade pip' command.
 Creating views namespace launch
 Created PostgreSQL schema: launch
@@ -831,13 +835,13 @@ Task launch.ice_refresh_roles_caller.run finished with result:
 Calling manager.ice_refresh_roles.refresh_roles from launch task ...
 Request timed out after 10 seconds. The assumption is that Manager is not installed. The task will be picked up later when Manager will be installed.
 Finished calling manager.ice_refresh_roles.refresh_roles from launch task.
-Installed plugin with id 80bf717f8c7f4bf0887eb246e864029c</span>
+Installed plugin with id 6409a350654d48e0a5402126704bf445</span>
 <span class="ansi33"></span>
 
 <span class="ansi34">=== Uninstall launch and show the logs ===</span>
 &gt;encapsia plugins --force uninstall launch
 <span class="ansi33">Calling: api.run_task(pluginsmanager, icepluginsmanager.uninstall_plugin) (attempt 1/10)</span>
-<span class="ansi33">Uninstalling launch</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
+<span class="ansi33">Uninstalling launch</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
 &gt;encapsia plugins logs launch
 <span class="ansi33">Calling: api.run_view('pluginsmanager', 'all_plugin_logs') (attempt 1/10)</span>
 <span class="ansi33">Name: launch</span>
@@ -846,7 +850,7 @@ Installed plugin with id 80bf717f8c7f4bf0887eb246e864029c</span>
 <span class="ansi33">Action: uninstall</span>
 <span class="ansi33">Server: my_node</span>
 <span class="ansi33">Success: True</span>
-<span class="ansi33">When: 2021-05-21T18:41:54.331238+00:00</span>
+<span class="ansi33">When: 2021-06-03T07:02:08.468932+00:00</span>
 <span class="ansi33">Logs:</span>
 <span class="ansi32">Removing all/any schedules from plugin namespace: launch
 Destroying plugin namespace: launch
@@ -862,195 +866,207 @@ Remove published manifest, if any</span>
 
 <span class="ansi34">=== Get status on all installed plugins ===</span>
 &gt;encapsia plugins status
-<span class="ansi31">tools-0.0.1 is not valid SemVer string</span>
 <span class="ansi33">Calling: api.run_view('pluginsmanager', 'installed_plugins_with_tags') (attempt 1/10)</span>
-<span class="ansi33">name    version    available    description    installed    plugin-tags
-------  ---------  -----------  -------------  -----------  -------------</span>
+<span class="ansi33">name*                       version**    available**        installed
+--------------------------  -----------  -----------------  ------------------------
+conduct                     1.6.4        1.6.5.1 (1.6.5-1)  Mon 31 May 2021 13:41:20
+entry                       1.10.0       1.10.3             Mon 31 May 2021 13:47:29
+variant_test [variant_two]  0.0.2        0.0.1              Wed 02 Jun 2021 11:11:15</span>
 <span class="ansi33">
-(Equivalent semver versions are shown in brackets when non-semver version is used)</span>
+(*) Plugin variant shown in square brackets when defined.
+(**) Equivalent semver versions are shown in brackets when non-semver version is used.</span>
 
 <span class="ansi34">=== Get info on latest plugins in the local store ===</span>
 &gt;encapsia plugins ls
-<span class="ansi31">tools-0.0.1 is not valid SemVer string</span>
-<span class="ansi33">name                   version
----------------------  -------------------
-analytics_addon        2.1.0-1
-analytics_permissions  2.0.0
-archiver               1.5.5
-coding                 1.2.18
-conduct                1.6.5.1 (1.6.5-1)
-config                 tools-0.0.1 (0.0.0)
-configtools            0.0.2
-datapointslib          0.0.4
-deploy                 1.0.2.1 (1.0.2-1)
-entry                  1.10.3
-esourcetraining        1.1.5-6
-example                0.0.1
-insights               2.1.0-10
-inventory              1.0.2-3
-launch                 2.0.0-14
-loader                 1.3.1-1
-loaderreview           1.1.9-4
-manager                1.3.0.7 (1.3.0-7)
-metricslib             0.0.4
-prehook                0.0.1
-serverlib              1.0.2
-sync                   0.0.2
-tags                   1.1.3
-tcp                    1.0.1
-trialconfig            0.0.1
-tutor                  1.1.7
-walkthrough_test       0.0.1
-webpsqlpermission      0.0.1</span>
+<span class="ansi33">name*                       version**
+--------------------------  -----------------
+analytics_addon             2.1.0-1
+analytics_permissions       2.0.0
+archiver                    1.5.5
+coding                      1.2.18
+conduct                     1.6.5.1 (1.6.5-1)
+configtools                 0.0.2
+datapointslib               0.0.4
+deploy                      1.0.2.1 (1.0.2-1)
+entry                       1.10.3
+esourcetraining             1.1.5-6
+example                     0.0.1
+insights                    2.1.0-10
+inventory                   1.0.2-3
+launch                      2.0.0-14
+loader                      1.3.1-1
+loaderreview                1.1.9-4
+manager                     1.3.0.7 (1.3.0-7)
+metricslib                  0.0.4
+prehook                     0.0.3
+prehook [pmierlutiu1]       0.0.2
+prehook [pmierlutiu2]       0.0.2
+serverlib                   1.0.2
+sync                        0.0.2
+tags                        1.1.3
+tcp                         1.0.1
+trialconfig                 0.0.1
+tutor                       1.1.7
+variant_test [variant_two]  0.0.1
+walkthrough_test            0.0.1
+webpsqlpermission           0.0.1</span>
 <span class="ansi33">
-(Equivalent semver versions are shown in brackets when non-semver version is used)</span>
+(*) Plugin variant shown in square brackets when defined.
+(**) Equivalent semver versions are shown in brackets when non-semver version is used.</span>
 &gt;encapsia plugins ls -l
-<span class="ansi31">tools-0.0.1 is not valid SemVer string</span>
-<span class="ansi33">name                   version              description
----------------------  -------------------  -------------------------------------------------------------------------------------------------------------------------------------
-analytics_addon        2.1.0-1              Interactive computing environment for analysing data and creating insights.
-analytics_permissions  2.0.0                Adds the ability to use the Analytics application
-archiver               1.5.5                Web Archiver Plugin
-coding                 1.2.18               Assign universal codes to clinical trial data for easier analysis and submission to regulatory authorities.
-conduct                1.6.5.1 (1.6.5-1)    Conduct app
-config                 tools-0.0.1 (0.0.0)  Trial Config Configuration
-configtools            0.0.2                Trial Config Configuration
-datapointslib          0.0.4                Library to obtain 'tall thin' table of datapoints.
-deploy                 1.0.2.1 (1.0.2-1)    Deploy app for Encapsia
-entry                  1.10.3               Entry app
-esourcetraining        1.1.5-6              Training for eSource App.
-example                0.0.1                Example plugin
-insights               2.1.0-10             Customisable dashboard of visualisations allowing unique insight into your study data.
-inventory              1.0.2-3              Manage kits in shipments
-launch                 2.0.0-14             Launch app
-loader                 1.3.1-1              Set up data loaders and manually upload local lab data.
-loaderreview           1.1.9-4              Review app
-manager                1.3.0.7 (1.3.0-7)    Manager app
-metricslib             0.0.4                Library to obtain metrics (counts) for each subject, e.g. number of entered pages.
-prehook                0.0.1                Prehook Plugin for Testing
-serverlib              1.0.2                Server lib is a plugin which consists of correct, clean and optimized common functionalities for re-use in other encapsia components.
-sync                   0.0.2                Synchronise a pair of production servers
-tags                   1.1.3                Tags app
-tcp                    1.0.1                Plugin that creates and applies Trial Configuration Packages (TCP)
-trialconfig            0.0.1                Plugin that creates and applies Trial Configuration Packages (TCP)
-tutor                  1.1.7                Tutor app
-walkthrough_test       0.0.1                Test plugin for Encapsia CLI walkthrough tests
-webpsqlpermission      0.0.1                Exports a permission for accessing psql over the web</span>
+<span class="ansi33">name*                       version**          description
+--------------------------  -----------------  -------------------------------------------------------------------------------------------------------------------------------------
+analytics_addon             2.1.0-1            Interactive computing environment for analysing data and creating insights.
+analytics_permissions       2.0.0              Adds the ability to use the Analytics application
+archiver                    1.5.5              Web Archiver Plugin
+coding                      1.2.18             Assign universal codes to clinical trial data for easier analysis and submission to regulatory authorities.
+conduct                     1.6.5.1 (1.6.5-1)  Conduct app
+configtools                 0.0.2              Trial Config Configuration
+datapointslib               0.0.4              Library to obtain 'tall thin' table of datapoints.
+deploy                      1.0.2.1 (1.0.2-1)  Deploy app for Encapsia
+entry                       1.10.3             Entry app
+esourcetraining             1.1.5-6            Training for eSource App.
+example                     0.0.1              Example plugin
+insights                    2.1.0-10           Customisable dashboard of visualisations allowing unique insight into your study data.
+inventory                   1.0.2-3            Manage kits in shipments
+launch                      2.0.0-14           Launch app
+loader                      1.3.1-1            Set up data loaders and manually upload local lab data.
+loaderreview                1.1.9-4            Review app
+manager                     1.3.0.7 (1.3.0-7)  Manager app
+metricslib                  0.0.4              Library to obtain metrics (counts) for each subject, e.g. number of entered pages.
+prehook                     0.0.3              Prehook Plugin for Testing
+prehook [pmierlutiu1]       0.0.2              Prehook Plugin for Testing
+prehook [pmierlutiu2]       0.0.2              Prehook Plugin for Testing
+serverlib                   1.0.2              Server lib is a plugin which consists of correct, clean and optimized common functionalities for re-use in other encapsia components.
+sync                        0.0.2              Synchronise a pair of production servers
+tags                        1.1.3              Tags app
+tcp                         1.0.1              Plugin that creates and applies Trial Configuration Packages (TCP)
+trialconfig                 0.0.1              Plugin that creates and applies Trial Configuration Packages (TCP)
+tutor                       1.1.7              Tutor app
+variant_test [variant_two]  0.0.1              Test Plugin with Variants
+walkthrough_test            0.0.1              Test plugin for Encapsia CLI walkthrough tests
+webpsqlpermission           0.0.1              Exports a permission for accessing psql over the web</span>
 <span class="ansi33">
-(Equivalent semver versions are shown in brackets when non-semver version is used)</span>
+(*) Plugin variant shown in square brackets when defined.
+(**) Equivalent semver versions are shown in brackets when non-semver version is used.</span>
 
 <span class="ansi34">=== Get info on upstream plugins ===</span>
 &gt;encapsia plugins upstream
-<span class="ansi33">Searching for plugins in S3 bucket(s): encapsia-plugins/cmedtech/pd/staging/apps, encapsia-plugins/cmedtech/pd/staging/middleware, encapsia-plugins/cmedtech/pd/sandbox/middleware, ice-plugins</span>
-<span class="ansi33">bucket            path                               name                   version
-----------------  ---------------------------------  ---------------------  -------------------
-ice-plugins       analytics_addon                    analytics_addon        2.1.0-1
-ice-plugins       analytics_permissions              analytics_permissions  2.0.2-1
-encapsia-plugins  cmedtech/pd/staging/apps/archiver  archiver               1.5.5
-ice-plugins       builder                            builder                1.0.0.73 (1.0.0-73)
-encapsia-plugins  cmedtech/pd/staging/apps/coding    coding                 1.2.18
-ice-plugins       coding_test                        coding_test            1.2.15.3 (1.2.15-3)
-ice-plugins       conduct                            conduct                1.6.5.1 (1.6.5-1)
-encapsia-plugins  cmedtech/pd/staging/middleware     datapointslib          0.0.3
-ice-plugins       deploy                             deploy                 1.0.2-1
-ice-plugins       entry                              entry                  1.10.3
-ice-plugins       esourcetraining                    esourcetraining        1.1.5-6
-ice-plugins       insights                           insights               2.1.0-10
-ice-plugins       inventory                          inventory              1.0.2-3
-ice-plugins       launch                             launch                 2.0.0-16
-ice-plugins       loader                             loader                 1.3.1-1
-ice-plugins       loaderreview                       loaderreview           1.1.9-4
-ice-plugins       manager                            manager                1.3.0.7 (1.3.0-7)
-encapsia-plugins  cmedtech/pd/staging/middleware     metricslib             0.0.4
-encapsia-plugins  cmedtech/pd/staging/middleware     serverlib              1.0.2
-ice-plugins       tags                               tags                   1.1.3
-encapsia-plugins  cmedtech/pd/staging/apps/tcp       tcp                    1.0.1
-ice-plugins       test001gallery                     test001gallery         1.0.1
-ice-plugins       test002gallery                     test002gallery         1.0.1
-ice-plugins       test003gallery                     test003gallery         1.0.1
-ice-plugins       trialconfig                        trialconfig            0.0.1
-encapsia-plugins  cmedtech/pd/staging/apps/tutor     tutor                  1.1.7
-ice-plugins       tutorbundles                       tutorbundles           1.1.0-dev2
-ice-plugins       webbdd                             webbdd                 0.1.0.1 (0.1.0-1)</span>
+<span class="ansi33">Searching for plugins in S3 bucket(s): encapsia-plugins/cmedtech/pd/staging/apps, encapsia-plugins/cmedtech/pd/staging/middleware, encapsia-plugins/cmedtech/pd/sandbox/middleware, ice-plugins, encapsia-testing/plugins/variant_test</span>
+<span class="ansi33">name*                       version**            bucket            path
+--------------------------  -------------------  ----------------  ---------------------------------
+analytics_addon             2.1.0-1              ice-plugins       analytics_addon
+analytics_permissions       2.0.2-1              ice-plugins       analytics_permissions
+archiver                    1.5.5                encapsia-plugins  cmedtech/pd/staging/apps/archiver
+builder                     1.0.0.73 (1.0.0-73)  ice-plugins       builder
+coding                      1.2.18               encapsia-plugins  cmedtech/pd/staging/apps/coding
+coding_test                 1.2.15.3 (1.2.15-3)  ice-plugins       coding_test
+conduct                     1.6.5.1 (1.6.5-1)    ice-plugins       conduct
+datapointslib               0.0.3                encapsia-plugins  cmedtech/pd/staging/middleware
+deploy                      1.0.2-1              ice-plugins       deploy
+entry                       1.10.3               ice-plugins       entry
+esourcetraining             1.1.5-6              ice-plugins       esourcetraining
+insights                    2.1.0-10             ice-plugins       insights
+inventory                   1.0.2-4              ice-plugins       inventory
+launch                      2.0.0-17             ice-plugins       launch
+loader                      1.3.1-1              ice-plugins       loader
+loaderreview                1.1.9-4              ice-plugins       loaderreview
+manager                     1.3.0-15             ice-plugins       manager
+metricslib                  0.0.4                encapsia-plugins  cmedtech/pd/staging/middleware
+serverlib                   1.0.2                encapsia-plugins  cmedtech/pd/staging/middleware
+tags                        1.1.3                ice-plugins       tags
+tcp                         1.0.1                encapsia-plugins  cmedtech/pd/staging/apps/tcp
+test001gallery              1.0.1                ice-plugins       test001gallery
+test002gallery              1.0.1                ice-plugins       test002gallery
+test003gallery              1.0.1                ice-plugins       test003gallery
+trialconfig                 0.0.1                ice-plugins       trialconfig
+tutor                       1.1.7                encapsia-plugins  cmedtech/pd/staging/apps/tutor
+tutorbundles                1.1.0-dev2           ice-plugins       tutorbundles
+variant_test                0.0.1                encapsia-testing  plugins/variant_test
+variant_test [variant1]     0.0.1                encapsia-testing  plugins/variant_test
+variant_test [variant_two]  0.0.1                encapsia-testing  plugins/variant_test
+webbdd                      0.1.0.1 (0.1.0-1)    ice-plugins       webbdd</span>
 <span class="ansi33">
-(Equivalent semver versions are shown in brackets when non-semver version is used)</span>
+(*) Plugin variant shown in square brackets when defined.
+(**) Equivalent semver versions are shown in brackets when non-semver version is used.</span>
 &gt;encapsia plugins upstream conduct-1.6 --all-versions
-<span class="ansi33">Searching for plugins in S3 bucket(s): encapsia-plugins/cmedtech/pd/staging/apps, encapsia-plugins/cmedtech/pd/staging/middleware, encapsia-plugins/cmedtech/pd/sandbox/middleware, ice-plugins</span>
-<span class="ansi33">bucket       path     name     version
------------  -------  -------  -------------------
-ice-plugins  conduct  conduct  1.6.0.3 (1.6.0-3)
-ice-plugins  conduct  conduct  1.6.0.4 (1.6.0-4)
-ice-plugins  conduct  conduct  1.6.0.5 (1.6.0-5)
-ice-plugins  conduct  conduct  1.6.0.6 (1.6.0-6)
-ice-plugins  conduct  conduct  1.6.0.7 (1.6.0-7)
-ice-plugins  conduct  conduct  1.6.0.9 (1.6.0-9)
-ice-plugins  conduct  conduct  1.6.0.10 (1.6.0-10)
-ice-plugins  conduct  conduct  1.6.0.11 (1.6.0-11)
-ice-plugins  conduct  conduct  1.6.0.12 (1.6.0-12)
-ice-plugins  conduct  conduct  1.6.0.13 (1.6.0-13)
-ice-plugins  conduct  conduct  1.6.0.14 (1.6.0-14)
-ice-plugins  conduct  conduct  1.6.0.15 (1.6.0-15)
-ice-plugins  conduct  conduct  1.6.0.16 (1.6.0-16)
-ice-plugins  conduct  conduct  1.6.0.17 (1.6.0-17)
-ice-plugins  conduct  conduct  1.6.0.18 (1.6.0-18)
-ice-plugins  conduct  conduct  1.6.0.19 (1.6.0-19)
-ice-plugins  conduct  conduct  1.6.0.20 (1.6.0-20)
-ice-plugins  conduct  conduct  1.6.0.21 (1.6.0-21)
-ice-plugins  conduct  conduct  1.6.0.22 (1.6.0-22)
-ice-plugins  conduct  conduct  1.6.0.23 (1.6.0-23)
-ice-plugins  conduct  conduct  1.6.0.24 (1.6.0-24)
-ice-plugins  conduct  conduct  1.6.0.25 (1.6.0-25)
-ice-plugins  conduct  conduct  1.6.0.26 (1.6.0-26)
-ice-plugins  conduct  conduct  1.6.0.27 (1.6.0-27)
-ice-plugins  conduct  conduct  1.6.0.28 (1.6.0-28)
-ice-plugins  conduct  conduct  1.6.0.29 (1.6.0-29)
-ice-plugins  conduct  conduct  1.6.0.30 (1.6.0-30)
-ice-plugins  conduct  conduct  1.6.0.31 (1.6.0-31)
-ice-plugins  conduct  conduct  1.6.0.32 (1.6.0-32)
-ice-plugins  conduct  conduct  1.6.0.33 (1.6.0-33)
-ice-plugins  conduct  conduct  1.6.0.34 (1.6.0-34)
-ice-plugins  conduct  conduct  1.6.0.35 (1.6.0-35)
-ice-plugins  conduct  conduct  1.6.0.36 (1.6.0-36)
-ice-plugins  conduct  conduct  1.6.0.37 (1.6.0-37)
-ice-plugins  conduct  conduct  1.6.0.38 (1.6.0-38)
-ice-plugins  conduct  conduct  1.6.0.39 (1.6.0-39)
-ice-plugins  conduct  conduct  1.6.0.40 (1.6.0-40)
-ice-plugins  conduct  conduct  1.6.0.41 (1.6.0-41)
-ice-plugins  conduct  conduct  1.6.0
-ice-plugins  conduct  conduct  1.6.1.1 (1.6.1-1)
-ice-plugins  conduct  conduct  1.6.1.2 (1.6.1-2)
-ice-plugins  conduct  conduct  1.6.1.3 (1.6.1-3)
-ice-plugins  conduct  conduct  1.6.1
-ice-plugins  conduct  conduct  1.6.2.1 (1.6.2-1)
-ice-plugins  conduct  conduct  1.6.2.2 (1.6.2-2)
-ice-plugins  conduct  conduct  1.6.2.3 (1.6.2-3)
-ice-plugins  conduct  conduct  1.6.2.4 (1.6.2-4)
-ice-plugins  conduct  conduct  1.6.2.5 (1.6.2-5)
-ice-plugins  conduct  conduct  1.6.2.6 (1.6.2-6)
-ice-plugins  conduct  conduct  1.6.2.7 (1.6.2-7)
-ice-plugins  conduct  conduct  1.6.2.8 (1.6.2-8)
-ice-plugins  conduct  conduct  1.6.2.9 (1.6.2-9)
-ice-plugins  conduct  conduct  1.6.2.10 (1.6.2-10)
-ice-plugins  conduct  conduct  1.6.2.11 (1.6.2-11)
-ice-plugins  conduct  conduct  1.6.2.12 (1.6.2-12)
-ice-plugins  conduct  conduct  1.6.2
-ice-plugins  conduct  conduct  1.6.3.1 (1.6.3-1)
-ice-plugins  conduct  conduct  1.6.3
-ice-plugins  conduct  conduct  1.6.4.1 (1.6.4-1)
-ice-plugins  conduct  conduct  1.6.4.4 (1.6.4-4)
-ice-plugins  conduct  conduct  1.6.4.5 (1.6.4-5)
-ice-plugins  conduct  conduct  1.6.4
-ice-plugins  conduct  conduct  1.6.5.1 (1.6.5-1)</span>
+<span class="ansi33">Searching for plugins in S3 bucket(s): encapsia-plugins/cmedtech/pd/staging/apps, encapsia-plugins/cmedtech/pd/staging/middleware, encapsia-plugins/cmedtech/pd/sandbox/middleware, ice-plugins, encapsia-testing/plugins/variant_test</span>
+<span class="ansi33">name*    version**            bucket       path
+-------  -------------------  -----------  -------
+conduct  1.6.0.3 (1.6.0-3)    ice-plugins  conduct
+conduct  1.6.0.4 (1.6.0-4)    ice-plugins  conduct
+conduct  1.6.0.5 (1.6.0-5)    ice-plugins  conduct
+conduct  1.6.0.6 (1.6.0-6)    ice-plugins  conduct
+conduct  1.6.0.7 (1.6.0-7)    ice-plugins  conduct
+conduct  1.6.0.9 (1.6.0-9)    ice-plugins  conduct
+conduct  1.6.0.10 (1.6.0-10)  ice-plugins  conduct
+conduct  1.6.0.11 (1.6.0-11)  ice-plugins  conduct
+conduct  1.6.0.12 (1.6.0-12)  ice-plugins  conduct
+conduct  1.6.0.13 (1.6.0-13)  ice-plugins  conduct
+conduct  1.6.0.14 (1.6.0-14)  ice-plugins  conduct
+conduct  1.6.0.15 (1.6.0-15)  ice-plugins  conduct
+conduct  1.6.0.16 (1.6.0-16)  ice-plugins  conduct
+conduct  1.6.0.17 (1.6.0-17)  ice-plugins  conduct
+conduct  1.6.0.18 (1.6.0-18)  ice-plugins  conduct
+conduct  1.6.0.19 (1.6.0-19)  ice-plugins  conduct
+conduct  1.6.0.20 (1.6.0-20)  ice-plugins  conduct
+conduct  1.6.0.21 (1.6.0-21)  ice-plugins  conduct
+conduct  1.6.0.22 (1.6.0-22)  ice-plugins  conduct
+conduct  1.6.0.23 (1.6.0-23)  ice-plugins  conduct
+conduct  1.6.0.24 (1.6.0-24)  ice-plugins  conduct
+conduct  1.6.0.25 (1.6.0-25)  ice-plugins  conduct
+conduct  1.6.0.26 (1.6.0-26)  ice-plugins  conduct
+conduct  1.6.0.27 (1.6.0-27)  ice-plugins  conduct
+conduct  1.6.0.28 (1.6.0-28)  ice-plugins  conduct
+conduct  1.6.0.29 (1.6.0-29)  ice-plugins  conduct
+conduct  1.6.0.30 (1.6.0-30)  ice-plugins  conduct
+conduct  1.6.0.31 (1.6.0-31)  ice-plugins  conduct
+conduct  1.6.0.32 (1.6.0-32)  ice-plugins  conduct
+conduct  1.6.0.33 (1.6.0-33)  ice-plugins  conduct
+conduct  1.6.0.34 (1.6.0-34)  ice-plugins  conduct
+conduct  1.6.0.35 (1.6.0-35)  ice-plugins  conduct
+conduct  1.6.0.36 (1.6.0-36)  ice-plugins  conduct
+conduct  1.6.0.37 (1.6.0-37)  ice-plugins  conduct
+conduct  1.6.0.38 (1.6.0-38)  ice-plugins  conduct
+conduct  1.6.0.39 (1.6.0-39)  ice-plugins  conduct
+conduct  1.6.0.40 (1.6.0-40)  ice-plugins  conduct
+conduct  1.6.0.41 (1.6.0-41)  ice-plugins  conduct
+conduct  1.6.0                ice-plugins  conduct
+conduct  1.6.1.1 (1.6.1-1)    ice-plugins  conduct
+conduct  1.6.1.2 (1.6.1-2)    ice-plugins  conduct
+conduct  1.6.1.3 (1.6.1-3)    ice-plugins  conduct
+conduct  1.6.1                ice-plugins  conduct
+conduct  1.6.2.1 (1.6.2-1)    ice-plugins  conduct
+conduct  1.6.2.2 (1.6.2-2)    ice-plugins  conduct
+conduct  1.6.2.3 (1.6.2-3)    ice-plugins  conduct
+conduct  1.6.2.4 (1.6.2-4)    ice-plugins  conduct
+conduct  1.6.2.5 (1.6.2-5)    ice-plugins  conduct
+conduct  1.6.2.6 (1.6.2-6)    ice-plugins  conduct
+conduct  1.6.2.7 (1.6.2-7)    ice-plugins  conduct
+conduct  1.6.2.8 (1.6.2-8)    ice-plugins  conduct
+conduct  1.6.2.9 (1.6.2-9)    ice-plugins  conduct
+conduct  1.6.2.10 (1.6.2-10)  ice-plugins  conduct
+conduct  1.6.2.11 (1.6.2-11)  ice-plugins  conduct
+conduct  1.6.2.12 (1.6.2-12)  ice-plugins  conduct
+conduct  1.6.2                ice-plugins  conduct
+conduct  1.6.3.1 (1.6.3-1)    ice-plugins  conduct
+conduct  1.6.3                ice-plugins  conduct
+conduct  1.6.4.1 (1.6.4-1)    ice-plugins  conduct
+conduct  1.6.4.4 (1.6.4-4)    ice-plugins  conduct
+conduct  1.6.4.5 (1.6.4-5)    ice-plugins  conduct
+conduct  1.6.4                ice-plugins  conduct
+conduct  1.6.5.1 (1.6.5-1)    ice-plugins  conduct</span>
 <span class="ansi33">
-(Equivalent semver versions are shown in brackets when non-semver version is used)</span>
+(*) Plugin variant shown in square brackets when defined.
+(**) Equivalent semver versions are shown in brackets when non-semver version is used.</span>
 
 <span class="ansi34">=== Create a backup ===</span>
 &gt;encapsia database backup /tmp/test_encapsia_backup
 <span class="ansi33">Calling: api.dbctl_action(backup_database) (attempt 1/10)</span>
-<span class="ansi33">Backing up database</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
-<span class="ansi33">Downloaded 7197613 bytes to /tmp/test_encapsia_backup</span>
+<span class="ansi33">Backing up database</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
+<span class="ansi33">Downloaded 28240470 bytes to /tmp/test_encapsia_backup</span>
 &gt;ls -l /tmp/test_encapsia_backup
--rw-------  1 peter  wheel  7197613 May 21 21:42 /tmp/test_encapsia_backup
+-rw-------  1 peter  wheel  28240470 Jun  3 10:02 /tmp/test_encapsia_backup
 
 <span class="ansi34">=== Restore from the backup ===</span>
 &gt;encapsia database restore --force /tmp/test_encapsia_backup
@@ -1062,8 +1078,8 @@ ice-plugins  conduct  conduct  1.6.5.1 (1.6.5-1)</span>
 <span class="ansi34">=== Create a fixture ===</span>
 &gt;encapsia fixtures create test_fixture
 <span class="ansi33">Calling: api.dbctl_action(create_fixture) (attempt 1/10)</span>
-<span class="ansi33">Creating fixture test_fixture</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
-<span class="ansi32">Fixture "test_fixture" created on Fri May 21 18:42:18 2021</span>
+<span class="ansi33">Creating fixture test_fixture</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
+<span class="ansi32">Fixture "test_fixture" created on Thu Jun  3 07:02:44 2021</span>
 
 <span class="ansi34">=== Use a fixture (DISABLED: to be less invasive on test server) ===</span>
 
@@ -1090,8 +1106,8 @@ smalldata</span>
 <span class="ansi33">Including: wheels</span>
 <span class="ansi33">Including: schedules</span>
 <span class="ansi33">Calling: api.run_task(pluginsmanager, icepluginsmanager.dev_update_plugin) (attempt 1/10)</span>
-<span class="ansi33">Uploading to server</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
-<span class="ansi32">Extracted /tmp/ice/tmp3u4lpe2n into /tmp/tmppgq488so
+<span class="ansi33">Uploading to server</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
+<span class="ansi32">Extracted /tmp/ice/tmp92cl8s_g into /tmp/tmpzrctcs4l
 Removing all/any schedules from plugin namespace: walkthrough_test
 Installing plugin walkthrough_test (0.0.1)
 Made webfiles directory: /var/share/nginx/iceplugins/walkthrough_test
@@ -1110,43 +1126,43 @@ Collecting click==7.1.2
   Using cached click-7.1.2-py2.py3-none-any.whl (82 kB)
 Installing collected packages: click, redis, rq, wheel
 Successfully installed click-7.1.2 redis-3.5.3 rq-1.8.0 wheel-0.36.2
-WARNING: You are using pip version 20.1.1; however, version 21.1.1 is available.
+WARNING: You are using pip version 20.1.1; however, version 21.1.2 is available.
 You should consider upgrading via the '/home/ice/.local/share/virtualenvs/walkthrough_test/bin/python -m pip install --upgrade pip' command.
 Made virtualenv: walkthrough_test
 Installing wheels in to namespace walkthrough_test
-/home/ice/.local/share/virtualenvs/walkthrough_test/bin/pip install --find-links /tmp/tmppgq488so/tmpbo6q9aua/wheels --requirement /tmp/tmppgq488so/tmpbo6q9aua/wheels/requirements.txt
-Looking in links: /tmp/tmppgq488so/tmpbo6q9aua/wheels
+/home/ice/.local/share/virtualenvs/walkthrough_test/bin/pip install --find-links /tmp/tmpzrctcs4l/tmpo42llgdc/wheels --requirement /tmp/tmpzrctcs4l/tmpo42llgdc/wheels/requirements.txt
+Looking in links: /tmp/tmpzrctcs4l/tmpo42llgdc/wheels
 Collecting encapsia-api
   Using cached encapsia_api-0.2.9-py3-none-any.whl (19 kB)
-Collecting requests[security]&lt;3.0,&gt;=2.24
-  Using cached requests-2.25.1-py2.py3-none-any.whl (61 kB)
 Collecting arrow&lt;0.17,&gt;=0.16
   Using cached arrow-0.16.0-py2.py3-none-any.whl (50 kB)
 Collecting toml&lt;0.11,&gt;=0.10
   Using cached toml-0.10.2-py2.py3-none-any.whl (16 kB)
-Collecting urllib3&lt;1.27,&gt;=1.21.1
-  Using cached urllib3-1.26.4-py2.py3-none-any.whl (153 kB)
-Collecting chardet&lt;5,&gt;=3.0.2
-  Using cached chardet-4.0.0-py2.py3-none-any.whl (178 kB)
-Collecting certifi&gt;=2017.4.17
-  Using cached certifi-2020.12.5-py2.py3-none-any.whl (147 kB)
+Collecting requests[security]&lt;3.0,&gt;=2.24
+  Using cached requests-2.25.1-py2.py3-none-any.whl (61 kB)
+Collecting python-dateutil&gt;=2.7.0
+  Using cached python_dateutil-2.8.1-py2.py3-none-any.whl (227 kB)
 Collecting idna&lt;3,&gt;=2.5
   Using cached idna-2.10-py2.py3-none-any.whl (58 kB)
+Collecting certifi&gt;=2017.4.17
+  Using cached certifi-2021.5.30-py2.py3-none-any.whl (145 kB)
+Collecting chardet&lt;5,&gt;=3.0.2
+  Using cached chardet-4.0.0-py2.py3-none-any.whl (178 kB)
+Collecting urllib3&lt;1.27,&gt;=1.21.1
+  Using cached urllib3-1.26.5-py2.py3-none-any.whl (138 kB)
 Collecting cryptography&gt;=1.3.4; extra == "security"
   Using cached cryptography-3.4.7-cp36-abi3-manylinux2014_x86_64.whl (3.2 MB)
 Collecting pyOpenSSL&gt;=0.14; extra == "security"
   Using cached pyOpenSSL-20.0.1-py2.py3-none-any.whl (54 kB)
-Collecting python-dateutil&gt;=2.7.0
-  Using cached python_dateutil-2.8.1-py2.py3-none-any.whl (227 kB)
+Collecting six&gt;=1.5
+  Using cached six-1.16.0-py2.py3-none-any.whl (11 kB)
 Collecting cffi&gt;=1.12
   Using cached cffi-1.14.5-cp38-cp38-manylinux1_x86_64.whl (411 kB)
-Collecting six&gt;=1.5.2
-  Using cached six-1.16.0-py2.py3-none-any.whl (11 kB)
 Collecting pycparser
   Using cached pycparser-2.20-py2.py3-none-any.whl (112 kB)
-Installing collected packages: urllib3, chardet, certifi, idna, pycparser, cffi, cryptography, six, pyOpenSSL, requests, python-dateutil, arrow, toml, encapsia-api
-Successfully installed arrow-0.16.0 certifi-2020.12.5 cffi-1.14.5 chardet-4.0.0 cryptography-3.4.7 encapsia-api-0.2.9 idna-2.10 pyOpenSSL-20.0.1 pycparser-2.20 python-dateutil-2.8.1 requests-2.25.1 six-1.16.0 toml-0.10.2 urllib3-1.26.4
-WARNING: You are using pip version 20.1.1; however, version 21.1.1 is available.
+Installing collected packages: six, python-dateutil, arrow, toml, idna, certifi, chardet, urllib3, pycparser, cffi, cryptography, pyOpenSSL, requests, encapsia-api
+Successfully installed arrow-0.16.0 certifi-2021.5.30 cffi-1.14.5 chardet-4.0.0 cryptography-3.4.7 encapsia-api-0.2.9 idna-2.10 pyOpenSSL-20.0.1 pycparser-2.20 python-dateutil-2.8.1 requests-2.25.1 six-1.16.0 toml-0.10.2 urllib3-1.26.5
+WARNING: You are using pip version 20.1.1; however, version 21.1.2 is available.
 You should consider upgrading via the '/home/ice/.local/share/virtualenvs/walkthrough_test/bin/python -m pip install --upgrade pip' command.
 Creating views namespace walkthrough_test
 Created PostgreSQL schema: walkthrough_test
@@ -1213,16 +1229,16 @@ Timeout calling hook walkthrough_test.test_module.test_function_with_meta_as_fix
             ],
             "device": null,
             "email": "system@root.encapsia.com",
-            "expires_at": "2022-05-21T18:37:46.771527+00:00",
-            "id": 84,
-            "issued_at": "2021-05-21T18:37:46.771527+00:00",
+            "expires_at": "2022-06-03T06:57:48.677484+00:00",
+            "id": 4411,
+            "issued_at": "2021-06-03T06:57:48.677484+00:00",
             "name": "Root Superuser",
             "namespace": "walkthrough_test",
             "notification_token": null,
             "role": null,
             "role_alias": null,
             "site_id": "",
-            "token": "940a462161074aeb9c17113f9be45a3a",
+            "token": "407c9ae27da845c5a347e2a21fd05fbd",
             "url": "https://localhost.icethree.com/v1/views/walkthrough_test/test_only_meta"
         }
     }
@@ -1258,16 +1274,16 @@ Timeout calling hook walkthrough_test.test_module.test_function_with_meta_as_fix
                 ],
                 "device": null,
                 "email": "system@root.encapsia.com",
-                "expires_at": "2022-05-21T18:37:46.771527+00:00",
-                "id": 84,
-                "issued_at": "2021-05-21T18:37:46.771527+00:00",
+                "expires_at": "2022-06-03T06:57:48.677484+00:00",
+                "id": 4411,
+                "issued_at": "2021-06-03T06:57:48.677484+00:00",
                 "name": "Root Superuser",
                 "namespace": "walkthrough_test",
                 "notification_token": null,
                 "role": null,
                 "role_alias": null,
                 "site_id": "",
-                "token": "940a462161074aeb9c17113f9be45a3a",
+                "token": "407c9ae27da845c5a347e2a21fd05fbd",
                 "url": "https://localhost.icethree.com/v1/views/walkthrough_test/test_mixture/hello?limit=123"
             }
         }
@@ -1348,16 +1364,16 @@ x,y
         ],
         "device": null,
         "email": "system@root.encapsia.com",
-        "expires_at": "2021-05-21T18:53:08.687296+00:00",
-        "id": 84,
-        "issued_at": "2021-05-21T18:43:08.687296+00:00",
+        "expires_at": "2021-06-03T07:13:35.444318+00:00",
+        "id": 4411,
+        "issued_at": "2021-06-03T07:03:35.444318+00:00",
         "name": "Root Superuser",
         "namespace": "walkthrough_test",
         "notification_token": null,
         "role": null,
         "role_alias": null,
         "site_id": "",
-        "token": "dba712d82bc044af86e0fc6a86c5c9f3",
+        "token": "319d0c5adeb24a41a276e5e56785ebe5",
         "url": "https://localhost.icethree.com/v1/tasks/walkthrough_test/test_module.test_function_with_any_args?a=1&amp;b=2&amp;c=3"
     }
 }</span>
@@ -1365,23 +1381,23 @@ x,y
 <span class="ansi34">=== Run test task function which only takes meta as a fixed argument ===</span>
 &gt;encapsia run task walkthrough_test test_module.test_function_with_meta_as_fixed_arg
 <span class="ansi33">Calling: api.run_task(walkthrough_test, test_module.test_function_with_meta_as_fixed_arg) (attempt 1/10)</span>
-<span class="ansi33">Running task walkthrough_test.test_module.test_function_with_meta_as_fixed_arg</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
+<span class="ansi33">Running task walkthrough_test.test_module.test_function_with_meta_as_fixed_arg</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">.</span><span class="ansi33">Done</span>
 <span class="ansi32">{
     "capabilities": [
         "superuser"
     ],
     "device": null,
     "email": "system@root.encapsia.com",
-    "expires_at": "2021-05-21T18:53:09.509597+00:00",
-    "id": 84,
-    "issued_at": "2021-05-21T18:43:09.509597+00:00",
+    "expires_at": "2021-06-03T07:13:36.248111+00:00",
+    "id": 4411,
+    "issued_at": "2021-06-03T07:03:36.248111+00:00",
     "name": "Root Superuser",
     "namespace": "walkthrough_test",
     "notification_token": null,
     "role": null,
     "role_alias": null,
     "site_id": "",
-    "token": "3c4f62c5b9bd49ef83bef8833cdbe7b7",
+    "token": "0d156383e6b44be49b8052f7aa16568f",
     "url": "https://localhost.icethree.com/v1/tasks/walkthrough_test/test_module.test_function_with_meta_as_fixed_arg"
 }</span>
 
@@ -1452,7 +1468,7 @@ Files example_data.jpg and /tmp/example_data.jpg are identical
 <span class="ansi33">Calling: api.run_task(walkthrough_test, test_module.test_function_with_no_args) (attempt 1/10)</span>
 <span class="ansi33">Running task walkthrough_test.test_module.test_function_with_no_args</span><span class="ansi33">.</span><span class="ansi31">
 Status: failed</span>
-<span class="ansi31">Task walkthrough_test/a9e7fb44-73f8-4f2e-8543-0f2bf215dc17 raised an exception (log id 19e47cfb69a24469993a08772107f7f1)</span>
+<span class="ansi31">Task walkthrough_test/b2047ebc-f73c-4f4c-a054-c60124d61e78 raised an exception (log id dfb5c67c8841435dad27e5eab356b527)</span>
 Aborted!
 &gt;true
 
@@ -1461,7 +1477,7 @@ Aborted!
 <span class="ansi33">Calling: api.run_task(walkthrough_test, test_module.test_function_with_single_arg_and_no_meta) (attempt 1/10)</span>
 <span class="ansi33">Running task walkthrough_test.test_module.test_function_with_single_arg_and_no_meta</span><span class="ansi33">.</span><span class="ansi31">
 Status: failed</span>
-<span class="ansi31">Task walkthrough_test/79d64de2-ad5a-44db-a1c7-0f7634f2c8d7 raised an exception (log id 767dd8c4d8b34efd99515d6222c66405)</span>
+<span class="ansi31">Task walkthrough_test/3a1aa727-1328-4cd8-b775-72ca1c618f85 raised an exception (log id 10473e38692548889c49ce9c2ff44ace)</span>
 Aborted!
 &gt;true
 
@@ -1470,7 +1486,7 @@ Aborted!
 <span class="ansi33">Calling: api.run_task(walkthrough_test, test_module.test_function_with_single_kwarg) (attempt 1/10)</span>
 <span class="ansi33">Running task walkthrough_test.test_module.test_function_with_single_kwarg</span><span class="ansi33">.</span><span class="ansi31">
 Status: failed</span>
-<span class="ansi31">Task walkthrough_test/cd7c7122-c998-4482-97a8-e6340bef26ac raised an exception (log id e582310e3e5e494c854cb623be443008)</span>
+<span class="ansi31">Task walkthrough_test/6bd63f60-7dbd-41a0-ac93-91fa47c46997 raised an exception (log id 6d7f9eb1b8a249c9b00ab9816ac9a403)</span>
 Aborted!
 &gt;true
 
@@ -1479,7 +1495,7 @@ Aborted!
 <span class="ansi33">Calling: api.run_task(walkthrough_test, test_module.test_function_for_posted_data) (attempt 1/10)</span>
 <span class="ansi33">Running task walkthrough_test.test_module.test_function_for_posted_data</span><span class="ansi33">.</span><span class="ansi31">
 Status: failed</span>
-<span class="ansi31">Task walkthrough_test/ff57ce1a-24a4-41ee-9a33-611161210576 raised an exception (log id f26c69780b16493f87671bcc5d862964)</span>
+<span class="ansi31">Task walkthrough_test/6808be52-2493-4e8f-ba60-6bc1e266bd54 raised an exception (log id d5d5bc0f1ca04f3988d89a1ef37cd010)</span>
 Aborted!
 &gt;true
 
