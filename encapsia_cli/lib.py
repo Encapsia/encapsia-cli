@@ -253,7 +253,9 @@ class MaxRetriesExceededError(Exception):
     pass
 
 
-def resilient_call(fn, *args, description=None, idempotent=False, max_retries=10, **kwargs):
+def resilient_call(
+    fn, *args, description=None, idempotent=False, max_retries=10, **kwargs
+):
     count = 1
     if description is None:
         description = f"{fn.__qualname__}(...)"

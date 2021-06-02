@@ -61,7 +61,9 @@ def set(obj, key, value):
     """Store value against given key."""
     api = lib.get_api(**obj)
     value = lib.parse(value, "json")
-    lib.resilient_call(api.set_config, key, value, description=f"api.set_config({key}, <value>)")
+    lib.resilient_call(
+        api.set_config, key, value, description=f"api.set_config({key}, <value>)"
+    )
 
 
 @main.command()
