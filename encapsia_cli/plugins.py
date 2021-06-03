@@ -139,7 +139,7 @@ def _install_plugin(api, filename: Path, print_output: bool = False):
         idempotent=True,  # re-uploading a blob is safe
     )
     lib.log(f"Uploaded {filename} to blob: {blob_id}")
-    lib.run_plugins_task(
+    return lib.run_plugins_task(
         api,
         "install_plugin",
         dict(blob_id=blob_id),
@@ -350,9 +350,11 @@ def install(obj, versions, show_logs, latest_existing, plugins):
     if to_install:
         api = lib.get_api(**obj)
         for pi in to_install:
-            _install_plugin(
+            success = _install_plugin(
                 api, plugins_local_dir / pi.get_filename(), print_output=show_logs
             )
+        if not success:
+            lib.log_error("Some plugins failed to install.", abort=True)
     else:
         lib.log("Nothing to do!")
 
