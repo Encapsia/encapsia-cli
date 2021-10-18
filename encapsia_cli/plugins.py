@@ -458,7 +458,7 @@ def dev_update(obj, directory):
                 result = lib.run_plugins_task(
                     api,
                     "dev_update_plugin",
-                    dict(),
+                    {},
                     "Uploading to server",
                     data=lib.create_targz_as_bytes(temp_directory),
                 )
@@ -498,7 +498,7 @@ def dev_destroy(obj, all, namespaces):
         lib.run_plugins_task(
             api,
             "dev_wipe",
-            dict(),
+            {},
             "Destroying all namespaces",
         )
     else:
