@@ -132,11 +132,8 @@ def _install_plugin(api, filename: Path, print_output: bool = False):
     """Use the API to install plugin directly from a file."""
     if not filename.is_file():
         lib.log_error(f"Cannot find plugin: {filename}", abort=True)
-    blob_id = lib.resilient_call(
-        api.upload_file_as_blob,
+    blob_id = api.upload_file_as_blob(
         filename.as_posix(),
-        description=f"api.upload_file_as_blob({filename})",
-        idempotent=True,  # re-uploading a blob is safe
     )
     lib.log(f"Uploaded {filename} to blob: {blob_id}")
     return lib.run_plugins_task(
@@ -145,7 +142,7 @@ def _install_plugin(api, filename: Path, print_output: bool = False):
         dict(blob_id=blob_id),
         "Installing",
         print_output=print_output,
-        idempotent=True,  # re-installing a plugin should be safe
+        is_idempotent=True,  # re-installing a plugin should be safe
     )
 
 
@@ -196,12 +193,9 @@ def logs(obj, plugins):
     """Print the latest install logs for given plugins."""
     api = lib.get_api(**obj)
     # Despite the name, this only fetches the latest log for each plugin, not all!
-    raw_info = lib.resilient_call(
-        api.run_view,
+    raw_info = api.run_view(
         "pluginsmanager",
         "all_plugin_logs",
-        description="api.run_view('pluginsmanager', 'all_plugin_logs')",
-        idempotent=True,
     )
     if plugins:
         # Filter to specified plugins.

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "encapsia-cli"
-version = "0.5.0"
+version = "0.5.1"
 description = "Client CLI for talking to an Encapsia system."
 readme = "README.md"
 authors = ["Timothy Corbett-Clark <timothy.corbettclark@gmail.com>"]
@@ -20,8 +20,8 @@ click-completion = "^0.5.0"
 click-shell = "^2.0"
 tabulate = "^0.8.3"
 httpie = "^2.2"
+encapsia-api = "^0.3.0"
 # encapsia-api = {path = "../encapsia-api/"} # Only needed during development against unreleased versions of encapsia-api
-encapsia-api = "^0.2.6"
 http-prompt = {version = "^1.0",optional = true}
 boto3 = "^1.14.29"
 semver = "^2.10.2"

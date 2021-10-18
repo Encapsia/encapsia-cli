@@ -148,10 +148,8 @@ def visual_poll(message, poll, NoTaskResultYet, wait=0.2):
         progress_char = "."
         try:
             result = poll()
-        except requests.exceptions.ConnectTimeout:
-            progress_char = click.style("T", fg="red")
-        except requests.exceptions.ConnectionError:
-            progress_char = click.style("C", fg="red")
+        except requests.exceptions.RequestException:
+            progress_char = click.style("E", fg="red")
         log(progress_char, nl=False)
         time.sleep(wait)
         count += 1
@@ -162,18 +160,23 @@ def visual_poll(message, poll, NoTaskResultYet, wait=0.2):
 
 
 def run_task(
-    api, namespace, name, params, message, upload=None, download=None, idempotent=False
+    api,
+    namespace,
+    name,
+    params,
+    message,
+    upload=None,
+    download=None,
+    is_idempotent=False,
 ):
     """Return the raw json result or log (HTTP) error and abort."""
-    poll, NoTaskResultYet = resilient_call(
-        api.run_task,
+    poll, NoTaskResultYet = api.run_task(
         namespace,
         name,
         params,
-        description=f"api.run_task({namespace}, {name})",
         upload=upload,
         download=download,
-        idempotent=idempotent,
+        is_idempotent=is_idempotent,
     )
     try:
         return visual_poll(message, poll, NoTaskResultYet)
@@ -184,7 +187,7 @@ def run_task(
 
 
 def run_plugins_task(
-    api, name, params, message, data=None, print_output=True, idempotent=False
+    api, name, params, message, data=None, print_output=True, is_idempotent=False
 ):
     """Log the result from pluginmanager, which will either be successful or not."""
     reply = run_task(
@@ -194,7 +197,7 @@ def run_plugins_task(
         params,
         message,
         upload=data,
-        idempotent=idempotent,
+        is_idempotent=is_idempotent,
     )
     if reply["status"] == "ok":
         if print_output:
@@ -214,18 +217,16 @@ def run_job(
     message,
     upload=None,
     download=None,
-    idempotent=False,
+    is_idempotent=False,
 ):
     """Run job, wait for it to complete, and log all joblogs; or log error from task."""
-    poll, NoResultYet = resilient_call(
-        api.run_job,
+    poll, NoResultYet = api.run_job(
         namespace,
         function,
         params,
-        description=f"api.run_job({namespace}, {function})",
         upload=upload,
         download=download,
-        idempotent=idempotent,
+        is_idempotent=is_idempotent,
     )
     try:
         return visual_poll(message, poll, NoResultYet)
@@ -235,39 +236,13 @@ def run_job(
         log_error(result.get("exc_info"), abort=True)
 
 
-def dbctl_action(api, name, params, message, idempotent=False):
-    poll, NoTaskResultYet = resilient_call(
-        api.dbctl_action,
+def dbctl_action(api, name, params, message, is_idempotent=False):
+    poll, NoTaskResultYet = api.dbctl_action(
         name,
         params,
-        description=f"api.dbctl_action({name})",
-        idempotent=idempotent,
+        is_idempotent=is_idempotent,
     )
     result = visual_poll(message, poll, NoTaskResultYet)
     if result["status"] != "ok":
         raise click.Abort()
     return result["result"]
-
-
-class MaxRetriesExceededError(Exception):
-    pass
-
-
-def resilient_call(
-    fn, *args, description=None, idempotent=False, max_retries=10, **kwargs
-):
-    count = 1
-    if description is None:
-        description = f"{fn.__qualname__}(...)"
-    while True:
-        log(f"Calling: {description} (attempt {count}/{max_retries})")
-        try:
-            return fn(*args, **kwargs)
-        except requests.exceptions.ConnectionError:
-            pass
-        except requests.exceptions.ConnectTimeout:
-            if not idempotent:
-                raise
-        count += 1
-        if count > max_retries:
-            raise MaxRetriesExceededError
