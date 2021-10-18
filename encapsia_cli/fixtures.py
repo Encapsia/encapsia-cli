@@ -14,7 +14,13 @@ def list_fixtures(obj):
     """List available fixtures."""
     api = lib.get_api(**obj)
     lib.log_output(
-        lib.dbctl_action(api, "list_fixtures", dict(), "Fetching list of fixtures")
+        lib.dbctl_action(
+            api,
+            "list_fixtures",
+            dict(),
+            "Fetching list of fixtures",
+            is_idempotent=True,
+        )
     )
 
 

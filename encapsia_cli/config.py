@@ -13,9 +13,7 @@ def main():
 def show(obj):
     """Show entire configuration."""
     api = lib.get_api(**obj)
-    config = lib.resilient_call(
-        api.get_all_config, description="api.get_all_config()", idempotent=True
-    )
+    config = api.get_all_config()
     lib.pretty_print(config, "json")
 
 
@@ -25,9 +23,7 @@ def show(obj):
 def save(obj, output):
     """Save entire configuration to given file."""
     api = lib.get_api(**obj)
-    config = lib.resilient_call(
-        api.get_all_config, description="api.get_all_config()", idempotent=True
-    )
+    config = api.get_all_config()
     lib.pretty_print(config, "json", output=output)
 
 
@@ -38,7 +34,7 @@ def load(obj, input):
     """Load (merge) configuration from given file."""
     api = lib.get_api(**obj)
     data = lib.parse(input.read(), "json")
-    lib.resilient_call(api.set_config_multi, data, description="api.set_config_multi()")
+    api.set_config_multi(data)
 
 
 @main.command()
@@ -47,9 +43,7 @@ def load(obj, input):
 def get(obj, key):
     """Retrieve value against given key."""
     api = lib.get_api(**obj)
-    value = lib.resilient_call(
-        api.get_config, key, description=f"api.get_config({key})", idempotent=True
-    )
+    value = api.get_config(key)
     lib.pretty_print(value, "json")
 
 
@@ -61,9 +55,7 @@ def set(obj, key, value):
     """Store value against given key."""
     api = lib.get_api(**obj)
     value = lib.parse(value, "json")
-    lib.resilient_call(
-        api.set_config, key, value, description=f"api.set_config({key}, <value>)"
-    )
+    api.set_config(key, value)
 
 
 @main.command()
@@ -72,4 +64,4 @@ def set(obj, key, value):
 def delete(obj, key):
     """Delete value against given key."""
     api = lib.get_api(**obj)
-    lib.resilient_call(api.delete_config, key, description=f"api.delete_config({key})")
+    api.delete_config(key)

@@ -20,7 +20,9 @@ def backup(obj, filename):
     if filename:
         filename = pathlib.Path(filename)
     api = lib.get_api(**obj)
-    handle = lib.dbctl_action(api, "backup_database", dict(), "Backing up database")
+    handle = lib.dbctl_action(
+        api, "backup_database", dict(), "Backing up database", is_idempotent=True
+    )
     filename = api.dbctl_download_data(handle, filename)
     lib.log(f"Downloaded {filename.stat().st_size} bytes to {filename}")
 

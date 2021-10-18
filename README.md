@@ -24,11 +24,11 @@ See the `walkthrough_tests` directory for bash scripts which exercise the CLI.
 
 Run them e.g. with:
 
-    bash walkthrough_tests/all.sh
+    poetry run bash walkthrough_tests/all.sh
 
 or test specific subcommands with:
 
-    bash walkthrough_tests/token.sh
+    poetry run bash walkthrough_tests/token.sh
 
 Note that these tests are *not* self-verifying; they just provide helpful coverage, assurance, and working documentation.
 
@@ -39,6 +39,6 @@ Note that these tests are *not* self-verifying; they just provide helpful covera
 * Run: `poetry run flake8 .`
 * Run: `poetry run mypy .`
 * Ensure "tests" run ok (see above).
-* Capture test output and commit with: `bash walkthrough_tests/all.sh 2>&1 | ansi2html -f 80% >WALKTHROUGH.html`
+* Capture test output and commit with: `poetry run bash walkthrough_tests/all.sh 2>&1 | poetry run ansi2html -f 80% >WALKTHROUGH.html`
 * Create `requirements.txt` for Snyk scanning with: `poetry export -f requirements.txt >requirements.txt`
 * Ensure git tag, package version, and `enacpsia_cli.__version__` are all equal.

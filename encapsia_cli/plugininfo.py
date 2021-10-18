@@ -230,12 +230,9 @@ class PluginInfos:
     def make_from_encapsia(host: str) -> PluginInfos:
         # TODO: use pluginsmanager.plugins() if it exists
         api = lib.get_api(host=host)
-        raw_info = lib.resilient_call(
-            api.run_view,
+        raw_info = api.run_view(
             "pluginsmanager",
             "installed_plugins_with_tags",
-            description="api.run_view('pluginsmanager', 'installed_plugins_with_tags')",
-            idempotent=True,
         )
         pis = []
         for i in raw_info:
