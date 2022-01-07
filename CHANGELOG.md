@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [next]
 
-- Nothing yet.
+### Fixed
+
+- `plugins add` will now abort if it cannot find some of the requested specs in S3
 
 ## [0.5.1] - 2021-10-19
 
