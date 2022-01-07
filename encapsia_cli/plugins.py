@@ -640,11 +640,19 @@ def add(obj, versions, latest_existing, plugins):
         )
     if specs_to_search_in_s3:
         s3_versions = PluginInfos.make_from_s3_buckets(plugins_s3_buckets)
-        to_download_from_s3.extend(
-            pi
-            for spec in specs_to_search_in_s3
-            if (pi := s3_versions.latest_version_matching_spec(spec)) is not None
-        )
+        not_found = []
+        for spec in specs_to_search_in_s3:
+            if (pi := s3_versions.latest_version_matching_spec(spec)) is not None:
+                to_download_from_s3.append(pi)
+            else:
+                not_found.append(spec)
+        if not_found:
+            lib.log_error(
+                "Some plugins could not be found in S3: {}".format(
+                    ", ".join(str(s) for s in not_found)
+                ),
+                abort=True
+            )
     if to_download_from_s3:
         for pi in to_download_from_s3:
             _add_to_local_store_from_s3(pi, plugins_local_dir, force=plugins_force)
