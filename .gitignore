@@ -13,3 +13,4 @@ pip-wheel-metadata/
 .encapsia/
 .vscode/
 .idea/
+.python-version
