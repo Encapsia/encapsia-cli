@@ -30,7 +30,7 @@ defusedxml==0.7.1; python_version >= "3.6" and python_full_version < "3.0.0" or 
 encapsia-api==0.3.0; python_version >= "3.6" and python_version < "4.0" \
     --hash=sha256:1d6f6d5a57b8bd04a74e2a3fd38a2fdff234260cc3c0b60b09583d9a2eb7d941 \
     --hash=sha256:c327dd9f7f2a58db9bc4b1dd324b72657f90c381473e522599e057e4c63ede80
-httpie==2.6.0; python_version >= "3.6" \
+httpie==3.1.0; python_version >= "3.6" \
     --hash=sha256:58fe1b845b4015a04b0dfc172b6f85c0960cebedc44cee09c9146291692083d7 \
     --hash=sha256:ef929317b239bbf0a5bb7159b4c5d2edbfc55f8a0bcf9cd24ce597daec2afca5
 idna==3.3; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.6.0" and python_version >= "3.6" \
