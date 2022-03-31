@@ -26,6 +26,7 @@ http-prompt = {version = "^1.0",optional = true}
 boto3 = "^1.14.29"
 semver = "^2.10.2"
 arrow = "^0.16.0"
+shellingham = "^1.4.0"
 
 [tool.poetry.extras]
 httpie-shell = ["http-prompt"]
@@ -44,6 +45,14 @@ addopts = "-ra"
 testpaths = [
     "tests",
 ]
+
+[tool.isort]
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+line_length = 88
+lines_after_imports = 2
 
 [build-system]
 requires = ["poetry>=1.0.5"]
