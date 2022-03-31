@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [next]
 
+### Fixed
+
+- `plugins add` will now abort if it cannot find some of the requested specs in S3
+
 ### Added
 
 - A new `token transfer` subcommand, allowing to obtain a token for a different user (current user's credentials permitting) and printing it out as plain text or shell command setting encapsia environment variables.
