@@ -13,6 +13,7 @@ import semver
 
 from encapsia_cli import lib, s3
 
+
 ALLOWED_PLUGIN_NAME = "[a-z][a-z0-9_]*"
 ALLOWED_VERSION = "[0-9][a-zA-Z0-9.+-]*"
 ALLOWED_VARIANT = "[a-zA-Z0-9_]+"

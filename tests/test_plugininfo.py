@@ -8,6 +8,7 @@ import toml
 
 from encapsia_cli.plugininfo import PluginInfo, PluginInfos, PluginSpec, PluginSpecs
 
+
 # Note: these need to be both extended (in coverage) and reduced (in test data duplication).
 
 

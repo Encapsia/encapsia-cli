@@ -18,6 +18,7 @@ import encapsia_cli.users
 import encapsia_cli.version
 from encapsia_cli import lib
 
+
 #: Initialise click completion.
 click_completion.init()
 
