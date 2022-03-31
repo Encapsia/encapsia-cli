@@ -651,7 +651,7 @@ def add(obj, versions, latest_existing, plugins):
                 "Some plugins could not be found in S3: {}".format(
                     ", ".join(str(s) for s in not_found)
                 ),
-                abort=True
+                abort=True,
             )
     if to_download_from_s3:
         for pi in to_download_from_s3:
