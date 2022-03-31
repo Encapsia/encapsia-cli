@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - `plugins add` will now abort if it cannot find some of the requested specs in S3
+- Clocked httpie to 3.1.0 to fix security vulnerabilities.
 
 ### Added
 
