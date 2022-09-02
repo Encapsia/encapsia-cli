@@ -1,4 +1,3 @@
-from ast import Break
 import click
 
 from encapsia_cli import lib
