@@ -46,8 +46,7 @@ def get(obj, key):
     try:
         value = api.get_config(key)
     except KeyError as e:
-        lib.log_error(f"error: could not get key {e}: No configuration with this key!")
-        return
+        lib.log_error(f"error: could not get key {e}: No configuration with this key!", abort=True)
     lib.pretty_print(value, "json")
 
 @main.command()
