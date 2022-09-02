@@ -236,7 +236,7 @@ class PluginInfos:
         )
         pis = []
         for i in raw_info:
-            tags = i.get("plugin_tags")
+            tags = i.get("manifest").get("tags")
             if not isinstance(tags, list):
                 tags = []
             try:
