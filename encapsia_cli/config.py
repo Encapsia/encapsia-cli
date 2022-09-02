@@ -42,8 +42,8 @@ def load(obj, input):
 @click.pass_obj
 def get(obj, key):
     """Retrieve value against given key."""
+    api = lib.get_api(**obj)
     try:
-        api = lib.get_api(**obj)
         value = api.get_config(key)
         lib.pretty_print(value, "json")
     except KeyError as e:
