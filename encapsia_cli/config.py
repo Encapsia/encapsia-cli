@@ -1,3 +1,4 @@
+from ast import Break
 import click
 
 from encapsia_cli import lib
@@ -45,10 +46,10 @@ def get(obj, key):
     api = lib.get_api(**obj)
     try:
         value = api.get_config(key)
-        lib.pretty_print(value, "json")
     except KeyError as e:
         lib.log_error(f"error: could not get key {e}: No configuration with this key!")
-
+        return
+    lib.pretty_print(value, "json")
 
 @main.command()
 @click.argument("key")
