@@ -94,6 +94,7 @@ def _add_to_local_store_from_s3(
                 f"Downloaded {pi.get_s3_bucket()}/{pi.get_s3_name()} and saved to {target}"
             )
 
+
 def _add_to_temp_store_from_s3(
     pi: PluginInfo, plugins_local_dir: Path, force: bool = False
 ):
@@ -103,7 +104,7 @@ def _add_to_temp_store_from_s3(
     if not os.path.exists(temp_os_path):
         os.mkdir(temp_os_path)
 
-    temp_directory = plugins_local_dir/temp_directory_string
+    temp_directory = plugins_local_dir / temp_directory_string
     _add_to_local_store_from_s3(pi, temp_directory, force)
 
 
@@ -162,9 +163,9 @@ def _install_plugin(api, filename: Path, print_output: bool = False):
         is_idempotent=True,  # re-installing a plugin should be safe
     )
 
+
 def _cleanup(temp_path):
     shutil.rmtree(temp_path)
-    print("Removed temp file")
 
 
 @click.group("plugins")
@@ -345,9 +346,6 @@ def install(obj, versions, show_logs, latest_existing, plugins):
 
     # Temporarily get the plugins from S3
     for s3_plugin in s3_plugins:
-        print("s3 bucket ->" + s3_plugin.get_s3_bucket())
-        print("s3 name ->" + s3_plugin.get_s3_name())
-
         _add_to_temp_store_from_s3(s3_plugin, plugins_local_dir, force=plugins_force)
         plugin_info = PluginSpec.make_from_plugininfo(s3_plugin, from_s3=True)
         to_install_candidates.append(plugin_info)
