@@ -1,4 +1,5 @@
 import datetime
+import os
 import shutil
 import tempfile
 import urllib.request
@@ -93,11 +94,27 @@ def _add_to_local_store_from_s3(
                 f"Downloaded {pi.get_s3_bucket()}/{pi.get_s3_name()} and saved to {target}"
             )
 
+def _add_to_temp_store_from_s3(
+    pi: PluginInfo, plugins_local_dir: Path, force: bool = False
+):
+    temp_directory_string = "temp"
+    temp_os_path = os.path.join(plugins_local_dir, temp_directory_string)
 
-def _create_install_plan(candidates, installed, local_store, force_install):
+    if not os.path.exists(temp_os_path):
+        os.mkdir(temp_os_path)
+
+    temp_directory = plugins_local_dir/temp_directory_string
+    _add_to_local_store_from_s3(pi, temp_directory, force)
+
+
+def _create_install_plan(candidates, installed, local_store, temp_store, force_install):
     plan = []
     for spec in candidates:
-        candidate = local_store.latest_version_matching_spec(spec)
+        if spec.from_s3:
+            candidate = temp_store.latest_version_matching_spec(spec)
+        else:
+            candidate = local_store.latest_version_matching_spec(spec)
+
         if not candidate:
             lib.log_error(
                 f"Could not find plugin matching {spec} in local store!", abort=True
@@ -144,6 +161,10 @@ def _install_plugin(api, filename: Path, print_output: bool = False):
         print_output=print_output,
         is_idempotent=True,  # re-installing a plugin should be safe
     )
+
+def _cleanup(temp_path):
+    shutil.rmtree(temp_path)
+    print("Removed temp file")
 
 
 @click.group("plugins")
@@ -292,7 +313,9 @@ def install(obj, versions, show_logs, latest_existing, plugins):
     """
     plugins_local_dir = obj["plugins_local_dir"]
     plugins_force = obj["plugins_force"]
+    plugins_s3_buckets = obj["plugins_s3_buckets"]
     host = obj["host"]
+    s3_plugins = PluginInfos.make_from_s3_buckets(plugins_s3_buckets)
 
     # Create a list of installation candidates.
     to_install_candidates = []
@@ -320,12 +343,23 @@ def install(obj, versions, show_logs, latest_existing, plugins):
             for pi in PluginInfos.make_from_encapsia(host)
         )
 
+    # Temporarily get the plugins from S3
+    for s3_plugin in s3_plugins:
+        print("s3 bucket ->" + s3_plugin.get_s3_bucket())
+        print("s3 name ->" + s3_plugin.get_s3_name())
+
+        _add_to_temp_store_from_s3(s3_plugin, plugins_local_dir, force=plugins_force)
+        plugin_info = PluginSpec.make_from_plugininfo(s3_plugin, from_s3=True)
+        to_install_candidates.append(plugin_info)
+
     # Work out and list installation plan.
     # to_install_candidates = sorted(PluginInfos(to_install_candidates))
     installed = PluginInfos.make_from_encapsia(host)
     local_store = PluginInfos.make_from_local_store(plugins_local_dir)
+    temp_path = plugins_local_dir/"temp"
+    temp_store = PluginInfos.make_from_local_store(plugins_local_dir/"temp")
     plan = _create_install_plan(
-        to_install_candidates, installed, local_store, force_install=plugins_force
+        to_install_candidates, installed, local_store, temp_store, force_install=plugins_force
     )
     to_install = [i[0] for i in plan if i[4] != "skip"]
     headers = ["name*", "existing version**", "new version**", "action"]
@@ -334,10 +368,11 @@ def install(obj, versions, show_logs, latest_existing, plugins):
 
     # Seek confirmation unless force.
     if to_install and not plugins_force:
-        click.confirm(
+        if not click.confirm(
             "Do you wish to proceed with the above plan?",
-            abort=True,
-        )
+        ):
+            _cleanup(temp_path)
+            lib.log_error("", abort=True)
 
     # Install them.
     lib.log("")
@@ -348,9 +383,11 @@ def install(obj, versions, show_logs, latest_existing, plugins):
                 api, plugins_local_dir / pi.get_filename(), print_output=show_logs
             )
         if not success:
+            _cleanup(temp_path)
             lib.log_error("Some plugins failed to install.", abort=True)
     else:
         lib.log("Nothing to do!")
+    _cleanup(temp_path)
 
 
 @main.command()
