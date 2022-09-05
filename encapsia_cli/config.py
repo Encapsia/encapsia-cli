@@ -43,7 +43,12 @@ def load(obj, input):
 def get(obj, key):
     """Retrieve value against given key."""
     api = lib.get_api(**obj)
-    value = api.get_config(key)
+    try:
+        value = api.get_config(key)
+    except KeyError as e:
+        lib.log_error(
+            f"error: could not get key {e}: No configuration with this key!", abort=True
+        )
     lib.pretty_print(value, "json")
 
 
