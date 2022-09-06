@@ -305,7 +305,10 @@ def install(obj, versions, show_logs, latest_existing, plugins):
                 _add_to_local_store_from_uri(
                     plugins_local_dir, plugin_filename.as_uri(), force=True
                 )
-                to_install_candidates.append(PluginInfo.make_from_filename(plugin_filename))
+                plugin_info = PluginInfo.make_from_filename(plugin_filename)
+                plugin_spec = PluginSpec.make_from_plugininfo(plugin_info)
+                # Need to add a plugin_spec in list below
+                to_install_candidates.append(plugin_spec)
         else:
             # Else assume it is a spec for a plugin already in the local store.
             to_install_candidates.append(PluginSpec.make_from_string(plugin))
