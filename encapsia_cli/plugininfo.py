@@ -294,7 +294,7 @@ class PluginSpec:
     ANY_VARIANT: T.ClassVar[T_Variant] = T_AnyVariant(object())
     
     PATH_REGEX : T.ClassVar[re.Pattern] = re.compile(
-        rf"\/.*?\.[a-z][a-z0-9_*.]+"
+        rf"\/?.*?\.[a-z][a-z0-9_*.]+"
     )
 
     def __post_init__(self):
@@ -331,6 +331,9 @@ class PluginSpec:
         * <plugin_name>-<version_prefix>
         * <plugin_name>-variant-<variant_name>-<version_prefix>
         """
+        
+        print(spec_string)
+        
         m = cls.PLUGIN_SPEC_NVV_REGEX.match(spec_string)
         if m:
             return m.group(1), m.group(2), m.group(3)  # name, variant, version_prefix
