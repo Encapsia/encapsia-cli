@@ -298,7 +298,7 @@ def install(obj, versions, show_logs, latest_existing, plugins):
     to_install_candidates = []
     for plugin in plugins:
         # Check if string is a path to a plugin
-        if PluginSpec.is_url(plugin):
+        if PluginInfo.is_file_path(plugin):
             plugin_filename = Path(plugin).resolve()
             if plugin_filename.is_file():
                 # If it looks like a file then just add it.

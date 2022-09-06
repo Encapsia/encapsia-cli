@@ -17,6 +17,7 @@ from encapsia_cli import lib, s3
 ALLOWED_PLUGIN_NAME = "[a-z][a-z0-9_]*"
 ALLOWED_VERSION = "[0-9][a-zA-Z0-9.+-]*"
 ALLOWED_VARIANT = "[a-zA-Z0-9_]+"
+DIR_FORMAT = "[A-z0-9-_+]*/"
 
 T_VersionDict = T.Union[T.Dict[str, str], T.Dict[str, T.Dict[str, T.Any]]]
 T_AnyVariant = T.NewType("T_AnyVariant", object)
@@ -59,6 +60,9 @@ class PluginInfo:
     )
     FOUR_DIGIT_VERSION_REGEX = re.compile(r"([0-9]+)\.([0-9]+)\.([0-9]+)\.([0-9]+)")
     DEV_VERSION_REGEX = re.compile(r"([0-9]+)\.([0-9]+)\.([0-9]+)dev([0-9]+)")
+    PATH_REGEX: T.ClassVar[re.Pattern] = re.compile(
+        rf"/?(({DIR_FORMAT})*)plugin-({ALLOWED_PLUGIN_NAME})(?:-variant-({ALLOWED_VARIANT}))?-({ALLOWED_VERSION})\.tar\.gz$"
+    )
 
     def __init__(
         self,
@@ -189,6 +193,13 @@ class PluginInfo:
             # In the unlikely scenario that plugin files are stored flat in a bucket.
             return self.get_filename()
 
+    @classmethod
+    def is_file_path(cls, spec_string: str) -> bool:
+        m = cls.PATH_REGEX.match(spec_string)
+        if m:
+            return True
+        return False
+
 
 class PluginInfos:
     """Container for one or more PluginInfo."""
@@ -292,10 +303,6 @@ class PluginSpec:
         rf"^({ALLOWED_PLUGIN_NAME})(?i:-ANY)(?:-({ALLOWED_VERSION}))?$"
     )
     ANY_VARIANT: T.ClassVar[T_Variant] = T_AnyVariant(object())
-    
-    PATH_REGEX : T.ClassVar[re.Pattern] = re.compile(
-        rf"\/?.*?\.[a-z][a-z0-9_*.]+"
-    )
 
     def __post_init__(self):
         if self.variant is None:
@@ -331,9 +338,6 @@ class PluginSpec:
         * <plugin_name>-<version_prefix>
         * <plugin_name>-variant-<variant_name>-<version_prefix>
         """
-        
-        print(spec_string)
-        
         m = cls.PLUGIN_SPEC_NVV_REGEX.match(spec_string)
         if m:
             return m.group(1), m.group(2), m.group(3)  # name, variant, version_prefix
@@ -414,14 +418,6 @@ class PluginSpec:
         else:
             version_dict = {self.name: {"version": self.version_prefix, "exact": False}}
         return version_dict
-
-
-    @classmethod
-    def is_url(cls, spec_string: str) -> bool:
-        m = cls.PATH_REGEX.match(spec_string)
-        if m:
-            return True
-        return False
 
 
 class PluginSpecs:

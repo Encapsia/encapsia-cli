@@ -67,7 +67,7 @@ encapsia plugins upstream
 encapsia plugins upstream conduct-1.6 --all-versions
 
 test "Install a plugin using a relative path"
-encapsia --host=npocroianu15 plugins install dir/plugin-foo-1.0.0.tar.gz
+encapsia plugins install dir/plugin-foo-1.0.0.tar.gz
 
 test "Install a plugin using an absolute path"
-encapsia --host=npocroianu15 plugins install "$(cd "$(dirname -- "$1")" >/dev/null; pwd -P)/$(basename -- "$1")dir/plugin-foo-1.0.0.tar.gz"
+encapsia plugins install "$(cd "$(dirname -- "$1")" >/dev/null; pwd -P)/$(basename -- "$1")dir/plugin-foo-1.0.0.tar.gz"
