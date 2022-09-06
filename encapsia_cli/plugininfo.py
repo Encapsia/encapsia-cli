@@ -292,6 +292,10 @@ class PluginSpec:
         rf"^({ALLOWED_PLUGIN_NAME})(?i:-ANY)(?:-({ALLOWED_VERSION}))?$"
     )
     ANY_VARIANT: T.ClassVar[T_Variant] = T_AnyVariant(object())
+    
+    PATH_REGEX : T.ClassVar[re.Pattern] = re.compile(
+        rf"\/.*?\.[a-z][a-z0-9_*.]+"
+    )
 
     def __post_init__(self):
         if self.variant is None:
@@ -407,6 +411,14 @@ class PluginSpec:
         else:
             version_dict = {self.name: {"version": self.version_prefix, "exact": False}}
         return version_dict
+
+
+    @classmethod
+    def is_url(cls, spec_string: str) -> bool:
+        m = cls.PATH_REGEX.match(spec_string)
+        if m:
+            return True
+        return False
 
 
 class PluginSpecs:
