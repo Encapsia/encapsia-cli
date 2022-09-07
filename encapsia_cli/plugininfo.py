@@ -17,7 +17,6 @@ from encapsia_cli import lib, s3
 ALLOWED_PLUGIN_NAME = "[a-z][a-z0-9_]*"
 ALLOWED_VERSION = "[0-9][a-zA-Z0-9.+-]*"
 ALLOWED_VARIANT = "[a-zA-Z0-9_]+"
-DIR_FORMAT = "[A-z0-9-_+]*/"
 
 T_VersionDict = T.Union[T.Dict[str, str], T.Dict[str, T.Dict[str, T.Any]]]
 T_AnyVariant = T.NewType("T_AnyVariant", object)
@@ -55,13 +54,14 @@ def get_variant_from_tags(tags):
 class PluginInfo:
     """Parse and use plugin information like name, variant and version."""
 
-    PLUGIN_FILENAME_REGEX = re.compile(
+    PLUGIN_FILENAME_REGEX: T.ClassVar[re.Pattern] = re.compile(
         rf"^.*plugin-({ALLOWED_PLUGIN_NAME})(?:-variant-({ALLOWED_VARIANT}))?-({ALLOWED_VERSION})\.tar\.gz$"
     )
-    FOUR_DIGIT_VERSION_REGEX = re.compile(r"([0-9]+)\.([0-9]+)\.([0-9]+)\.([0-9]+)")
-    DEV_VERSION_REGEX = re.compile(r"([0-9]+)\.([0-9]+)\.([0-9]+)dev([0-9]+)")
-    PATH_REGEX: T.ClassVar[re.Pattern] = re.compile(
-        rf"/?(({DIR_FORMAT})*)plugin-({ALLOWED_PLUGIN_NAME})(?:-variant-({ALLOWED_VARIANT}))?-({ALLOWED_VERSION})\.tar\.gz$"
+    FOUR_DIGIT_VERSION_REGEX: T.ClassVar[re.Pattern] = re.compile(
+        r"([0-9]+)\.([0-9]+)\.([0-9]+)\.([0-9]+)"
+    )
+    DEV_VERSION_REGEX: T.ClassVar[re.Pattern] = re.compile(
+        r"([0-9]+)\.([0-9]+)\.([0-9]+)dev([0-9]+)"
     )
 
     def __init__(
@@ -194,11 +194,8 @@ class PluginInfo:
             return self.get_filename()
 
     @classmethod
-    def is_file_path(cls, spec_string: str) -> bool:
-        m = cls.PATH_REGEX.match(spec_string)
-        if m:
-            return True
-        return False
+    def looks_like_path_to_plugin(cls, spec_string: str) -> bool:
+        return cls.PLUGIN_FILENAME_REGEX.match(spec_string) is not None
 
 
 class PluginInfos:

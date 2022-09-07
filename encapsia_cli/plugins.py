@@ -297,8 +297,7 @@ def install(obj, versions, show_logs, latest_existing, plugins):
     # Create a list of installation candidates.
     to_install_candidates = []
     for plugin in plugins:
-        # Check if string is a path to a plugin
-        if PluginInfo.is_file_path(plugin):
+        if PluginInfo.looks_like_path_to_plugin(plugin):
             plugin_filename = Path(plugin).resolve()
             if plugin_filename.is_file():
                 # If it looks like a file then just add it.
@@ -307,8 +306,11 @@ def install(obj, versions, show_logs, latest_existing, plugins):
                 )
                 plugin_info = PluginInfo.make_from_filename(plugin_filename)
                 plugin_spec = PluginSpec.make_from_plugininfo(plugin_info)
-                # Need to add a plugin_spec in list below
                 to_install_candidates.append(plugin_spec)
+            else:
+                lib.log_error(
+                    f"Could not find a plugin matching the path: {plugin}!"
+                )
         else:
             # Else assume it is a spec for a plugin already in the local store.
             to_install_candidates.append(PluginSpec.make_from_string(plugin))

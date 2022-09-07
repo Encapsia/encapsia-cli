@@ -41,4 +41,4 @@ Note that these tests are *not* self-verifying; they just provide helpful covera
 * Ensure "tests" run ok (see above).
 * Capture test output and commit with: `poetry run bash walkthrough_tests/all.sh 2>&1 | poetry run ansi2html -f 80% >WALKTHROUGH.html`
 * Create `requirements.txt` for Snyk scanning with: `poetry export -f requirements.txt >requirements.txt`
-* Ensure git tag, package version, and `enacpsia_cli.__version__` are all equal.
+* Ensure git tag, package version, and `encapsia_cli.__version__` are all equal.
