@@ -158,12 +158,7 @@ def _install_plugin(api, filename: Path, print_output: bool = False):
     "s3_buckets",
     type=str,
     multiple=True,
-    default=[
-        "encapsia-plugins/cmedtech/pd/staging/apps",
-        "encapsia-plugins/cmedtech/pd/staging/middleware",
-        "encapsia-plugins/cmedtech/pd/staging/insights",
-        "ice-plugins",
-    ],
+    default="ice-plugins",
     help="Name of AWS S3 bucket (or path) containing plugins (may be provided multiple times).",
 )
 @click.option(
