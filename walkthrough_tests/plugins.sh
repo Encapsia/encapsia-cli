@@ -65,3 +65,7 @@ encapsia plugins ls -l
 test "Get info on upstream plugins"
 encapsia plugins upstream
 encapsia plugins upstream conduct-1.6 --all-versions
+
+test "Install a plugin using a path"
+encapsia plugins --force install example_plugins/plugin-foo-1.0.0.tar.gz
+

@@ -297,13 +297,20 @@ def install(obj, versions, show_logs, latest_existing, plugins):
     # Create a list of installation candidates.
     to_install_candidates = []
     for plugin in plugins:
-        plugin_filename = Path(plugin).resolve()
-        if plugin_filename.is_file():
-            # If it looks like a file then just add it.
-            _add_to_local_store_from_uri(
-                plugins_local_dir, plugin_filename.as_uri(), force=True
-            )
-            to_install_candidates.append(PluginInfo.make_from_filename(plugin_filename))
+        if PluginInfo.looks_like_path_to_plugin(plugin):
+            plugin_filename = Path(plugin).resolve()
+            if plugin_filename.is_file():
+                # If it looks like a file then just add it.
+                _add_to_local_store_from_uri(
+                    plugins_local_dir, plugin_filename.as_uri(), force=True
+                )
+                plugin_info = PluginInfo.make_from_filename(plugin_filename)
+                plugin_spec = PluginSpec.make_from_plugininfo(plugin_info)
+                to_install_candidates.append(plugin_spec)
+            else:
+                lib.log_error(
+                    f"The requested plugin '{plugin}', which looks like a path to a file, was not found."
+                )
         else:
             # Else assume it is a spec for a plugin already in the local store.
             to_install_candidates.append(PluginSpec.make_from_string(plugin))

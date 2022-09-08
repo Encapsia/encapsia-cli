@@ -54,11 +54,15 @@ def get_variant_from_tags(tags):
 class PluginInfo:
     """Parse and use plugin information like name, variant and version."""
 
-    PLUGIN_FILENAME_REGEX = re.compile(
+    PLUGIN_FILENAME_REGEX: T.ClassVar[re.Pattern] = re.compile(
         rf"^.*plugin-({ALLOWED_PLUGIN_NAME})(?:-variant-({ALLOWED_VARIANT}))?-({ALLOWED_VERSION})\.tar\.gz$"
     )
-    FOUR_DIGIT_VERSION_REGEX = re.compile(r"([0-9]+)\.([0-9]+)\.([0-9]+)\.([0-9]+)")
-    DEV_VERSION_REGEX = re.compile(r"([0-9]+)\.([0-9]+)\.([0-9]+)dev([0-9]+)")
+    FOUR_DIGIT_VERSION_REGEX: T.ClassVar[re.Pattern] = re.compile(
+        r"([0-9]+)\.([0-9]+)\.([0-9]+)\.([0-9]+)"
+    )
+    DEV_VERSION_REGEX: T.ClassVar[re.Pattern] = re.compile(
+        r"([0-9]+)\.([0-9]+)\.([0-9]+)dev([0-9]+)"
+    )
 
     def __init__(
         self,
@@ -188,6 +192,10 @@ class PluginInfo:
         else:
             # In the unlikely scenario that plugin files are stored flat in a bucket.
             return self.get_filename()
+
+    @classmethod
+    def looks_like_path_to_plugin(cls, spec_string: str) -> bool:
+        return cls.PLUGIN_FILENAME_REGEX.match(spec_string) is not None
 
 
 class PluginInfos:
