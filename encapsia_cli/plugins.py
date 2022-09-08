@@ -309,7 +309,7 @@ def install(obj, versions, show_logs, latest_existing, plugins):
                 to_install_candidates.append(plugin_spec)
             else:
                 lib.log_error(
-                    f"Could not find a plugin matching the path: {plugin}!"
+                    f"The requested plugin '{plugin}', which looks like a path to a file, was not found."
                 )
         else:
             # Else assume it is a spec for a plugin already in the local store.
