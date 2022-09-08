@@ -647,7 +647,7 @@ def add(obj, versions, latest_existing, all_available, plugins):
                     plugin, plugins_local_dir, force=plugins_force
                 )
         else:
-            lib.log("No plugins found in: {plugins_s3_buckets}.")
+            lib.log(f"No plugins found in: {plugins_s3_buckets}.")
         return
 
     for plugin in plugins:
