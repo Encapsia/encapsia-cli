@@ -1,5 +1,4 @@
 import datetime
-import os
 import shutil
 import tempfile
 import urllib.request
@@ -95,27 +94,10 @@ def _add_to_local_store_from_s3(
             )
 
 
-def _add_to_temp_store_from_s3(
-    pi: PluginInfo, plugins_local_dir: Path, force: bool = False
-):
-    temp_directory_string = "temp"
-    temp_os_path = os.path.join(plugins_local_dir, temp_directory_string)
-
-    if not os.path.exists(temp_os_path):
-        os.mkdir(temp_os_path)
-
-    temp_directory = plugins_local_dir / temp_directory_string
-    _add_to_local_store_from_s3(pi, temp_directory, force)
-
-
-def _create_install_plan(candidates, installed, local_store, temp_store, force_install):
+def _create_install_plan(candidates, installed, local_store, force_install):
     plan = []
     for spec in candidates:
-        if spec.from_s3:
-            candidate = temp_store.latest_version_matching_spec(spec)
-        else:
-            candidate = local_store.latest_version_matching_spec(spec)
-
+        candidate = local_store.latest_version_matching_spec(spec)
         if not candidate:
             lib.log_error(
                 f"Could not find plugin matching {spec} in local store!", abort=True
@@ -164,10 +146,6 @@ def _install_plugin(api, filename: Path, print_output: bool = False):
     )
 
 
-def _cleanup(temp_path):
-    shutil.rmtree(temp_path)
-
-
 @click.group("plugins")
 @click.option(
     "--local-dir",
@@ -184,7 +162,7 @@ def _cleanup(temp_path):
         "encapsia-plugins/cmedtech/pd/staging/apps",
         "encapsia-plugins/cmedtech/pd/staging/middleware",
         "encapsia-plugins/cmedtech/pd/staging/insights",
-        "ice-plugins"
+        "ice-plugins",
     ],
     help="Name of AWS S3 bucket (or path) containing plugins (may be provided multiple times).",
 )
@@ -201,13 +179,6 @@ def main(ctx, force, s3_buckets, local_dir):
     ctx.obj["plugins_local_dir"].mkdir(parents=True, exist_ok=True)
     ctx.obj["plugins_s3_buckets"] = s3_buckets
     ctx.obj["plugins_force"] = force
-    # This is for checking if the input values are different from the defaults
-    default_values_dict = dict(zip([command.name for command in ctx.command.params], [command.default for command in ctx.command.params]))
-    if set(default_values_dict.get('s3_buckets')) == set(s3_buckets):
-        # If the value received for s3_buckets is the same as the default one, it means there was no optional parameter --s3-bucket passed
-        ctx.obj["plugins_s3_buckets_from_input"] = None
-    else:
-        ctx.obj["plugins_s3_buckets_from_input"] = s3_buckets
 
 
 @main.command()
@@ -312,9 +283,15 @@ def status(obj, long_format, plugins):
     default=False,
     help="Upgrade existing plugins.",
 )
+@click.option(
+    "--all-available",
+    is_flag=True,
+    default=False,
+    help="Download all available plugins from s3.",
+)
 @click.argument("plugins", nargs=-1)
 @click.pass_obj
-def install(obj, versions, show_logs, latest_existing, plugins):
+def install(obj, versions, show_logs, latest_existing, all_available, plugins):
     """Install/upgrade plugins by name, from files, or from a versions.toml file.
 
     Plugins provided as files are put in the local store before being installed.
@@ -326,7 +303,7 @@ def install(obj, versions, show_logs, latest_existing, plugins):
     """
     plugins_local_dir = obj["plugins_local_dir"]
     plugins_force = obj["plugins_force"]
-    plugins_s3_buckets_from_input = obj["plugins_s3_buckets_from_input"]
+    plugins_s3_buckets = obj["plugins_s3_buckets"]
     host = obj["host"]
 
     # Create a list of installation candidates.
@@ -355,22 +332,22 @@ def install(obj, versions, show_logs, latest_existing, plugins):
             for pi in PluginInfos.make_from_encapsia(host)
         )
 
-    # Temporarily get the plugins from S3
-    if plugins_s3_buckets_from_input:
-        s3_plugins = PluginInfos.make_from_s3_buckets(plugins_s3_buckets_from_input)
+    # Get the plugins from S3
+    if all_available and plugins_s3_buckets:
+        s3_plugins = PluginInfos.make_from_s3_buckets(plugins_s3_buckets)
         for s3_plugin in s3_plugins:
-            _add_to_temp_store_from_s3(s3_plugin, plugins_local_dir, force=plugins_force)
-            plugin_info = PluginSpec.make_from_plugininfo(s3_plugin, from_s3=True)
+            _add_to_local_store_from_s3(
+                s3_plugin, plugins_local_dir, force=plugins_force
+            )
+            plugin_info = PluginSpec.make_from_plugininfo(s3_plugin)
             to_install_candidates.append(plugin_info)
 
     # Work out and list installation plan.
     # to_install_candidates = sorted(PluginInfos(to_install_candidates))
     installed = PluginInfos.make_from_encapsia(host)
     local_store = PluginInfos.make_from_local_store(plugins_local_dir)
-    temp_path = plugins_local_dir / "temp"
-    temp_store = PluginInfos.make_from_local_store(temp_path)
     plan = _create_install_plan(
-        to_install_candidates, installed, local_store, temp_store, force_install=plugins_force
+        to_install_candidates, installed, local_store, force_install=plugins_force
     )
     to_install = [i[0] for i in plan if i[4] != "skip"]
     headers = ["name*", "existing version**", "new version**", "action"]
@@ -379,11 +356,10 @@ def install(obj, versions, show_logs, latest_existing, plugins):
 
     # Seek confirmation unless force.
     if to_install and not plugins_force:
-        if not click.confirm(
+        click.confirm(
             "Do you wish to proceed with the above plan?",
-        ):
-            _cleanup(temp_path)
-            lib.log_error("", abort=True)
+            abort=True,
+        )
 
     # Install them.
     lib.log("")
@@ -394,11 +370,9 @@ def install(obj, versions, show_logs, latest_existing, plugins):
                 api, plugins_local_dir / pi.get_filename(), print_output=show_logs
             )
         if not success:
-            _cleanup(temp_path)
             lib.log_error("Some plugins failed to install.", abort=True)
     else:
         lib.log("Nothing to do!")
-    _cleanup(temp_path)
 
 
 @main.command()
@@ -707,7 +681,9 @@ def add(obj, versions, latest_existing, plugins):
     if plugins_s3_buckets_from_input:
         s3_plugins = PluginInfos.make_from_s3_buckets(plugins_s3_buckets_from_input)
         for s3_plugin in s3_plugins:
-            _add_to_local_store_from_s3(s3_plugin, plugins_local_dir, force=plugins_force)
+            _add_to_local_store_from_s3(
+                s3_plugin, plugins_local_dir, force=plugins_force
+            )
 
     if to_download_from_s3:
         for pi in to_download_from_s3:

@@ -284,7 +284,6 @@ class PluginSpec:
     variant: T_Variant
     version_prefix: str = ""
     exact_match: bool = False
-    from_s3: bool = False
 
     PLUGIN_SPEC_NVV_REGEX: T.ClassVar[re.Pattern] = re.compile(
         rf"^({ALLOWED_PLUGIN_NAME})(?:-variant-({ALLOWED_VARIANT}))?(?:-({ALLOWED_VERSION}))?$"
@@ -361,14 +360,15 @@ class PluginSpec:
 
     @classmethod
     def make_from_plugininfo(
-        cls, plugininfo: PluginInfo, exact_match: bool = True, from_s3: bool = False
+        cls,
+        plugininfo: PluginInfo,
+        exact_match: bool = True,
     ) -> PluginSpec:
         return cls(
             plugininfo.name,
             plugininfo.variant,
             plugininfo.version,
             exact_match=exact_match,
-            from_s3=from_s3
         )
 
     def _variant_match(self, pi: PluginInfo) -> bool:
