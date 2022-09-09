@@ -153,7 +153,6 @@ def _download_plugins_from_s3(
         for plugin in plugins_to_download:
             _add_to_local_store_from_s3(plugin, plugins_local_dir, force=plugins_force)
     else:
-        print("HERE")
         if not added_from_file_or_uri:
             lib.log("Nothing to do!")
 
