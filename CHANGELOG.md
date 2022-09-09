@@ -9,16 +9,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed installing plugin using file path. #76.
 - `plugins add` will now abort if it cannot find some of the requested specs in S3
 - Clocked httpie to 3.1.0 to fix security vulnerabilities.
 
 ### Added
 
+- Support for adding to local_store groups of plugins with one command. #87.
+- Support for installing groups of plugins with one command. #87.
 - A new `token transfer` subcommand, allowing to obtain a token for a different user (current user's credentials permitting) and printing it out as plain text or shell command setting encapsia environment variables.
 - A new `token env` subcommand that just prints out shell commands to set environment variables `ENCAPSIA_URL` and `ENCAPSIA_TOKEN`.
 
 ### Changed
 
+- Display a message when a config get key is missing, instead of a traceback. #62.
+- Replaced request to deprecated pluginsmanager API. #79.
 - The `token extend` subcommand gained ability to display extended token (both as plain text or as shell commands setting environment), instead of storing in credentials file.
 - The `token extend` now allows you to set capabilities (as a subset of existing capabilities).
 

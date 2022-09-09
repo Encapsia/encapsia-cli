@@ -146,6 +146,18 @@ def _install_plugin(api, filename: Path, print_output: bool = False):
     )
 
 
+def _download_plugins_from_s3(
+    plugins_to_download, plugins_local_dir, plugins_force, added_from_file_or_uri=False
+):
+    if plugins_to_download:
+        for plugin in plugins_to_download:
+            _add_to_local_store_from_s3(plugin, plugins_local_dir, force=plugins_force)
+    else:
+        print("HERE")
+        if not added_from_file_or_uri:
+            lib.log("Nothing to do!")
+
+
 @click.group("plugins")
 @click.option(
     "--local-dir",
@@ -640,14 +652,11 @@ def add(obj, versions, latest_existing, all_available, plugins):
 
     # Get all available plugins from S3
     if all_available and plugins_s3_buckets:
-        to_download_from_s3 = PluginInfos.make_from_s3_buckets(plugins_s3_buckets)
-        if to_download_from_s3:
-            for plugin in to_download_from_s3:
-                _add_to_local_store_from_s3(
-                    plugin, plugins_local_dir, force=plugins_force
-                )
-        else:
-            lib.log(f"No plugins found in: {plugins_s3_buckets}.")
+        _download_plugins_from_s3(
+            PluginInfos.make_from_s3_buckets(plugins_s3_buckets),
+            plugins_local_dir,
+            plugins_force,
+        )
         return
 
     for plugin in plugins:
@@ -688,13 +697,9 @@ def add(obj, versions, latest_existing, all_available, plugins):
                 ),
                 abort=True,
             )
-
-    if to_download_from_s3:
-        for pi in to_download_from_s3:
-            _add_to_local_store_from_s3(pi, plugins_local_dir, force=plugins_force)
-    else:
-        if not added_from_file_or_uri:
-            lib.log("Nothing to do!")
+    _download_plugins_from_s3(
+        to_download_from_s3, plugins_local_dir, plugins_force, added_from_file_or_uri
+    )
 
 
 @main.command()
