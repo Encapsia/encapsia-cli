@@ -368,7 +368,9 @@ class PluginSpec:
 
     @classmethod
     def make_from_plugininfo(
-        cls, plugininfo: PluginInfo, exact_match: bool = True
+        cls,
+        plugininfo: PluginInfo,
+        exact_match: bool = True,
     ) -> PluginSpec:
         return cls(
             plugininfo.name,

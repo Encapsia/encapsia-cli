@@ -146,6 +146,17 @@ def _install_plugin(api, filename: Path, print_output: bool = False):
     )
 
 
+def _download_plugins_from_s3(
+    plugins_to_download, plugins_local_dir, plugins_force, added_from_file_or_uri=False
+):
+    if plugins_to_download:
+        for plugin in plugins_to_download:
+            _add_to_local_store_from_s3(plugin, plugins_local_dir, force=plugins_force)
+    else:
+        if not added_from_file_or_uri:
+            lib.log("Nothing to do!")
+
+
 @click.group("plugins")
 @click.option(
     "--local-dir",
@@ -278,9 +289,15 @@ def status(obj, long_format, plugins):
     default=False,
     help="Upgrade existing plugins.",
 )
+@click.option(
+    "--all-available",
+    is_flag=True,
+    default=False,
+    help="Download all available plugins from s3.",
+)
 @click.argument("plugins", nargs=-1)
 @click.pass_obj
-def install(obj, versions, show_logs, latest_existing, plugins):
+def install(obj, versions, show_logs, latest_existing, all_available, plugins):
     """Install/upgrade plugins by name, from files, or from a versions.toml file.
 
     Plugins provided as files are put in the local store before being installed.
@@ -292,6 +309,7 @@ def install(obj, versions, show_logs, latest_existing, plugins):
     """
     plugins_local_dir = obj["plugins_local_dir"]
     plugins_force = obj["plugins_force"]
+    plugins_s3_buckets = obj["plugins_s3_buckets"]
     host = obj["host"]
 
     # Create a list of installation candidates.
@@ -326,6 +344,15 @@ def install(obj, versions, show_logs, latest_existing, plugins):
             PluginSpec(pi.name, pi.variant)
             for pi in PluginInfos.make_from_encapsia(host)
         )
+
+    # Get the plugins from S3
+    if all_available and plugins_s3_buckets:
+        s3_plugins = PluginInfos.make_from_s3_buckets(plugins_s3_buckets)
+        for s3_plugin in s3_plugins:
+            _add_to_local_store_from_s3(
+                s3_plugin, plugins_local_dir, force=plugins_force
+            )
+            to_install_candidates.append(PluginSpec.make_from_plugininfo(s3_plugin))
 
     # Work out and list installation plan.
     # to_install_candidates = sorted(PluginInfos(to_install_candidates))
@@ -609,9 +636,15 @@ def upstream(obj, plugins, all_versions):
     default=False,
     help="Upgrade existing plugins.",
 )
+@click.option(
+    "--all-available",
+    is_flag=True,
+    default=False,
+    help="Add to local store all available plugins from s3.",
+)
 @click.argument("plugins", nargs=-1)
 @click.pass_obj
-def add(obj, versions, latest_existing, plugins):
+def add(obj, versions, latest_existing, all_available, plugins):
     """Add plugin(s) to local store from file, URL, or S3."""
     plugins_local_dir = obj["plugins_local_dir"]
     plugins_s3_buckets = obj["plugins_s3_buckets"]
@@ -622,6 +655,16 @@ def add(obj, versions, latest_existing, plugins):
     to_download_from_s3 = []
     s3_versions = None  # For performance, only fetch if/when first needed.
     added_from_file_or_uri = False
+
+    # Get all available plugins from S3
+    if all_available and plugins_s3_buckets:
+        _download_plugins_from_s3(
+            PluginInfos.make_from_s3_buckets(plugins_s3_buckets),
+            plugins_local_dir,
+            plugins_force,
+        )
+        return
+
     for plugin in plugins:
         if Path(plugin).is_file():
             _add_to_local_store_from_uri(
@@ -660,12 +703,9 @@ def add(obj, versions, latest_existing, plugins):
                 ),
                 abort=True,
             )
-    if to_download_from_s3:
-        for pi in to_download_from_s3:
-            _add_to_local_store_from_s3(pi, plugins_local_dir, force=plugins_force)
-    else:
-        if not added_from_file_or_uri:
-            lib.log("Nothing to do!")
+    _download_plugins_from_s3(
+        to_download_from_s3, plugins_local_dir, plugins_force, added_from_file_or_uri
+    )
 
 
 @main.command()
