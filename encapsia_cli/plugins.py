@@ -94,14 +94,28 @@ def _add_to_local_store_from_s3(
             )
 
 
-def _create_install_plan(candidates, installed, local_store, force_install):
+def _create_install_plan(
+    candidates, installed, local_store, plugins_s3_buckets, force_install
+):
     plan = []
+    to_download_from_s3 = []
+    s3_versions = None  # For performance, only fetch if/when first needed.
     for spec in candidates:
         candidate = local_store.latest_version_matching_spec(spec)
+        will_get_from_s3 = False
         if not candidate:
-            lib.log_error(
-                f"Could not find plugin matching {spec} in local store!", abort=True
-            )
+            if s3_versions is None:
+                s3_versions = PluginInfos.make_from_s3_buckets(plugins_s3_buckets)
+            if (
+                candidate := s3_versions.latest_version_matching_spec(spec)
+            ) is not None:
+                to_download_from_s3.append(candidate)
+                will_get_from_s3 = True
+            else:
+                lib.log_error(
+                    f"Could not find plugin matching {spec} in local store nor S3",
+                    abort=True,
+                )
         current = installed.latest_version_matching_spec(
             PluginSpec(spec.name, spec.variant)
         )
@@ -116,6 +130,8 @@ def _create_install_plan(candidates, installed, local_store, force_install):
         else:
             current_version = ""
             action = "install"
+        if will_get_from_s3 and action != "skip":
+            action = "download from s3 and " + action
         plan.append(
             [
                 candidate,  # keep first for sorting
@@ -125,7 +141,7 @@ def _create_install_plan(candidates, installed, local_store, force_install):
                 action,
             ]
         )
-    return sorted(plan)
+    return sorted(plan), to_download_from_s3
 
 
 def _install_plugin(api, filename: Path, print_output: bool = False):
@@ -358,8 +374,12 @@ def install(obj, versions, show_logs, latest_existing, all_available, plugins):
     # to_install_candidates = sorted(PluginInfos(to_install_candidates))
     installed = PluginInfos.make_from_encapsia(host)
     local_store = PluginInfos.make_from_local_store(plugins_local_dir)
-    plan = _create_install_plan(
-        to_install_candidates, installed, local_store, force_install=plugins_force
+    plan, to_download_from_s3 = _create_install_plan(
+        to_install_candidates,
+        installed,
+        local_store,
+        plugins_s3_buckets,
+        force_install=plugins_force,
     )
     to_install = [i[0] for i in plan if i[4] != "skip"]
     headers = ["name*", "existing version**", "new version**", "action"]
@@ -376,6 +396,8 @@ def install(obj, versions, show_logs, latest_existing, all_available, plugins):
     # Install them.
     lib.log("")
     if to_install:
+        for pi in to_download_from_s3:
+            _add_to_local_store_from_s3(pi, plugins_local_dir, force=plugins_force)
         api = lib.get_api(**obj)
         for pi in to_install:
             success = _install_plugin(
