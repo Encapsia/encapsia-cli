@@ -144,8 +144,7 @@ def run(*args, **kwargs):
 
 
 def read_toml(filename):
-    with filename.open() as f:
-        return toml.load(f)
+    return toml.load(filename)
 
 
 def write_toml(filename, obj):
@@ -165,9 +164,28 @@ def create_targz_as_bytes(directory):
     return data.getvalue()
 
 
-def extract_targz(filename, directory):
-    with tarfile.open(filename) as tar:
-        tar.extractall(directory)
+@contextlib.contextmanager
+def open_targz_member(filename, member_name):
+    """Contextmanager of io.BufferedReader with archive member `member_name`'s data.
+
+    `member_name` can be a simple name (e.g. 'foo.txt') or a path string (e.g.
+    'bar/foo.txt') or a pathlib.Path.
+
+    Raise KeyError if no matching member found.
+
+    """
+    with tarfile.open(filename, mode="r:gz") as tar:
+        member_path = pathlib.Path(member_name)
+        for entry_name in tar.getnames():
+            entry_path = pathlib.Path(entry_name)
+            if (
+                entry_path.is_relative_to(member_path.parent)
+                and entry_path.name == member_path.name
+            ):
+                yield tar.extractfile(entry_name)
+                break
+        else:
+            raise KeyError(member_name)
 
 
 def parse(obj, format):

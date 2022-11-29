@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed installing plugin using file path. #76.
 - `plugins add` will now abort if it cannot find some of the requested specs in S3
 - Clocked several dependencies patching vulnerabilities and other issues.
+- Replaced implementation using `tarfile.extractall` of `encapsia plugins ls`, that is
+  vulnerable to a path traversal attack. See
+  https://github.com/python/cpython/issues/73974 and
+  https://www.trellix.com/en-us/about/newsroom/stories/research/tarfile-exploiting-the-world.html
 
 ### Added
 

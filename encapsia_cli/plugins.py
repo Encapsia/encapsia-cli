@@ -3,6 +3,7 @@ import shutil
 import tempfile
 import urllib.request
 from contextlib import contextmanager
+from io import TextIOWrapper
 from pathlib import Path
 
 import click
@@ -762,11 +763,9 @@ def ls(obj, all_versions, long_format, plugins):
     def _read_description(pi):
         filename = plugins_local_dir / pi.get_filename()
         try:
-            with lib.temp_directory() as tmp_dir:
-                lib.extract_targz(filename, tmp_dir)
-                manifests = list(tmp_dir.glob("**/plugin.toml"))
-                return lib.read_toml(manifests[0])["description"]
-        except Exception:
+            with lib.open_targz_member(filename, "plugin.toml") as f:
+                return lib.read_toml(TextIOWrapper(f))["description"]
+        except SyntaxError:
             lib.log_error(f"Malformed? Unable to read: {filename}")
             return "N/A"
 
