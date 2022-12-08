@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed misleading "Key Error" when credentials are wrong (should be 401 Unauthorized) #51
+- Fixed misleading "Key Error" when credentials are wrong (should be 401 Unauthorized) #75
 - Fixed installing plugin using file path. #76.
 - `plugins add` will now abort if it cannot find some of the requested specs in S3
 - Clocked several dependencies patching vulnerabilities and other issues.
