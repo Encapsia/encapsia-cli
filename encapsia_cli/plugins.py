@@ -1,5 +1,4 @@
 import datetime
-import re
 import shutil
 import tempfile
 import urllib.request
@@ -413,18 +412,16 @@ def install(obj, versions, show_logs, latest_existing, all_available, plugins):
 
 
 def variant_is_installed(api, plugin_spec):
-    response = api.run_view("pluginsmanager", "plugins", view_options={"tags": True})
+    desired_tag = f'"variant={plugin_spec.variant}"'
+    response = api.run_view(
+        "pluginsmanager", "plugins", view_options={"having_tags": desired_tag}
+    )
     matching_plugins = [item for item in response if item["name"] == plugin_spec.name]
-    if len(matching_plugins) == 1:
-        plugin_info = matching_plugins[0]
-        if "tags" in plugin_info["manifest"]:
-            tags = plugin_info["manifest"]["tags"]
-            for tag in tags:
-                match = re.search(r"variant\s*=\s*(\w+)", tag)
-                if match:
-                    return match.groups()[0] == plugin_spec.variant
-
-    return False
+    if len(matching_plugins) > 1:
+        lib.log_error(
+            f"More than one plugin with the name {plugin_spec.name} and variant {plugin_spec.variant} are installed."
+        )
+    return len(matching_plugins) > 0
 
 
 @main.command()
@@ -448,7 +445,7 @@ def uninstall(obj, show_logs, namespaces):
             name = plugin_spec.name
             if plugin_spec.variant is not None:
                 if not variant_is_installed(api, plugin_spec):
-                    print(
+                    lib.log_output(
                         f"Variant {plugin_spec.variant} specified for plugin {name} is not installed; skipping."
                     )
                     continue
@@ -460,7 +457,7 @@ def uninstall(obj, show_logs, namespaces):
                 print_output=show_logs,
             )
         except InvalidSpecError as e:
-            print(e)
+            lib.log_error(e)
 
 
 @main.command()
