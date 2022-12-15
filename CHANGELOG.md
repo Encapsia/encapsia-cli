@@ -5,12 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [next]
+## [0.5.2] - 2022-12-15
 
 ### Fixed
 
-- Fixed Error if variant is specified in encapsia plugin uninstall #78
-- Fixed misleading "Key Error" when credentials are wrong (should be 401 Unauthorized) #75
+- Fixed error if variant is specified in encapsia plugin uninstall. #78
+- Fixed misleading "Key Error" when credentials are wrong (should be 401 Unauthorized)
+  #75
 - Fixed installing plugin using file path. #76.
 - `plugins add` will now abort if it cannot find some of the requested specs in S3
 - Clocked several dependencies patching vulnerabilities and other issues.
