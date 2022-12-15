@@ -12,6 +12,7 @@ from tabulate import tabulate
 
 from encapsia_cli import lib, s3
 from encapsia_cli.plugininfo import (
+    InvalidSpecError,
     PluginInfo,
     PluginInfos,
     PluginSpec,
@@ -410,6 +411,19 @@ def install(obj, versions, show_logs, latest_existing, all_available, plugins):
         lib.log("Nothing to do!")
 
 
+def variant_is_installed(api, plugin_spec):
+    desired_tag = f'"variant={plugin_spec.variant}"'
+    response = api.run_view(
+        "pluginsmanager", "plugins", view_options={"having_tags": desired_tag}
+    )
+    matching_plugins = [item for item in response if item["name"] == plugin_spec.name]
+    if len(matching_plugins) > 1:
+        lib.log_error(
+            f"More than one plugin with the name {plugin_spec.name} and variant {plugin_spec.variant} are installed."
+        )
+    return len(matching_plugins) > 0
+
+
 @main.command()
 @click.option(
     "--show-logs", is_flag=True, default=False, help="Print installation logs."
@@ -426,13 +440,24 @@ def uninstall(obj, show_logs, namespaces):
         )
     api = lib.get_api(**obj)
     for namespace in namespaces:
-        lib.run_plugins_task(
-            api,
-            "uninstall_plugin",
-            dict(namespace=namespace),
-            f"Uninstalling {namespace}",
-            print_output=show_logs,
-        )
+        try:
+            plugin_spec = PluginSpec.make_from_string(namespace)
+            name = plugin_spec.name
+            if plugin_spec.variant is not None:
+                if not variant_is_installed(api, plugin_spec):
+                    lib.log_output(
+                        f"Variant {plugin_spec.variant} specified for plugin {name} is not installed; skipping."
+                    )
+                    continue
+            lib.run_plugins_task(
+                api,
+                "uninstall_plugin",
+                dict(namespace=name),
+                f"Uninstalling {name}",
+                print_output=show_logs,
+            )
+        except InvalidSpecError as e:
+            lib.log_error(e)
 
 
 @main.command()
