@@ -113,7 +113,20 @@ def remove_task_by_name(obj, namespace, name):
 @click.argument("namespace")
 @click.argument("schedule-file")
 def update_schedule(obj, namespace, schedule_file):
-    """Update schedules for existing tasks."""
+    """Update schedules for existing tasks.
+
+    \b
+    The schedule file must be toml with the following content:
+    schedules = [
+        {
+            name = "<schedule to update>" # Required
+            description = "<new description>" # Optional
+            params = "<new params>" # Optional
+            cron = "<new cron>" # Optional
+        },
+        ...
+    ]
+    """
     api = lib.get_api(**obj)
     with open(schedule_file) as f:
         _config = toml.load(f)

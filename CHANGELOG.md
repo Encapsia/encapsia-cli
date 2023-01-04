@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Nothing yet.
 
+## [0.6.0]
+
+- Update ```schedule add``` to accept ```name``` parameter.
+- New ```schedule remove_task_by_name``` command.
+- New ```schedule update_schedule``` command.
+
 ## [0.5.1] - 2021-10-19
 
 ### Changed
