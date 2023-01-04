@@ -13,7 +13,29 @@ import time
 import click
 import encapsia_api
 import requests.exceptions
+import shellingham  # type: ignore
 import toml
+
+
+SHELL_SET_ENV_TEMPLATES = {
+    "bash": "export {variable}='{value}'",
+    "zsh": "export {variable}='{value}'",
+    "fish": "set -xU {variable} '{value}'",
+}
+
+
+def _get_shell_setenv_template(shell):
+    if shell == "auto":
+        was_auto = " (auto-detected)"
+        try:
+            shell, _ = shellingham.detect_shell()
+        except shellingham.ShellDetectionFailure:
+            shell = "sh"
+    else:
+        was_auto = ""
+    if shell not in SHELL_SET_ENV_TEMPLATES:
+        log_error(f"Unsupported shell: {shell}{was_auto}", abort=True)
+    return SHELL_SET_ENV_TEMPLATES[shell]
 
 
 def log(message="", nl=True):
@@ -41,6 +63,20 @@ def pretty_print(obj, format, output=None):
         output.write(formatted)
 
 
+def print_token(token, display, url=None, shell="auto"):
+    if display == "plain":
+        log(token)
+    elif display == "shell":
+        if url is None:
+            raise ValueError("Need an URL to print shell setenv commands")
+        setenv_template = _get_shell_setenv_template(shell)
+        log(setenv_template.format(variable="ENCAPSIA_URL", value=url))
+        log(setenv_template.format(variable="ENCAPSIA_TOKEN", value=token))
+
+    else:
+        raise ValueError(f"Unsupported display format {display}")
+
+
 def get_api(**obj):
     host = obj.get("host")
     try:
@@ -48,7 +84,8 @@ def get_api(**obj):
     except encapsia_api.EncapsiaApiError as e:
         log_error("Unable to determine host (or URL/token).")
         log_error(
-            "Try specifying via the command line, env variable, or ~/.encapsia/config.toml file."
+            "Try specifying via the command line, env variable, "
+            "or ~/.encapsia/config.toml file."
         )
         log_error(str(e), abort=True)
     return encapsia_api.EncapsiaApi(url, token)
@@ -107,8 +144,7 @@ def run(*args, **kwargs):
 
 
 def read_toml(filename):
-    with filename.open() as f:
-        return toml.load(f)
+    return toml.load(filename)
 
 
 def write_toml(filename, obj):
@@ -128,9 +164,28 @@ def create_targz_as_bytes(directory):
     return data.getvalue()
 
 
-def extract_targz(filename, directory):
-    with tarfile.open(filename) as tar:
-        tar.extractall(directory)
+@contextlib.contextmanager
+def open_targz_member(filename, member_name):
+    """Contextmanager of io.BufferedReader with archive member `member_name`'s data.
+
+    `member_name` can be a simple name (e.g. 'foo.txt') or a path string (e.g.
+    'bar/foo.txt') or a pathlib.Path.
+
+    Raise KeyError if no matching member found.
+
+    """
+    with tarfile.open(filename, mode="r:gz") as tar:
+        member_path = pathlib.Path(member_name)
+        for entry_name in tar.getnames():
+            entry_path = pathlib.Path(entry_name)
+            if (
+                entry_path.is_relative_to(member_path.parent)
+                and entry_path.name == member_path.name
+            ):
+                yield tar.extractfile(entry_name)
+                break
+        else:
+            raise KeyError(member_name)
 
 
 def parse(obj, format):
@@ -138,6 +193,7 @@ def parse(obj, format):
         return json.loads(obj)
     elif format == "toml":
         return toml.loads(obj)
+    raise ValueError(f"Unsupported format: {format}")
 
 
 def visual_poll(message, poll, NoTaskResultYet, wait=0.2):

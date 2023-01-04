@@ -13,6 +13,7 @@ import semver
 
 from encapsia_cli import lib, s3
 
+
 ALLOWED_PLUGIN_NAME = "[a-z][a-z0-9_]*"
 ALLOWED_VERSION = "[0-9][a-zA-Z0-9.+-]*"
 ALLOWED_VARIANT = "[a-zA-Z0-9_]+"
@@ -53,11 +54,15 @@ def get_variant_from_tags(tags):
 class PluginInfo:
     """Parse and use plugin information like name, variant and version."""
 
-    PLUGIN_FILENAME_REGEX = re.compile(
+    PLUGIN_FILENAME_REGEX: T.ClassVar[re.Pattern] = re.compile(
         rf"^.*plugin-({ALLOWED_PLUGIN_NAME})(?:-variant-({ALLOWED_VARIANT}))?-({ALLOWED_VERSION})\.tar\.gz$"
     )
-    FOUR_DIGIT_VERSION_REGEX = re.compile(r"([0-9]+)\.([0-9]+)\.([0-9]+)\.([0-9]+)")
-    DEV_VERSION_REGEX = re.compile(r"([0-9]+)\.([0-9]+)\.([0-9]+)dev([0-9]+)")
+    FOUR_DIGIT_VERSION_REGEX: T.ClassVar[re.Pattern] = re.compile(
+        r"([0-9]+)\.([0-9]+)\.([0-9]+)\.([0-9]+)"
+    )
+    DEV_VERSION_REGEX: T.ClassVar[re.Pattern] = re.compile(
+        r"([0-9]+)\.([0-9]+)\.([0-9]+)dev([0-9]+)"
+    )
 
     def __init__(
         self,
@@ -188,6 +193,10 @@ class PluginInfo:
             # In the unlikely scenario that plugin files are stored flat in a bucket.
             return self.get_filename()
 
+    @classmethod
+    def looks_like_path_to_plugin(cls, spec_string: str) -> bool:
+        return cls.PLUGIN_FILENAME_REGEX.match(spec_string) is not None
+
 
 class PluginInfos:
     """Container for one or more PluginInfo."""
@@ -228,15 +237,14 @@ class PluginInfos:
 
     @staticmethod
     def make_from_encapsia(host: str) -> PluginInfos:
-        # TODO: use pluginsmanager.plugins() if it exists
         api = lib.get_api(host=host)
         raw_info = api.run_view(
             "pluginsmanager",
-            "installed_plugins_with_tags",
+            "plugins",
         )
         pis = []
         for i in raw_info:
-            tags = i.get("plugin_tags")
+            tags = i.get("manifest").get("tags")
             if not isinstance(tags, list):
                 tags = []
             try:
@@ -360,7 +368,9 @@ class PluginSpec:
 
     @classmethod
     def make_from_plugininfo(
-        cls, plugininfo: PluginInfo, exact_match: bool = True
+        cls,
+        plugininfo: PluginInfo,
+        exact_match: bool = True,
     ) -> PluginSpec:
         return cls(
             plugininfo.name,

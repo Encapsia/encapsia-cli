@@ -5,9 +5,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [next]
+## [0.5.2] - 2022-12-15
 
-- Nothing yet.
+### Fixed
+
+- Fixed error if variant is specified in encapsia plugin uninstall. #78
+- Fixed misleading "Key Error" when credentials are wrong (should be 401 Unauthorized)
+  #75
+- Fixed installing plugin using file path. #76.
+- `plugins add` will now abort if it cannot find some of the requested specs in S3
+- Clocked several dependencies patching vulnerabilities and other issues.
+- Replaced implementation using `tarfile.extractall` of `encapsia plugins ls`, that is
+  vulnerable to a path traversal attack. See
+  https://github.com/python/cpython/issues/73974 and
+  https://www.trellix.com/en-us/about/newsroom/stories/research/tarfile-exploiting-the-world.html
+
+### Added
+
+- Support for adding to local_store groups of plugins with one command. #87.
+- Support for installing groups of plugins with one command. #87.
+- A new `token transfer` subcommand, allowing to obtain a token for a different user (current user's credentials permitting) and printing it out as plain text or shell command setting encapsia environment variables.
+- A new `token env` subcommand that just prints out shell commands to set environment variables `ENCAPSIA_URL` and `ENCAPSIA_TOKEN`.
+
+### Changed
+
+- Display a message when a config get key is missing, instead of a traceback. #62.
+- Replaced request to deprecated pluginsmanager API. #79.
+- The `token extend` subcommand gained ability to display extended token (both as plain text or as shell commands setting environment), instead of storing in credentials file.
+- The `token extend` now allows you to set capabilities (as a subset of existing capabilities).
 
 ## [0.6.0]
 

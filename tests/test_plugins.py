@@ -3,6 +3,7 @@ from click.testing import CliRunner
 
 from encapsia_cli.encapsia import main
 
+
 MANIFEST = """\
 name = "example"
 description = "Example plugin"

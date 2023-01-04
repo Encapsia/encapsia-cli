@@ -1,4 +1,6 @@
 [flake8]
+exclude = .svn,CVS,.bzr,.hg,.git,__pycache__,.tox,.nox,.eggs,*.egg,
+extend-exclude = .venv,.coverage,.mypy_cache,.pytest_cache,dist,htmlcov,build,tmp
 max-line-length = 88
 select = C,E,F,W,B,B950
 ignore = E501,W503,E203
