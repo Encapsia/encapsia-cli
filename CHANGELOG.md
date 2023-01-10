@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed a regression preventing uninstall of normal plugins. Thanks mpopetcmed.
 - Fixed passing `lifespan` to `api.login_transfer`, an unused argument that was removed
   in latest encapsia-api.
+- Fixed a regression running `encapsia plugins ls --long` (was using
+  `pathlib.Path.is_relative_to` which is not yet present in python 3.8), bummer.
 
 ## [0.5.2] - 2022-12-15
 

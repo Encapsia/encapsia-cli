@@ -178,12 +178,18 @@ def open_targz_member(filename, member_name):
         member_path = pathlib.Path(member_name)
         for entry_name in tar.getnames():
             entry_path = pathlib.Path(entry_name)
-            if (
-                entry_path.is_relative_to(member_path.parent)
-                and entry_path.name == member_path.name
-            ):
-                yield tar.extractfile(entry_name)
-                break
+            # The following could be use when we target python>=3.9
+            # if (
+            #     entry_path.is_relative_to(member_path.parent)
+            #     and entry_path.name == member_path.name
+            # ):
+            try:
+                rel_path = entry_path.relative_to(member_path.parent)
+                if rel_path.name == member_path.name:
+                    yield tar.extractfile(entry_name)
+                    break
+            except ValueError:
+                pass
         else:
             raise KeyError(member_name)
 
