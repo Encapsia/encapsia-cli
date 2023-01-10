@@ -443,7 +443,7 @@ def uninstall(obj, show_logs, namespaces):
         try:
             plugin_spec = PluginSpec.make_from_string(namespace)
             name = plugin_spec.name
-            if plugin_spec.variant is not None:
+            if plugin_spec.variant:
                 if not variant_is_installed(api, plugin_spec):
                     lib.log_output(
                         f"Variant {plugin_spec.variant} specified for plugin {name} is not installed; skipping."
