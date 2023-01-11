@@ -112,6 +112,7 @@ def remove_task_by_name(obj, namespace, name):
 @main.command()
 @click.argument("namespace")
 @click.argument("schedule-file")
+@click.pass_obj
 def update_schedule(obj, namespace, schedule_file):
     """Update schedules for existing tasks.
 
@@ -134,10 +135,14 @@ def update_schedule(obj, namespace, schedule_file):
     new_schedules = {
         s['name']: s for s in replacement_schedules
     }
-    schedules = lib.run_plugins_task(
-        api, "list_scheduled_tasks", {}, "Fetching tasks"
+    reply = lib.run_task(
+        api, "pluginsmanager",
+        "icepluginsmanager.list_scheduled_tasks", {},
+        "Fetching tasks"
     )
-    for schedule in json.loads(schedules):
+    schedules = json.loads(reply["output"].strip())
+    print(schedules)
+    for schedule in schedules:
         if (schedule['namespace'] == namespace):
             if schedule['name'] in new_schedules.keys():
                 id = schedule['id']
