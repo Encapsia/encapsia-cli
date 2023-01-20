@@ -121,7 +121,8 @@ def main(ctx, colour, host, silent):
 
     """
     ctx.color = {"always": True, "never": False, "auto": None}[colour]
-    ctx.obj = dict(host=host,silent=silent)
+    ctx.obj = dict(host=host, silent=silent)
+
 
 COMMANDS = [
     encapsia_cli.completion.main,
