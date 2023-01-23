@@ -39,11 +39,13 @@ def _get_shell_setenv_template(shell):
 
 
 def log(message="", nl=True):
-    click.secho(message, fg="yellow", nl=nl)
+    if not click.get_current_context().obj["silent"]:
+        click.secho(message, fg="yellow", nl=nl)
 
 
 def log_output(message=""):
-    click.secho(message, fg="green")
+    if not click.get_current_context().obj["silent"]:
+        click.secho(message, fg="green")
 
 
 def log_error(message="", abort=False):

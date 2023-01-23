@@ -391,7 +391,7 @@ def install(obj, versions, show_logs, latest_existing, all_available, plugins):
     # Seek confirmation unless force.
     if to_install and not plugins_force:
         click.confirm(
-            "Do you wish to proceed with the above plan?",
+            "Do you wish to proceed?",
             abort=True,
         )
 
