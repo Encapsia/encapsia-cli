@@ -119,9 +119,7 @@ def extend(obj, lifespan, capabilities, store, display, shell):
 def transfer(obj, lifespan, display, shell, user):
     """Get a token for `user` (subject to proper capabilities)"""
     api = lib.get_api(**obj)
-    user_token = api.login_transfer(user, lifespan=lifespan)
-    # login_transfer does not use the lifespan argument;
-    # see https://github.com/tcorbettclark/encapsia-api/issues/32
+    user_token = api.login_transfer(user)
     user_api = EncapsiaApi(api.url, user_token)
     extended_user_token = user_api.login_again(lifespan=lifespan)
     lib.print_token(extended_user_token, display, url=api.url, shell=shell)

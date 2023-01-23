@@ -1,6 +1,6 @@
 # About
 
-[![Known Vulnerabilities](https://snyk.io/test/github/tcorbettclark/encapsia-cli/badge.svg?targetFile=requirements.txt)](https://snyk.io/test/github/tcorbettclark/encapsia-cli?targetFile=requirements.txt)
+[![Known Vulnerabilities](https://snyk.io/test/github/encapsia/encapsia-cli/badge.svg?targetFile=requirements.txt)](https://snyk.io/test/github/encapsia/encapsia-cli?targetFile=requirements.txt)
 
 This package provides command line access to Encapsia over the REST API.
 

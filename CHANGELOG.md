@@ -5,11 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [next]
+
+## [0.5.3] - 2023-01-10
 
 ### Fixed
 
-- Fixed misleading "Key Error" when credentials are wrong (should be 401 Unauthorized) #75
+- Fixed a regression preventing uninstall of normal plugins. Thanks mpopetcmed.
+- Fixed passing `lifespan` to `api.login_transfer`, an unused argument that was removed
+  in latest encapsia-api.
+- Fixed a regression running `encapsia plugins ls --long` (was using
+  `pathlib.Path.is_relative_to` which is not yet present in python 3.8), bummer.
+
+## [0.5.2] - 2022-12-15
+
+### Fixed
+
+- Fixed error if variant is specified in encapsia plugin uninstall. #78
+- Fixed misleading "Key Error" when credentials are wrong (should be 401 Unauthorized)
+  #75
 - Fixed installing plugin using file path. #76.
 - `plugins add` will now abort if it cannot find some of the requested specs in S3
 - Clocked several dependencies patching vulnerabilities and other issues.
