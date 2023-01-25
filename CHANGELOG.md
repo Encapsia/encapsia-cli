@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Global --silent flag, for suppressing normal output. #55.
+- Print messages on successful completion for several commands. #55
 
 ## [0.5.3] - 2023-01-10
 

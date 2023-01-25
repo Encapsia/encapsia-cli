@@ -19,6 +19,7 @@ def add_systemuser(obj, description, capabilities):
     """Create system user with suitable user and role."""
     api = lib.get_api(**obj)
     api.add_system_user(description, [x.strip() for x in capabilities.split(",")])
+    lib.log_output(f"System user {description} successfully created")
 
 
 @main.command()
@@ -30,6 +31,7 @@ def add_superuser(obj, email, first_name, last_name):
     """Create superuser with suitable user and role."""
     api = lib.get_api(**obj)
     api.add_super_user(email, first_name, last_name)
+    lib.log_output(f"Superuser {email} successfully created")
 
 
 @main.command("list")
@@ -91,6 +93,7 @@ def delete_user(obj, email):
     """Delete user (but *do not* delete any related role)."""
     api = lib.get_api(**obj)
     api.delete_user(email)
+    lib.log_output(f"User {email} successfully deleted")
 
 
 @main.command("export")
