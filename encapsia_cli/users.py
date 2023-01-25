@@ -19,7 +19,7 @@ def add_systemuser(obj, description, capabilities):
     """Create system user with suitable user and role."""
     api = lib.get_api(**obj)
     api.add_system_user(description, [x.strip() for x in capabilities.split(",")])
-    lib.log_output(f"System user {description} successfully created")
+    lib.log_output(f"System user and role for {description} successfully created")
 
 
 @main.command()
