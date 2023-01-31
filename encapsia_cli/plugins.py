@@ -63,7 +63,7 @@ def _log_message_explaining_headers():
 
 
 def _add_to_local_store_from_uri(
-    plugins_local_dir: Path, uri: str, force: bool = False
+    plugins_local_dir: Path, uri: str, overwrite: bool = False
 ):
     full_name = uri.rsplit("/", 1)[-1]
     try:
@@ -71,7 +71,7 @@ def _add_to_local_store_from_uri(
     except ValueError:
         lib.log_error("That doesn't look like a plugin. Aborting!", abort=True)
     store_filename = plugins_local_dir / full_name
-    if not force and store_filename.exists():
+    if not overwrite and store_filename.exists():
         lib.log(f"Found: {store_filename} (Skipping)")
     else:
         filename, headers = urllib.request.urlretrieve(uri, tempfile.mkstemp()[1])
@@ -80,10 +80,10 @@ def _add_to_local_store_from_uri(
 
 
 def _add_to_local_store_from_s3(
-    pi: PluginInfo, plugins_local_dir: Path, force: bool = False
+    pi: PluginInfo, plugins_local_dir: Path, overwrite: bool = False
 ):
     target = plugins_local_dir / pi.get_filename()
-    if not force and target.exists():
+    if not overwrite and target.exists():
         lib.log(f"Found: {target} (Skipping)")
     else:
         try:
@@ -174,7 +174,9 @@ def _download_plugins_from_s3(
 ):
     if plugins_to_download:
         for plugin in plugins_to_download:
-            _add_to_local_store_from_s3(plugin, plugins_local_dir, force=plugins_force)
+            _add_to_local_store_from_s3(
+                plugin, plugins_local_dir, overwrite=plugins_force
+            )
     else:
         if not added_from_file_or_uri:
             lib.log("Nothing to do!")
@@ -382,7 +384,7 @@ def install(
             if plugin_filename.is_file():
                 # If it looks like a file then just add it.
                 _add_to_local_store_from_uri(
-                    plugins_local_dir, plugin_filename.as_uri(), force=True
+                    plugins_local_dir, plugin_filename.as_uri(), overwrite=True
                 )
                 plugin_info = PluginInfo.make_from_filename(plugin_filename)
                 plugin_spec = PluginSpec.make_from_plugininfo(plugin_info)
@@ -412,7 +414,7 @@ def install(
         s3_plugins = PluginInfos.make_from_s3_buckets(plugins_s3_buckets)
         for s3_plugin in s3_plugins:
             _add_to_local_store_from_s3(
-                s3_plugin, plugins_local_dir, force=(plugins_force or overwrite)
+                s3_plugin, plugins_local_dir, overwrite=(plugins_force or overwrite)
             )
             to_install_candidates.append(PluginSpec.make_from_plugininfo(s3_plugin))
 
@@ -445,7 +447,7 @@ def install(
     if to_install:
         for pi in to_download_from_s3:
             _add_to_local_store_from_s3(
-                pi, plugins_local_dir, force=(plugins_force or overwrite)
+                pi, plugins_local_dir, overwrite=(plugins_force or overwrite)
             )
         api = lib.get_api(**obj)
         for pi in to_install:
@@ -563,13 +565,14 @@ class LastUploadedVsModifiedTracker:
 @main.command("dev-update")
 @click.option(
     "--all",
+    "upload_all",
     is_flag=True,
     default=False,
     help="Upload all folders, not just the new or modified ones.",
 )
 @click.argument("directory", default=".")
 @click.pass_obj
-def dev_update(obj, all, directory):
+def dev_update(obj, upload_all, directory):
     """Update plugin parts which have changed since previous update.
 
     Optionally pass in the DIRECTORY of the plugin (defaults to cwd).
@@ -581,7 +584,7 @@ def dev_update(obj, all, directory):
         lib.log_error("Not in a plugin directory.", abort=True)
 
     with _get_modified_plugin_directories(
-        directory, reset=obj["plugins_force"] or all
+        directory, reset=obj["plugins_force"] or upload_all
     ) as modified_plugin_directories:
         if modified_plugin_directories:
             with lib.temp_directory() as temp_directory:
@@ -622,16 +625,18 @@ def dev_create(obj, namespace, n_task_workers):
 
 
 @main.command("dev-destroy")
-@click.option("--all", is_flag=True, default=False, help="Destroy all namespaces!")
+@click.option(
+    "--all", "destroy_all", is_flag=True, default=False, help="Destroy all namespaces!"
+)
 @click.option(
     "--yes", is_flag=True, default=False, help="Do not prompt for confirmation."
 )
 @click.argument("namespaces", nargs=-1)
 @click.pass_obj
-def dev_destroy(obj, all, yes, namespaces):
+def dev_destroy(obj, destroy_all, yes, namespaces):
     """Destroy namespace(s) of given name. Only useful during development"""
     api = lib.get_api(**obj)
-    if all:
+    if destroy_all:
         plugins_force = obj["plugins_force"]
         if not (plugins_force or yes):
             click.confirm(
@@ -645,6 +650,8 @@ def dev_destroy(obj, all, yes, namespaces):
             "Destroying all namespaces",
         )
     else:
+        if len(namespaces) == 0:
+            lib.log("Specify at least one namespace or --all")
         for namespace in namespaces:
             lib.run_plugins_task(
                 api,

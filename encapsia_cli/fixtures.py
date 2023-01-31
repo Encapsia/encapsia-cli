@@ -40,12 +40,17 @@ def create_fixture(obj, name):
 @main.command("use")
 @click.argument("name")
 @click.option(
-    "--force", "--yes", is_flag=True, help="Don't prompt the user for confirmation."
+    "--force", is_flag=True, help="[Deprecated] Don't prompt the user for confirmation."
 )
+@click.option("--yes", is_flag=True, help="Don't prompt the user for confirmation.")
 @click.pass_obj
-def use_fixture(obj, name, force):
+def use_fixture(obj, name, force, yes):
     """Switch to fixture with given name."""
-    if not force:
+    if force:
+        lib.log_error(
+            "Warning: --force option is deprecated, please use the --yes option."
+        )
+    if not (force or yes):
         click.confirm(
             f'Are you sure you want to change the database to fixture "{name}"?',
             abort=True,
@@ -59,12 +64,17 @@ def use_fixture(obj, name, force):
 @main.command("delete")
 @click.argument("name")
 @click.option(
-    "--force", "--yes", is_flag=True, help="Don't prompt the user for confirmation."
+    "--force", is_flag=True, help="[Deprecated] Don't prompt the user for confirmation."
 )
+@click.option("--yes", is_flag=True, help="Don't prompt the user for confirmation.")
 @click.pass_obj
-def delete_fixture(obj, name, force):
+def delete_fixture(obj, name, force, yes):
     """Delete fixture with given name."""
-    if not force:
+    if force:
+        lib.log_error(
+            "Warning: --force option is deprecated, please use the --yes option."
+        )
+    if not (force or yes):
         click.confirm(f'Are you sure you want to delete fixture "{name}"?', abort=True)
     api = lib.get_api(**obj)
     lib.log_output(

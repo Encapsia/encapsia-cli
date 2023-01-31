@@ -30,13 +30,18 @@ def backup(obj, filename):
 @main.command()
 @click.argument("filename", type=click.Path(exists=True))
 @click.option(
-    "--force", "--yes", is_flag=True, help="Don't prompt the user for confirmation."
+    "--force", is_flag=True, help="[Deprecated] Don't prompt the user for confirmation."
 )
+@click.option("--yes", is_flag=True, help="Don't prompt the user for confirmation.")
 @click.pass_obj
-def restore(obj, filename, force):
+def restore(obj, filename, force, yes):
     """Restore database from given backup file."""
+    if force:
+        lib.log_error(
+            "Warning: --force option is deprecated, please use the --yes option."
+        )
     filename = pathlib.Path(filename)
-    if not force:
+    if not (force or yes):
         click.confirm(
             f'Are you sure you want to restore the database from "{filename}"?',
             abort=True,
