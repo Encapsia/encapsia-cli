@@ -29,7 +29,9 @@ def backup(obj, filename):
 
 @main.command()
 @click.argument("filename", type=click.Path(exists=True))
-@click.option("--force", is_flag=True, help="Don't prompt the user for confirmation.")
+@click.option(
+    "--force", "--yes", is_flag=True, help="Don't prompt the user for confirmation."
+)
 @click.pass_obj
 def restore(obj, filename, force):
     """Restore database from given backup file."""

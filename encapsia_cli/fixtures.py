@@ -39,7 +39,9 @@ def create_fixture(obj, name):
 
 @main.command("use")
 @click.argument("name")
-@click.option("--force", is_flag=True, help="Don't prompt the user for confirmation.")
+@click.option(
+    "--force", "--yes", is_flag=True, help="Don't prompt the user for confirmation."
+)
 @click.pass_obj
 def use_fixture(obj, name, force):
     """Switch to fixture with given name."""
@@ -56,7 +58,9 @@ def use_fixture(obj, name, force):
 
 @main.command("delete")
 @click.argument("name")
-@click.option("--force", is_flag=True, help="Don't prompt the user for confirmation.")
+@click.option(
+    "--force", "--yes", is_flag=True, help="Don't prompt the user for confirmation."
+)
 @click.pass_obj
 def delete_fixture(obj, name, force):
     """Delete fixture with given name."""

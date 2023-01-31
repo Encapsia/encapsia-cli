@@ -97,7 +97,12 @@ def _add_to_local_store_from_s3(
 
 
 def _create_install_plan(
-    candidates, installed, local_store, plugins_s3_buckets, force_install
+    candidates,
+    installed,
+    local_store,
+    plugins_s3_buckets,
+    allow_reinstall,
+    allow_downgrade,
 ):
     plan = []
     to_download_from_s3 = []
@@ -126,9 +131,9 @@ def _create_install_plan(
             if current.semver < candidate.semver:
                 action = "upgrade"
             elif current.semver > candidate.semver:
-                action = "downgrade"
+                action = "downgrade" if allow_downgrade else "skip"
             else:
-                action = "reinstall" if force_install else "skip"
+                action = "reinstall" if allow_reinstall else "skip"
         else:
             current_version = ""
             action = "install"
@@ -194,11 +199,15 @@ def _download_plugins_from_s3(
     "--force",
     is_flag=True,
     default=False,
-    help="Always fetch/build/etc again.",
+    help="[deprecated] Always fetch/build/etc again.",
 )
 @click.pass_context
 def main(ctx, force, s3_buckets, local_dir):
     """Install, uninstall, create, and update plugins."""
+    if force:
+        lib.log_error(
+            "Warning: --force option is deprecated, please use the other available options (use --help to find them)."
+        )
     ctx.obj["plugins_local_dir"] = Path(local_dir).expanduser()
     ctx.obj["plugins_local_dir"].mkdir(parents=True, exist_ok=True)
     ctx.obj["plugins_s3_buckets"] = s3_buckets
@@ -313,9 +322,44 @@ def status(obj, long_format, plugins):
     default=False,
     help="Download all available plugins from s3.",
 )
+@click.option(
+    "--yes",
+    is_flag=True,
+    default=False,
+    help="Do not prompt for confirmation after presenting the install plan.",
+)
+@click.option(
+    "--reinstall",
+    is_flag=True,
+    default=False,
+    help="Allow re-installing plugins even if the same version is already installed.",
+)
+@click.option(
+    "--downgrade",
+    is_flag=True,
+    default=False,
+    help="Allow installing plugins even if a newer version is already installed.",
+)
+@click.option(
+    "--overwrite",
+    is_flag=True,
+    default=False,
+    help="Overwrite existing plugins having the same name and version in the local store.",
+)
 @click.argument("plugins", nargs=-1)
 @click.pass_obj
-def install(obj, versions, show_logs, latest_existing, all_available, plugins):
+def install(
+    obj,
+    versions,
+    show_logs,
+    latest_existing,
+    all_available,
+    yes,
+    reinstall,
+    downgrade,
+    overwrite,
+    plugins,
+):
     """Install/upgrade plugins by name, from files, or from a versions.toml file.
 
     Plugins provided as files are put in the local store before being installed.
@@ -368,7 +412,7 @@ def install(obj, versions, show_logs, latest_existing, all_available, plugins):
         s3_plugins = PluginInfos.make_from_s3_buckets(plugins_s3_buckets)
         for s3_plugin in s3_plugins:
             _add_to_local_store_from_s3(
-                s3_plugin, plugins_local_dir, force=plugins_force
+                s3_plugin, plugins_local_dir, force=(plugins_force or overwrite)
             )
             to_install_candidates.append(PluginSpec.make_from_plugininfo(s3_plugin))
 
@@ -381,7 +425,8 @@ def install(obj, versions, show_logs, latest_existing, all_available, plugins):
         installed,
         local_store,
         plugins_s3_buckets,
-        force_install=plugins_force,
+        allow_reinstall=plugins_force or reinstall,
+        allow_downgrade=plugins_force or downgrade,
     )
     to_install = [i[0] for i in plan if i[4] != "skip"]
     headers = ["name*", "existing version**", "new version**", "action"]
@@ -389,7 +434,7 @@ def install(obj, versions, show_logs, latest_existing, all_available, plugins):
     _log_message_explaining_headers()
 
     # Seek confirmation unless force.
-    if to_install and not plugins_force:
+    if to_install and not (plugins_force or yes):
         click.confirm(
             "Do you wish to proceed?",
             abort=True,
@@ -399,7 +444,9 @@ def install(obj, versions, show_logs, latest_existing, all_available, plugins):
     lib.log("")
     if to_install:
         for pi in to_download_from_s3:
-            _add_to_local_store_from_s3(pi, plugins_local_dir, force=plugins_force)
+            _add_to_local_store_from_s3(
+                pi, plugins_local_dir, force=(plugins_force or overwrite)
+            )
         api = lib.get_api(**obj)
         for pi in to_install:
             success = _install_plugin(
@@ -428,11 +475,14 @@ def variant_is_installed(api, plugin_spec):
 @click.option(
     "--show-logs", is_flag=True, default=False, help="Print installation logs."
 )
+@click.option(
+    "--yes", is_flag=True, default=False, help="Do not prompt for confirmation."
+)
 @click.argument("namespaces", nargs=-1)
 @click.pass_obj
-def uninstall(obj, show_logs, namespaces):
+def uninstall(obj, show_logs, yes, namespaces):
     """Uninstall named plugin(s)."""
-    if namespaces and not obj["plugins_force"]:
+    if namespaces and not (obj["plugins_force"] or yes):
         lib.log("Preparing to uninstall: " + ", ".join(namespaces))
         click.confirm(
             "Are you sure?",
@@ -511,9 +561,15 @@ class LastUploadedVsModifiedTracker:
 
 
 @main.command("dev-update")
+@click.option(
+    "--all",
+    is_flag=True,
+    default=False,
+    help="Upload all folders, not just the new or modified ones.",
+)
 @click.argument("directory", default=".")
 @click.pass_obj
-def dev_update(obj, directory):
+def dev_update(obj, all, directory):
     """Update plugin parts which have changed since previous update.
 
     Optionally pass in the DIRECTORY of the plugin (defaults to cwd).
@@ -525,7 +581,7 @@ def dev_update(obj, directory):
         lib.log_error("Not in a plugin directory.", abort=True)
 
     with _get_modified_plugin_directories(
-        directory, reset=obj["plugins_force"]
+        directory, reset=obj["plugins_force"] or all
     ) as modified_plugin_directories:
         if modified_plugin_directories:
             with lib.temp_directory() as temp_directory:
@@ -567,16 +623,21 @@ def dev_create(obj, namespace, n_task_workers):
 
 @main.command("dev-destroy")
 @click.option("--all", is_flag=True, default=False, help="Destroy all namespaces!")
+@click.option(
+    "--yes", is_flag=True, default=False, help="Do not prompt for confirmation."
+)
 @click.argument("namespaces", nargs=-1)
 @click.pass_obj
-def dev_destroy(obj, all, namespaces):
+def dev_destroy(obj, all, yes, namespaces):
     """Destroy namespace(s) of given name. Only useful during development"""
     api = lib.get_api(**obj)
     if all:
-        click.confirm(
-            "Are you sure you want to destroy all namespaces?",
-            abort=True,
-        )
+        plugins_force = obj["plugins_force"]
+        if not (plugins_force or yes):
+            click.confirm(
+                "Are you sure you want to destroy all namespaces?",
+                abort=True,
+            )
         lib.run_plugins_task(
             api,
             "dev_wipe",
@@ -594,9 +655,15 @@ def dev_destroy(obj, all, namespaces):
 
 
 @main.command()
+@click.option(
+    "--overwrite",
+    is_flag=True,
+    default=False,
+    help="Overwrite any existing plugin with the same name and version in the local store.",
+)
 @click.argument("sources", nargs=-1)
 @click.pass_obj
-def dev_build(obj, sources):
+def dev_build(obj, overwrite, sources):
     """Build plugins from given source directories."""
     plugins_local_dir = obj["plugins_local_dir"]
     plugins_force = obj["plugins_force"]
@@ -616,7 +683,7 @@ def dev_build(obj, sources):
             )
         else:
             output_filename = plugins_local_dir / f"plugin-{name}-{version}.tar.gz"
-        if not plugins_force and output_filename.exists():
+        if not (plugins_force or overwrite) and output_filename.exists():
             lib.log(f"Found: {output_filename} (Skipping)")
         else:
             with lib.temp_directory() as temp_directory:
@@ -690,13 +757,19 @@ def upstream(obj, plugins, all_versions):
     default=False,
     help="Add to local store all available plugins from s3.",
 )
+@click.option(
+    "--overwrite",
+    is_flag=True,
+    default=False,
+    help="Overwrite if the same plugin version already exists in the local store.",
+)
 @click.argument("plugins", nargs=-1)
 @click.pass_obj
-def add(obj, versions, latest_existing, all_available, plugins):
+def add(obj, versions, latest_existing, all_available, overwrite, plugins):
     """Add plugin(s) to local store from file, URL, or S3."""
     plugins_local_dir = obj["plugins_local_dir"]
     plugins_s3_buckets = obj["plugins_s3_buckets"]
-    plugins_force = obj["plugins_force"]
+    overwrite = overwrite or obj["plugins_force"]
     host = obj["host"]
 
     specs_to_search_in_s3 = []
@@ -709,7 +782,7 @@ def add(obj, versions, latest_existing, all_available, plugins):
         _download_plugins_from_s3(
             PluginInfos.make_from_s3_buckets(plugins_s3_buckets),
             plugins_local_dir,
-            plugins_force,
+            overwrite,
         )
         return
 
@@ -718,11 +791,11 @@ def add(obj, versions, latest_existing, all_available, plugins):
             _add_to_local_store_from_uri(
                 plugins_local_dir,
                 Path(plugin).resolve().as_uri(),
-                plugins_force,
+                overwrite,
             )
             added_from_file_or_uri = True
         elif urllib.parse.urlparse(plugin).scheme != "":
-            _add_to_local_store_from_uri(plugins_local_dir, plugin, plugins_force)
+            _add_to_local_store_from_uri(plugins_local_dir, plugin, overwrite)
             added_from_file_or_uri = True
         else:
             specs_to_search_in_s3.append(PluginSpec.make_from_string(plugin))
@@ -752,7 +825,7 @@ def add(obj, versions, latest_existing, all_available, plugins):
                 abort=True,
             )
     _download_plugins_from_s3(
-        to_download_from_s3, plugins_local_dir, plugins_force, added_from_file_or_uri
+        to_download_from_s3, plugins_local_dir, overwrite, added_from_file_or_uri
     )
 
 
