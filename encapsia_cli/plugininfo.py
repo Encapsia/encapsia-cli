@@ -236,7 +236,7 @@ class PluginInfos:
             return None  # Never reached, but keep linters happy
 
     @staticmethod
-    def make_from_encapsia(host: str) -> PluginInfos:
+    def make_from_encapsia(host: str, errors_list=None) -> PluginInfos:
         api = lib.get_api(host=host)
         raw_info = api.run_view(
             "pluginsmanager",
@@ -244,20 +244,34 @@ class PluginInfos:
         )
         pis = []
         for i in raw_info:
-            tags = i.get("manifest").get("tags")
+            if any(i.get(key) is None for key in ("name", "version")):
+                lib.log_error(f"Invalid plugin info: {i}")
+                if errors_list is not None:
+                    errors_list.append(i)
+                continue
+            if any(i.get(key) is None for key in ("manifest", "when")):
+                lib.log_error(f"Missing important information for plugin {i}")
+                if errors_list is not None:
+                    errors_list.append(i)
+
+            tags = i.get("manifest", {}).get("tags")
             if not isinstance(tags, list):
                 tags = []
             try:
                 variant = get_variant_from_tags(tags)
             except TooManyVariantTagsError as e:
                 lib.log_error(f"Error in {i['name']} tag list: {e}")
+                if errors_list is not None and i not in errors_list:
+                    errors_list.append(i)
             pi = PluginInfo.make_from_name_variant_version(
                 i["name"], variant, i["version"]
             )
             pi.extras.update(
                 {
-                    "description": i["description"],
-                    "installed": _format_datetime(i["when"]),
+                    "description": i.get("description"),
+                    "installed": _format_datetime(i.get("when"))
+                    if "when" in i
+                    else "Unknown",
                     "plugin-tags": ", ".join(sorted(tags)),
                 }
             )

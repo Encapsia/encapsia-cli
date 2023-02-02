@@ -220,10 +220,16 @@ def main(ctx, force, s3_buckets, local_dir):
 @click.pass_obj
 def freeze(obj):
     """Print currently installed plugins as versions TOML."""
+    errors_list = []
     versions = PluginSpecs.make_from_plugininfos(
-        PluginInfos.make_from_encapsia(obj["host"])
+        PluginInfos.make_from_encapsia(obj["host"], errors_list)
     ).as_version_dict()
     lib.log_output(toml.dumps(versions))
+    if len(errors_list):
+        lib.log_error(
+            "There were some errors in the plugin metadata retrieved from server"
+        )
+        raise click.Abort()
 
 
 @main.command()
@@ -281,7 +287,8 @@ def status(obj, long_format, plugins):
     local_versions = PluginInfos.make_from_local_store(
         plugins_local_dir
     ).filter_to_latest()
-    plugin_infos = PluginInfos.make_from_encapsia(host)
+    errors_list = []
+    plugin_infos = PluginInfos.make_from_encapsia(host, errors_list)
     if plugins:
         specs = PluginSpecs.make_from_spec_strings(plugins)
         plugin_infos = specs.filter(plugin_infos)
@@ -303,6 +310,11 @@ def status(obj, long_format, plugins):
         info.append(pi_info)
     lib.log(tabulate(info, headers=headers))
     _log_message_explaining_headers()
+    if len(errors_list):
+        lib.log_error(
+            "There were some errors in the plugin metadata retrieved from server"
+        )
+        raise click.Abort()
 
 
 @main.command()
@@ -420,7 +432,13 @@ def install(
 
     # Work out and list installation plan.
     # to_install_candidates = sorted(PluginInfos(to_install_candidates))
-    installed = PluginInfos.make_from_encapsia(host)
+    errors_list = []
+    installed = PluginInfos.make_from_encapsia(host, errors_list)
+    if len(errors_list):
+        click.confirm(
+            "There are some plugin metadata errors on the destination server, do you want to continue installing?",
+            abort=True,
+        )
     local_store = PluginInfos.make_from_local_store(plugins_local_dir)
     plan, to_download_from_s3 = _create_install_plan(
         to_install_candidates,

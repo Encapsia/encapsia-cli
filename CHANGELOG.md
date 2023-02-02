@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased] - 
 
 ### Fixed
+- Handling the case when the plugins info contains invalid data. #110
 
 ### Added
 
