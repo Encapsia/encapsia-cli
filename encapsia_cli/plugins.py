@@ -101,12 +101,14 @@ def _create_install_plan(
     installed,
     local_store,
     plugins_s3_buckets,
+    metadata_error_list,
     allow_reinstall,
     allow_downgrade,
 ):
     plan = []
     to_download_from_s3 = []
     s3_versions = None  # For performance, only fetch if/when first needed.
+    bad_plugin_names = [bad_plugin.get("name") for bad_plugin in metadata_error_list]
     for spec in candidates:
         candidate = local_store.latest_version_matching_spec(spec)
         will_get_from_s3 = False
@@ -137,6 +139,8 @@ def _create_install_plan(
         else:
             current_version = ""
             action = "install"
+        if spec.name in bad_plugin_names:
+            action = "skip"
         if will_get_from_s3 and action != "skip":
             action = "download from s3 and " + action
         plan.append(
@@ -360,6 +364,12 @@ def status(obj, long_format, plugins):
     default=False,
     help="Overwrite existing plugins having the same name and version in the local store.",
 )
+@click.option(
+    "--ignore-warnings",
+    is_flag=True,
+    default=False,
+    help="In case of warnings, try to perform the installation of plugins that are deemed to be safe (from the supplied list) - instead of aborting the operation completely.",
+)
 @click.argument("plugins", nargs=-1)
 @click.pass_obj
 def install(
@@ -372,6 +382,7 @@ def install(
     reinstall,
     downgrade,
     overwrite,
+    ignore_warnings,
     plugins,
 ):
     """Install/upgrade plugins by name, from files, or from a versions.toml file.
@@ -432,11 +443,11 @@ def install(
 
     # Work out and list installation plan.
     # to_install_candidates = sorted(PluginInfos(to_install_candidates))
-    errors_list = []
-    installed = PluginInfos.make_from_encapsia(host, errors_list)
-    if len(errors_list):
-        click.confirm(
-            "There are some plugin metadata errors on the destination server, do you want to continue installing?",
+    metadata_error_list = []
+    installed = PluginInfos.make_from_encapsia(host, metadata_error_list)
+    if len(metadata_error_list) and not ignore_warnings:
+        lib.log_error(
+            "There are some plugin metadata errors on the destination server. Use --ignore-warnings to install only the plugins that are not impacted.",
             abort=True,
         )
     local_store = PluginInfos.make_from_local_store(plugins_local_dir)
@@ -445,6 +456,7 @@ def install(
         installed,
         local_store,
         plugins_s3_buckets,
+        metadata_error_list,
         allow_reinstall=plugins_force or reinstall,
         allow_downgrade=plugins_force or downgrade,
     )
