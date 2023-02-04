@@ -101,14 +101,13 @@ def _create_install_plan(
     installed,
     local_store,
     plugins_s3_buckets,
-    metadata_error_list,
+    bad_plugins,
     allow_reinstall,
     allow_downgrade,
 ):
     plan = []
     to_download_from_s3 = []
     s3_versions = None  # For performance, only fetch if/when first needed.
-    bad_plugin_names = [bad_plugin.get("name") for bad_plugin in metadata_error_list]
     for spec in candidates:
         candidate = local_store.latest_version_matching_spec(spec)
         will_get_from_s3 = False
@@ -139,7 +138,7 @@ def _create_install_plan(
         else:
             current_version = ""
             action = "install"
-        if spec.name in bad_plugin_names:
+        if spec.name in bad_plugins:
             action = "skip"
         if will_get_from_s3 and action != "skip":
             action = "download from s3 and " + action
@@ -224,12 +223,14 @@ def main(ctx, force, s3_buckets, local_dir):
 @click.pass_obj
 def freeze(obj):
     """Print currently installed plugins as versions TOML."""
-    errors_list = []
+    bad_plugins = set()
     versions = PluginSpecs.make_from_plugininfos(
-        PluginInfos.make_from_encapsia(obj["host"], errors_list)
+        PluginInfos.make_from_encapsia(obj["host"], bad_plugins)
     ).as_version_dict()
-    lib.log_output(toml.dumps(versions))
-    if len(errors_list):
+    for pl_name in versions.keys():
+        color = "red" if pl_name in bad_plugins else None
+        lib.log_output(click.style(f"{pl_name} = {versions[pl_name]}", fg=color))
+    if bad_plugins:
         lib.log_error(
             "There were some errors in the plugin metadata retrieved from server"
         )
@@ -291,8 +292,8 @@ def status(obj, long_format, plugins):
     local_versions = PluginInfos.make_from_local_store(
         plugins_local_dir
     ).filter_to_latest()
-    errors_list = []
-    plugin_infos = PluginInfos.make_from_encapsia(host, errors_list)
+    bad_plugins = set()
+    plugin_infos = PluginInfos.make_from_encapsia(host, bad_plugins)
     if plugins:
         specs = PluginSpecs.make_from_spec_strings(plugins)
         plugin_infos = specs.filter(plugin_infos)
@@ -303,8 +304,9 @@ def status(obj, long_format, plugins):
 
     info = []
     for pi in plugin_infos:
+        print_reverse = pi.name in bad_plugins
         pi_info = [
-            pi.name_and_variant(),
+            click.style(pi.name_and_variant(), reverse=print_reverse, reset=False),
             pi.formatted_version(),
             _get_available_from_local_store(local_versions, pi),
             pi.extras["installed"],
@@ -314,7 +316,7 @@ def status(obj, long_format, plugins):
         info.append(pi_info)
     lib.log(tabulate(info, headers=headers))
     _log_message_explaining_headers()
-    if len(errors_list):
+    if bad_plugins:
         lib.log_error(
             "There were some errors in the plugin metadata retrieved from server"
         )
@@ -443,9 +445,9 @@ def install(
 
     # Work out and list installation plan.
     # to_install_candidates = sorted(PluginInfos(to_install_candidates))
-    metadata_error_list = []
-    installed = PluginInfos.make_from_encapsia(host, metadata_error_list)
-    if len(metadata_error_list) and not ignore_warnings:
+    bad_plugins = set()
+    installed = PluginInfos.make_from_encapsia(host, bad_plugins)
+    if bad_plugins and not ignore_warnings:
         lib.log_error(
             "There are some plugin metadata errors on the destination server. Use --ignore-warnings to install only the plugins that are not impacted.",
             abort=True,
@@ -456,7 +458,7 @@ def install(
         installed,
         local_store,
         plugins_s3_buckets,
-        metadata_error_list,
+        bad_plugins,
         allow_reinstall=plugins_force or reinstall,
         allow_downgrade=plugins_force or downgrade,
     )
