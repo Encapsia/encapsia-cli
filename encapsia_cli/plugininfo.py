@@ -236,7 +236,7 @@ class PluginInfos:
             return None  # Never reached, but keep linters happy
 
     @staticmethod
-    def make_from_encapsia(host: str) -> PluginInfos:
+    def make_from_encapsia(host: str, bad_plugins_bin=None) -> PluginInfos:
         api = lib.get_api(host=host)
         raw_info = api.run_view(
             "pluginsmanager",
@@ -244,20 +244,51 @@ class PluginInfos:
         )
         pis = []
         for i in raw_info:
-            tags = i.get("manifest").get("tags")
+
+            # keys should be present and non-null
+            MANDATORY_ENTRIES = ("name", "version")
+            missing_mandatory_entries = [
+                key for key in MANDATORY_ENTRIES if i.get(key) is None
+            ]
+            if missing_mandatory_entries:
+                lib.log_error(
+                    f"Invalid plugin info!\nMissing mandatory entries {missing_mandatory_entries} in {i}"
+                )
+                if bad_plugins_bin is not None:
+                    bad_plugins_bin.add(i.get("name"))
+                continue
+
+            # keys should be present and non-null
+            IMPORTANT_ENTRIES = ("manifest", "when")
+            missing_important_entries = [
+                key for key in IMPORTANT_ENTRIES if i.get(key) is None
+            ]
+            if missing_important_entries:
+                lib.log_error(
+                    f"Missing important information {missing_important_entries} for plugin {i}"
+                )
+                if bad_plugins_bin is not None:
+                    bad_plugins_bin.add(i.get("name"))
+
+            manifest = i.get("manifest")
+            tags = manifest.get("tags") if hasattr(manifest, "get") else None
             if not isinstance(tags, list):
                 tags = []
             try:
                 variant = get_variant_from_tags(tags)
             except TooManyVariantTagsError as e:
                 lib.log_error(f"Error in {i['name']} tag list: {e}")
+                if bad_plugins_bin is not None:
+                    bad_plugins_bin.add(i.get("name"))
             pi = PluginInfo.make_from_name_variant_version(
                 i["name"], variant, i["version"]
             )
             pi.extras.update(
                 {
-                    "description": i["description"],
-                    "installed": _format_datetime(i["when"]),
+                    "description": i.get("description"),
+                    "installed": (
+                        _format_datetime(i.get("when")) if "when" in i else "Unknown"
+                    ),
                     "plugin-tags": ", ".join(sorted(tags)),
                 }
             )

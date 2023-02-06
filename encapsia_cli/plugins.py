@@ -101,6 +101,7 @@ def _create_install_plan(
     installed,
     local_store,
     plugins_s3_buckets,
+    bad_plugins,
     allow_reinstall,
     allow_downgrade,
 ):
@@ -137,6 +138,8 @@ def _create_install_plan(
         else:
             current_version = ""
             action = "install"
+        if spec.name in bad_plugins:
+            action = "skip"
         if will_get_from_s3 and action != "skip":
             action = "download from s3 and " + action
         plan.append(
@@ -220,10 +223,18 @@ def main(ctx, force, s3_buckets, local_dir):
 @click.pass_obj
 def freeze(obj):
     """Print currently installed plugins as versions TOML."""
+    bad_plugins = set()
     versions = PluginSpecs.make_from_plugininfos(
-        PluginInfos.make_from_encapsia(obj["host"])
+        PluginInfos.make_from_encapsia(obj["host"], bad_plugins)
     ).as_version_dict()
-    lib.log_output(toml.dumps(versions))
+    for pl_name in versions.keys():
+        color = "red" if pl_name in bad_plugins else None
+        lib.log_output(click.style(f"{pl_name} = {versions[pl_name]}", fg=color))
+    if bad_plugins:
+        lib.log_error(
+            "There were some errors in the plugin metadata retrieved from server"
+        )
+        raise click.Abort()
 
 
 @main.command()
@@ -281,7 +292,8 @@ def status(obj, long_format, plugins):
     local_versions = PluginInfos.make_from_local_store(
         plugins_local_dir
     ).filter_to_latest()
-    plugin_infos = PluginInfos.make_from_encapsia(host)
+    bad_plugins = set()
+    plugin_infos = PluginInfos.make_from_encapsia(host, bad_plugins)
     if plugins:
         specs = PluginSpecs.make_from_spec_strings(plugins)
         plugin_infos = specs.filter(plugin_infos)
@@ -292,8 +304,9 @@ def status(obj, long_format, plugins):
 
     info = []
     for pi in plugin_infos:
+        print_reverse = pi.name in bad_plugins
         pi_info = [
-            pi.name_and_variant(),
+            click.style(pi.name_and_variant(), reverse=print_reverse, reset=False),
             pi.formatted_version(),
             _get_available_from_local_store(local_versions, pi),
             pi.extras["installed"],
@@ -303,6 +316,11 @@ def status(obj, long_format, plugins):
         info.append(pi_info)
     lib.log(tabulate(info, headers=headers))
     _log_message_explaining_headers()
+    if bad_plugins:
+        lib.log_error(
+            "There were some errors in the plugin metadata retrieved from server"
+        )
+        raise click.Abort()
 
 
 @main.command()
@@ -348,6 +366,12 @@ def status(obj, long_format, plugins):
     default=False,
     help="Overwrite existing plugins having the same name and version in the local store.",
 )
+@click.option(
+    "--ignore-warnings",
+    is_flag=True,
+    default=False,
+    help="In case of warnings, try to perform the installation of plugins that are deemed to be safe (from the supplied list) - instead of aborting the operation completely.",
+)
 @click.argument("plugins", nargs=-1)
 @click.pass_obj
 def install(
@@ -360,6 +384,7 @@ def install(
     reinstall,
     downgrade,
     overwrite,
+    ignore_warnings,
     plugins,
 ):
     """Install/upgrade plugins by name, from files, or from a versions.toml file.
@@ -420,13 +445,20 @@ def install(
 
     # Work out and list installation plan.
     # to_install_candidates = sorted(PluginInfos(to_install_candidates))
-    installed = PluginInfos.make_from_encapsia(host)
+    bad_plugins = set()
+    installed = PluginInfos.make_from_encapsia(host, bad_plugins)
+    if bad_plugins and not ignore_warnings:
+        lib.log_error(
+            "There are some plugin metadata errors on the destination server. Use --ignore-warnings to install only the plugins that are not impacted.",
+            abort=True,
+        )
     local_store = PluginInfos.make_from_local_store(plugins_local_dir)
     plan, to_download_from_s3 = _create_install_plan(
         to_install_candidates,
         installed,
         local_store,
         plugins_s3_buckets,
+        bad_plugins,
         allow_reinstall=plugins_force or reinstall,
         allow_downgrade=plugins_force or downgrade,
     )
