@@ -110,15 +110,15 @@ def _create_install_plan(
     to_download_from_s3 = []
     s3_versions = None  # For performance, only fetch if/when first needed.
     for spec in candidates:
-        candidate = local_store.latest_version_matching_spec(
-            spec, exclude_prereleases=exclude_prereleases
-        )
+        candidate = local_store.latest_version_matching_spec(spec, exclude_prereleases)
         will_get_from_s3 = False
         if not candidate:
             if s3_versions is None:
                 s3_versions = PluginInfos.make_from_s3_buckets(plugins_s3_buckets)
             if (
-                candidate := s3_versions.latest_version_matching_spec(spec)
+                candidate := s3_versions.latest_version_matching_spec(
+                    spec, exclude_prereleases
+                )
             ) is not None:
                 to_download_from_s3.append(candidate)
                 will_get_from_s3 = True
@@ -813,9 +813,30 @@ def upstream(obj, plugins, all_versions):
     default=False,
     help="Overwrite if the same plugin version already exists in the local store.",
 )
+@click.option(
+    "--include-dev-builds",
+    is_flag=True,
+    default=False,
+    help="Include development builds (pre-releases) when looking for the latest available version in the S3 buckets.",
+)
+@click.option(
+    "--ignore-warnings",
+    is_flag=True,
+    default=False,
+    help="In case of warnings, try to add only the plugins that are found in S3 buckets - instead of aborting the operation completely.",
+)
 @click.argument("plugins", nargs=-1)
 @click.pass_obj
-def add(obj, versions, latest_existing, all_available, overwrite, plugins):
+def add(
+    obj,
+    versions,
+    latest_existing,
+    all_available,
+    overwrite,
+    include_dev_builds,
+    ignore_warnings,
+    plugins,
+):
     """Add plugin(s) to local store from file, URL, or S3."""
     plugins_local_dir = obj["plugins_local_dir"]
     plugins_s3_buckets = obj["plugins_s3_buckets"]
@@ -863,7 +884,11 @@ def add(obj, versions, latest_existing, all_available, overwrite, plugins):
         s3_versions = PluginInfos.make_from_s3_buckets(plugins_s3_buckets)
         not_found = []
         for spec in specs_to_search_in_s3:
-            if (pi := s3_versions.latest_version_matching_spec(spec)) is not None:
+            if (
+                pi := s3_versions.latest_version_matching_spec(
+                    spec, exclude_prereleases=not include_dev_builds
+                )
+            ) is not None:
                 to_download_from_s3.append(pi)
             else:
                 not_found.append(spec)
@@ -872,7 +897,7 @@ def add(obj, versions, latest_existing, all_available, overwrite, plugins):
                 "Some plugins could not be found in S3: {}".format(
                     ", ".join(str(s) for s in not_found)
                 ),
-                abort=True,
+                abort=not ignore_warnings,
             )
     _download_plugins_from_s3(
         to_download_from_s3, plugins_local_dir, overwrite, added_from_file_or_uri

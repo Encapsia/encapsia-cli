@@ -10,13 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Handling the case when the plugins info contains invalid data. #110
-- Do not install dev build plugins when looking for the latest version (unless --include-dev-builds is used). #109
+- Do not add or install dev build plugins when looking for the latest version (unless `--include-dev-builds` is used). #109
 
 ### Added
 
 - Global --silent flag, for suppressing normal output. #55.
 - Print messages on successful completion for several commands. #55
 - Provide alternative options to --force (that will be deprecated soon): [--yes, --downgrade, --reinstall, --overwrite and --all]. #52
+- `--ignore-warnings` flag for `plugins add` and `install`, useful when specifying several plugins and some of them cannot be processed, will do only the error-free ones, instead of aborting completely.
 
 ## [0.5.3] - 2023-01-10
 
