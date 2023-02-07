@@ -295,13 +295,18 @@ class PluginInfos:
             pis.append(pi)
         return PluginInfos(pis)
 
-    def latest(self) -> T.Optional[PluginInfo]:
+    def latest(self, exclude_prereleases=False) -> T.Optional[PluginInfo]:
         """Returns greatest PluginInfo with in sort order (name, variant, version).
 
         Careful: this has little value when comparing plugins with different name and
         variant!
         """
-        return max(self.pis, default=None)
+        if exclude_prereleases:
+            return max(
+                (pi for pi in self.pis if not pi.semver.prerelease), default=None
+            )
+        else:
+            return max(self.pis, default=None)
 
     def filter_to_latest(self) -> PluginInfos:
         groupped_pis = collections.defaultdict(list)
@@ -313,8 +318,14 @@ class PluginInfos:
             if (p := PluginInfos(pis).latest()) is not None
         )
 
-    def latest_version_matching_spec(self, spec) -> T.Optional[PluginInfo]:
-        return PluginSpec.make_from_spec_or_string(spec).filter(self).latest()
+    def latest_version_matching_spec(
+        self, spec, exclude_prereleases=False
+    ) -> T.Optional[PluginInfo]:
+        return (
+            PluginSpec.make_from_spec_or_string(spec)
+            .filter(self)
+            .latest(exclude_prereleases)
+        )
 
 
 @dataclass

@@ -104,12 +104,15 @@ def _create_install_plan(
     bad_plugins,
     allow_reinstall,
     allow_downgrade,
+    exclude_prereleases,
 ):
     plan = []
     to_download_from_s3 = []
     s3_versions = None  # For performance, only fetch if/when first needed.
     for spec in candidates:
-        candidate = local_store.latest_version_matching_spec(spec)
+        candidate = local_store.latest_version_matching_spec(
+            spec, exclude_prereleases=exclude_prereleases
+        )
         will_get_from_s3 = False
         if not candidate:
             if s3_versions is None:
@@ -372,6 +375,12 @@ def status(obj, long_format, plugins):
     default=False,
     help="In case of warnings, try to perform the installation of plugins that are deemed to be safe (from the supplied list) - instead of aborting the operation completely.",
 )
+@click.option(
+    "--include-dev-builds",
+    is_flag=True,
+    default=False,
+    help="Include development builds (pre-releases) when looking for the latest available version in the local store.",
+)
 @click.argument("plugins", nargs=-1)
 @click.pass_obj
 def install(
@@ -385,6 +394,7 @@ def install(
     downgrade,
     overwrite,
     ignore_warnings,
+    include_dev_builds,
     plugins,
 ):
     """Install/upgrade plugins by name, from files, or from a versions.toml file.
@@ -461,6 +471,7 @@ def install(
         bad_plugins,
         allow_reinstall=plugins_force or reinstall,
         allow_downgrade=plugins_force or downgrade,
+        exclude_prereleases=not include_dev_builds,
     )
     to_install = [i[0] for i in plan if i[4] != "skip"]
     headers = ["name*", "existing version**", "new version**", "action"]
