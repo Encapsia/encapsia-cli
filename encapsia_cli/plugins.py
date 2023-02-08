@@ -446,7 +446,9 @@ def install(
 
     # Get the plugins from S3
     if all_available and plugins_s3_buckets:
-        s3_plugins = PluginInfos.make_from_s3_buckets(plugins_s3_buckets)
+        s3_plugins = PluginInfos.make_from_s3_buckets(
+            plugins_s3_buckets
+        ).filter_out_prereleases(include_dev_builds)
         for s3_plugin in s3_plugins:
             _add_to_local_store_from_s3(
                 s3_plugin, plugins_local_dir, overwrite=(plugins_force or overwrite)
@@ -851,7 +853,9 @@ def add(
     # Get all available plugins from S3
     if all_available and plugins_s3_buckets:
         _download_plugins_from_s3(
-            PluginInfos.make_from_s3_buckets(plugins_s3_buckets),
+            PluginInfos.make_from_s3_buckets(plugins_s3_buckets).filter_out_prereleases(
+                include_dev_builds
+            ),
             plugins_local_dir,
             overwrite,
         )

@@ -318,6 +318,11 @@ class PluginInfos:
             if (p := PluginInfos(pis).latest()) is not None
         )
 
+    def filter_out_prereleases(self, include_dev_builds=False) -> PluginInfos:
+        if not include_dev_builds:
+            return PluginInfos(pi for pi in self.pis if not pi.semver.prerelease)
+        return self
+
     def latest_version_matching_spec(
         self, spec, exclude_prereleases=False
     ) -> T.Optional[PluginInfo]:
