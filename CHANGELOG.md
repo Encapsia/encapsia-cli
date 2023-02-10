@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Global --silent flag, for suppressing normal output. #55.
 - Print messages on successful completion for several commands. #55
 - Provide alternative options to --force (that will be deprecated soon): [--yes, --downgrade, --reinstall, --overwrite and --all]. #52
+- --config option to specify a different location for the config.toml file #57
 
 ## [0.5.3] - 2023-01-10
 

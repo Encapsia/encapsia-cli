@@ -53,17 +53,23 @@ s3_buckets = [
 """.strip()
 
 
-def create_default_config_file_if_needed(filename):
+def create_default_config_file_if_needed(ctx, filename):
     filename.parent.mkdir(parents=True, exist_ok=True)
     if not filename.exists():
         with filename.open("w") as f:
             f.write(DEFAULT_CONFIG_FILE)
+        if not ctx.obj:
+            ##for this to work --silent has to come before --config in the CL
+            ctx.obj = dict(silent=ctx.params.get('silent'))
         lib.log(f"Created default user configuration file in: {str(filename)}")
 
 
-def get_user_config():
-    filename = pathlib.Path.home() / ".encapsia" / "config.toml"
-    create_default_config_file_if_needed(filename)
+def get_user_config(ctx, param, value):
+    if value is None:
+        filename = pathlib.Path.home() / ".encapsia" / "config.toml"
+    else:
+        filename = pathlib.Path(value)
+    create_default_config_file_if_needed(ctx, filename)
     config = lib.read_toml(filename)
 
     # Make directories into Path directories which exist.
@@ -71,10 +77,12 @@ def get_user_config():
         config[k][d] = pathlib.Path(config[k][d]).expanduser()
         config[k][d].mkdir(parents=True, exist_ok=True)
 
+    ctx.default_map = config
+
     return config
 
 
-@click.group(context_settings=dict(default_map=get_user_config()))
+@click.group()
 @click.option(
     "--colour",
     type=click.Choice(["always", "never", "auto"]),
@@ -89,10 +97,18 @@ def get_user_config():
     "--silent",
     is_flag=True,
     default=False,
+    is_eager=True,
     help="Suppress normal output.",
 )
+@click.option(
+    "--config",
+    type=click.Path(),
+    callback=get_user_config,
+    is_eager=True,
+    help="Specify config file path and name (the default is ~/.encapsia/config.toml)"
+    )
 @click.pass_context
-def main(ctx, colour, host, silent):
+def main(ctx, colour, host, silent, config):
     """CLI to talk to an encapsia host.
 
     Options can be provided in one of three ways, in this priority order:
@@ -100,7 +116,7 @@ def main(ctx, colour, host, silent):
     \b
     1. On the command line as an --option.
     2. In an environment variable as ENCAPSIA_<OPTION> or ENCAPSIA_<SUBCOMMAND>_<OPTION>.
-    3. In your config file located at ~/.encapsia/config.toml
+    3. In your config file located at ~/.encapsia/config.toml, or specified by the --config option
 
     If the config file does not exist then it will be created with documentation and defaults.
 
