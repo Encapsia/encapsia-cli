@@ -104,20 +104,20 @@ def _create_install_plan(
     bad_plugins,
     allow_reinstall,
     allow_downgrade,
-    exclude_prereleases,
+    include_prereleases,
 ):
     plan = []
     to_download_from_s3 = []
     s3_versions = None  # For performance, only fetch if/when first needed.
     for spec in candidates:
-        candidate = local_store.latest_version_matching_spec(spec, exclude_prereleases)
+        candidate = local_store.latest_version_matching_spec(spec, include_prereleases)
         will_get_from_s3 = False
         if not candidate:
             if s3_versions is None:
                 s3_versions = PluginInfos.make_from_s3_buckets(plugins_s3_buckets)
             if (
                 candidate := s3_versions.latest_version_matching_spec(
-                    spec, exclude_prereleases
+                    spec, include_prereleases
                 )
             ) is not None:
                 to_download_from_s3.append(candidate)
@@ -376,10 +376,11 @@ def status(obj, long_format, plugins):
     help="In case of warnings, try to perform the installation of plugins that are deemed to be safe (from the supplied list) - instead of aborting the operation completely.",
 )
 @click.option(
-    "--include-dev-builds",
+    "--include-prereleases",
+    "-pre",
     is_flag=True,
     default=False,
-    help="Include development builds (pre-releases) when looking for the latest available version in the local store.",
+    help="Include pre-release builds when looking for the latest available version in the local store.",
 )
 @click.argument("plugins", nargs=-1)
 @click.pass_obj
@@ -394,7 +395,7 @@ def install(
     downgrade,
     overwrite,
     ignore_warnings,
-    include_dev_builds,
+    include_prereleases,
     plugins,
 ):
     """Install/upgrade plugins by name, from files, or from a versions.toml file.
@@ -448,7 +449,7 @@ def install(
     if all_available and plugins_s3_buckets:
         s3_plugins = PluginInfos.make_from_s3_buckets(
             plugins_s3_buckets
-        ).filter_out_prereleases(include_dev_builds)
+        ).filter_out_prereleases(include_prereleases)
         for s3_plugin in s3_plugins:
             _add_to_local_store_from_s3(
                 s3_plugin, plugins_local_dir, overwrite=(plugins_force or overwrite)
@@ -473,7 +474,7 @@ def install(
         bad_plugins,
         allow_reinstall=plugins_force or reinstall,
         allow_downgrade=plugins_force or downgrade,
-        exclude_prereleases=not include_dev_builds,
+        include_prereleases=include_prereleases,
     )
     to_install = [i[0] for i in plan if i[4] != "skip"]
     headers = ["name*", "existing version**", "new version**", "action"]
@@ -816,10 +817,11 @@ def upstream(obj, plugins, all_versions):
     help="Overwrite if the same plugin version already exists in the local store.",
 )
 @click.option(
-    "--include-dev-builds",
+    "--include-prereleases",
+    "-pre",
     is_flag=True,
     default=False,
-    help="Include development builds (pre-releases) when looking for the latest available version in the S3 buckets.",
+    help="Include pre-release builds when looking for the latest available version in the S3 buckets.",
 )
 @click.option(
     "--ignore-warnings",
@@ -835,7 +837,7 @@ def add(
     latest_existing,
     all_available,
     overwrite,
-    include_dev_builds,
+    include_prereleases,
     ignore_warnings,
     plugins,
 ):
@@ -854,7 +856,7 @@ def add(
     if all_available and plugins_s3_buckets:
         _download_plugins_from_s3(
             PluginInfos.make_from_s3_buckets(plugins_s3_buckets).filter_out_prereleases(
-                include_dev_builds
+                include_prereleases
             ),
             plugins_local_dir,
             overwrite,
@@ -890,7 +892,7 @@ def add(
         for spec in specs_to_search_in_s3:
             if (
                 pi := s3_versions.latest_version_matching_spec(
-                    spec, exclude_prereleases=not include_dev_builds
+                    spec, include_prereleases
                 )
             ) is not None:
                 to_download_from_s3.append(pi)

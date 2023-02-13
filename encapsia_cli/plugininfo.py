@@ -295,13 +295,13 @@ class PluginInfos:
             pis.append(pi)
         return PluginInfos(pis)
 
-    def latest(self, exclude_prereleases=False) -> T.Optional[PluginInfo]:
+    def latest(self, include_prereleases=True) -> T.Optional[PluginInfo]:
         """Returns greatest PluginInfo with in sort order (name, variant, version).
 
         Careful: this has little value when comparing plugins with different name and
         variant!
         """
-        if exclude_prereleases:
+        if not include_prereleases:
             return max(
                 (pi for pi in self.pis if not pi.semver.prerelease), default=None
             )
@@ -324,12 +324,12 @@ class PluginInfos:
         return self
 
     def latest_version_matching_spec(
-        self, spec, exclude_prereleases=False
+        self, spec, include_prereleases=True
     ) -> T.Optional[PluginInfo]:
         return (
             PluginSpec.make_from_spec_or_string(spec)
             .filter(self)
-            .latest(exclude_prereleases)
+            .latest(include_prereleases)
         )
 
 
