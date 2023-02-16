@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Handling the case when the plugins info contains invalid data. #110
-- Do not add or install dev build plugins when looking for the latest version (unless `--include-dev-builds` is used). #109
+- Do not add or install pre-release build plugins when looking for the latest version (unless `--include-prereleases` is used). #109
 
 ### Added
 
