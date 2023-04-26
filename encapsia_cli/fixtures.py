@@ -40,7 +40,7 @@ def create_fixture(obj, name):
 @main.command("use")
 @click.argument("name")
 @click.option(
-    "--force", is_flag=True, help="[Deprecated] Don't prompt the user for confirmation."
+    "--force", is_flag=True, help="[DEPRECATED] Don't prompt the user for confirmation."
 )
 @click.option("--yes", is_flag=True, help="Don't prompt the user for confirmation.")
 @click.pass_obj

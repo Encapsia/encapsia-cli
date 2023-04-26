@@ -20,6 +20,9 @@ Run:
 
 ### Walkthrough Tests
 
+Prerequisite: an instance of ice must be running on your localhost, and valid token for
+it must be present in your key store.
+
 See the `walkthrough_tests` directory for bash scripts which exercise the CLI.
 
 Run them e.g. with:
@@ -30,7 +33,8 @@ or test specific subcommands with:
 
     poetry run bash walkthrough_tests/token.sh
 
-Note that these tests are *not* self-verifying; they just provide helpful coverage, assurance, and working documentation.
+Note that these tests are *not* self-verifying; they just provide helpful coverage,
+assurance, and working documentation.
 
 ## Release checklist
 

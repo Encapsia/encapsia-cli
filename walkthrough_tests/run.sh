@@ -9,7 +9,7 @@ cd $(dirname "$0")
 start_tests
 
 test "(Setup for running views or tasks etc) Install the test plugin from src"
-encapsia plugins --force dev-update test_plugin
+encapsia plugins dev-update --all test_plugin
 
 # The views
 

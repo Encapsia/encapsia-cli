@@ -5,19 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [unreleased] -
 
-## [Unreleased] - 
+nothing yet
+
+## [0.5.4] - 2023-04-24 
 
 ### Fixed
+
 - Handling the case when the plugins info contains invalid data. #110
-- Do not add or install pre-release build plugins when looking for the latest version (unless `--include-prereleases` is used). #109
+- Do not add or install pre-release build plugins when looking for the latest version
+  (unless `--include-prereleases` is used). #109
 
 ### Added
 
 - Global --silent flag, for suppressing normal output. #55.
 - Print messages on successful completion for several commands. #55
-- Provide alternative options to --force (that will be deprecated soon): [--yes, --downgrade, --reinstall, --overwrite and --all]. #52
-- `--ignore-warnings` flag for `plugins add` and `install`, useful when specifying several plugins and some of them cannot be processed, will do only the error-free ones, instead of aborting completely.
+- Provide alternative options to --force (that will be deprecated in the future):
+  [--yes, --downgrade, --reinstall, --overwrite and --all]. #52
+- `--ignore-warnings` flag for `plugins add` and `install`, useful when specifying
+  several plugins and some of them cannot be processed, will do only the error-free
+  ones, instead of aborting completely.
 
 ## [0.5.3] - 2023-01-10
 

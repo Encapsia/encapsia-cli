@@ -244,7 +244,6 @@ class PluginInfos:
         )
         pis = []
         for i in raw_info:
-
             # keys should be present and non-null
             MANDATORY_ENTRIES = ("name", "version")
             missing_mandatory_entries = [

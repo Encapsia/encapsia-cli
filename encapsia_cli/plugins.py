@@ -207,7 +207,7 @@ def _download_plugins_from_s3(
     "--force",
     is_flag=True,
     default=False,
-    help="[deprecated] Always fetch/build/etc again.",
+    help="[DEPRECATED] Always fetch/build/etc again.",
 )
 @click.pass_context
 def main(ctx, force, s3_buckets, local_dir):
@@ -377,7 +377,7 @@ def status(obj, long_format, plugins):
 )
 @click.option(
     "--include-prereleases",
-    "-pre",
+    "--pre",
     is_flag=True,
     default=False,
     help="Include pre-release builds when looking for the latest available version in the local store.",
@@ -764,6 +764,7 @@ def dev_build(obj, overwrite, sources):
 @click.argument("plugins", nargs=-1)
 @click.option(
     "--all-versions",
+    "--all",
     is_flag=True,
     default=False,
     help="List all versions, not just the latest.",
@@ -818,7 +819,7 @@ def upstream(obj, plugins, all_versions):
 )
 @click.option(
     "--include-prereleases",
-    "-pre",
+    "--pre",
     is_flag=True,
     default=False,
     help="Include pre-release builds when looking for the latest available version in the S3 buckets.",
