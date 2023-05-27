@@ -71,4 +71,3 @@ encapsia plugins upstream conduct-1.6 --all-versions
 
 test "Install a plugin using a path"
 encapsia plugins install --yes example_plugins/plugin-foo-1.0.0.tar.gz
-
