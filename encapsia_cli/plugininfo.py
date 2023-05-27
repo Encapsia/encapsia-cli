@@ -24,12 +24,10 @@ T_Variant = T.Union[str, T_AnyVariant]
 
 
 class TooManyVariantTagsError(Exception):
-
     pass
 
 
 class InvalidSpecError(Exception):
-
     pass
 
 

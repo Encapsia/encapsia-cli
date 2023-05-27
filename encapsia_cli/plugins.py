@@ -23,7 +23,6 @@ from encapsia_cli.plugininfo import (
 
 
 class _PluginsTaskError(Exception):
-
     pass
 
 
@@ -200,7 +199,7 @@ def _download_plugins_from_s3(
     "s3_buckets",
     type=str,
     multiple=True,
-    default="ice-plugins",
+    default=["ice-plugins"],
     help="Name of AWS S3 bucket (or path) containing plugins (may be provided multiple times).",
 )
 @click.option(
@@ -567,7 +566,6 @@ def dev_list(obj):
 
 
 class LastUploadedVsModifiedTracker:
-
     DIRECTORIES = ["tasks", "views", "wheels", "webfiles", "schedules"]
 
     def __init__(self, directory, reset=False):

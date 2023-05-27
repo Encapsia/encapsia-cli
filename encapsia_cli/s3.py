@@ -15,8 +15,7 @@ def list_bucket(bucket: str, prefix: str = "") -> T.Iterable[dict]:
     page_iterator = paginator.paginate(Bucket=bucket, Prefix=prefix)
     try:
         for page in page_iterator:
-            for item in page.get("Contents", []):
-                yield item
+            yield from page.get("Contents", [])
     except botocore.exceptions.ClientError as e:
         raise S3Error(f"Unable to search bucket: {bucket}: {e}") from e
 

@@ -1,9 +1,10 @@
 import pathlib
 
 import click
-import click_completion
 
-import encapsia_cli.completion
+# import click_completion
+
+# import encapsia_cli.completion
 import encapsia_cli.config
 import encapsia_cli.database
 import encapsia_cli.fixtures
@@ -12,7 +13,6 @@ import encapsia_cli.httpie
 import encapsia_cli.plugins
 import encapsia_cli.run
 import encapsia_cli.schedule
-import encapsia_cli.shell
 import encapsia_cli.token
 import encapsia_cli.users
 import encapsia_cli.version
@@ -20,7 +20,7 @@ from encapsia_cli import lib
 
 
 #: Initialise click completion.
-click_completion.init()
+# click_completion.init()
 
 
 DEFAULT_CONFIG_FILE = f"""
@@ -125,7 +125,7 @@ def main(ctx, colour, host, silent):
 
 
 COMMANDS = [
-    encapsia_cli.completion.main,
+    #    encapsia_cli.completion.main,
     encapsia_cli.config.main,
     encapsia_cli.database.main,
     encapsia_cli.fixtures.main,
@@ -134,7 +134,6 @@ COMMANDS = [
     encapsia_cli.plugins.main,
     encapsia_cli.run.main,
     encapsia_cli.schedule.main,
-    encapsia_cli.shell.main,
     encapsia_cli.token.main,
     encapsia_cli.users.main,
     encapsia_cli.version.main,

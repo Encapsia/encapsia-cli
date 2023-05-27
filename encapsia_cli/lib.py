@@ -13,7 +13,7 @@ import time
 import click
 import encapsia_api
 import requests.exceptions
-import shellingham  # type: ignore
+import shellingham
 import toml
 
 
