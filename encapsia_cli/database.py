@@ -21,7 +21,7 @@ def backup(obj, filename):
         filename = pathlib.Path(filename)
     api = lib.get_api(**obj)
     handle = lib.dbctl_action(
-        api, "backup_database", dict(), "Backing up database", is_idempotent=True
+        api, "backup_database", {}, "Backing up database", is_idempotent=True
     )
     filename = api.dbctl_download_data(handle, filename)
     lib.log(f"Downloaded {filename.stat().st_size} bytes to {filename}")
@@ -52,6 +52,6 @@ def restore(obj, filename, force, yes):
     # This means that attempts to use it will generate a 500 error when
     # Nginx tries to check the permission.
     # Further, the current token may no longer work.
-    poll, NoResultYet = api.dbctl_action("restore_database", dict(data_handle=handle))
+    poll, NoResultYet = api.dbctl_action("restore_database", {"data_handle": handle})
     lib.log("Database restore requested.")
     lib.log("Please verify by other means (e.g. look at the logs).")

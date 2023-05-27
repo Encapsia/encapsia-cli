@@ -167,7 +167,7 @@ def _install_plugin(api, filename: Path, print_output: bool = False):
     return lib.run_plugins_task(
         api,
         "install_plugin",
-        dict(blob_id=blob_id),
+        {"blob_id": blob_id},
         "Installing",
         print_output=print_output,
         is_idempotent=True,  # re-installing a plugin should be safe
@@ -229,7 +229,7 @@ def freeze(obj):
     versions = PluginSpecs.make_from_plugininfos(
         PluginInfos.make_from_encapsia(obj["host"], bad_plugins)
     ).as_version_dict()
-    for pl_name in versions.keys():
+    for pl_name in versions:
         color = "red" if pl_name in bad_plugins else None
         lib.log_output(click.style(f"{pl_name} = {versions[pl_name]}", fg=color))
     if bad_plugins:
@@ -549,7 +549,7 @@ def uninstall(obj, show_logs, yes, namespaces):
             lib.run_plugins_task(
                 api,
                 "uninstall_plugin",
-                dict(namespace=name),
+                {"namespace": name},
                 f"Uninstalling {name}",
                 print_output=show_logs,
             )
@@ -562,7 +562,7 @@ def uninstall(obj, show_logs, yes, namespaces):
 def dev_list(obj):
     """Print information about the namespace usage of installed plugins."""
     api = lib.get_api(**obj)
-    lib.run_plugins_task(api, "list_namespaces", dict(), "Fetching list of namespaces")
+    lib.run_plugins_task(api, "list_namespaces", {}, "Fetching list of namespaces")
 
 
 class LastUploadedVsModifiedTracker:
@@ -663,7 +663,7 @@ def dev_create(obj, namespace, n_task_workers):
     lib.run_plugins_task(
         api,
         "dev_create_namespace",
-        dict(namespace=namespace, n_task_workers=n_task_workers),
+        {"namespace": namespace, "n_task_workers": n_task_workers},
         "Creating namespace",
     )
 
@@ -700,7 +700,7 @@ def dev_destroy(obj, destroy_all, yes, namespaces):
             lib.run_plugins_task(
                 api,
                 "dev_destroy_namespace",
-                dict(namespace=namespace),
+                {"namespace": namespace},
                 f"Destroying namespace: {namespace}",
             )
 

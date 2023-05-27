@@ -3,7 +3,6 @@ import pathlib
 import click
 
 # import click_completion
-
 # import encapsia_cli.completion
 import encapsia_cli.config
 import encapsia_cli.database
@@ -58,7 +57,7 @@ def create_default_config_file_if_needed(filename):
     if not filename.exists():
         with filename.open("w") as f:
             f.write(DEFAULT_CONFIG_FILE)
-        lib.log(f"Created default user configuration file in: {str(filename)}")
+        lib.log(f"Created default user configuration file in: {filename!s}")
 
 
 def get_user_config():
@@ -74,7 +73,7 @@ def get_user_config():
     return config
 
 
-@click.group(context_settings=dict(default_map=get_user_config()))
+@click.group(context_settings={"default_map": get_user_config()})
 @click.option(
     "--colour",
     type=click.Choice(["always", "never", "auto"]),
@@ -121,7 +120,7 @@ def main(ctx, colour, host, silent):
 
     """
     ctx.color = {"always": True, "never": False, "auto": None}[colour]
-    ctx.obj = dict(host=host, silent=silent)
+    ctx.obj = {"host": host, "silent": silent}
 
 
 COMMANDS = [

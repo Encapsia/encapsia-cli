@@ -64,11 +64,11 @@ class PluginInfo:
 
     def __init__(
         self,
-        s3_bucket: T.Optional[str],
-        s3_path: T.Optional[str],
+        s3_bucket: str | None,
+        s3_path: str | None,
         name: str,
         version: str,
-        variant: T.Optional[str],
+        variant: str | None,
     ):
         """Private constructor. Use make_* factory methods instead."""
         self.s3_bucket = s3_bucket
@@ -77,7 +77,7 @@ class PluginInfo:
         self.version = version
         self.semver = self._parse_version(self.version)
         self.variant = "" if variant is None else variant
-        self.extras: T.Dict[str, str] = {}
+        self.extras: dict[str, str] = {}
 
     def __eq__(self, other) -> bool:
         if isinstance(other, PluginInfo):
@@ -124,7 +124,7 @@ class PluginInfo:
         return cls(None, None, name, version, variant=variant)
 
     @classmethod
-    def make_from_filename(cls, filename: T.Union[str, Path]) -> PluginInfo:
+    def make_from_filename(cls, filename: str | Path) -> PluginInfo:
         name, variant, version = cls.get_name_variant_version_from_filename(filename)
         return cls(None, None, name, version, variant=variant)
 
@@ -178,10 +178,10 @@ class PluginInfo:
         variant = f"-variant-{self.variant}" if self.variant else ""
         return f"plugin-{self.name}{variant}-{self.version}.tar.gz"
 
-    def get_s3_bucket(self) -> T.Optional[str]:
+    def get_s3_bucket(self) -> str | None:
         return self.s3_bucket
 
-    def get_s3_path(self) -> T.Optional[str]:
+    def get_s3_path(self) -> str | None:
         return self.s3_path
 
     def get_s3_name(self) -> str:
@@ -292,7 +292,7 @@ class PluginInfos:
             pis.append(pi)
         return PluginInfos(pis)
 
-    def latest(self, include_prereleases=True) -> T.Optional[PluginInfo]:
+    def latest(self, include_prereleases=True) -> PluginInfo | None:
         """Returns greatest PluginInfo with in sort order (name, variant, version).
 
         Careful: this has little value when comparing plugins with different name and
@@ -322,7 +322,7 @@ class PluginInfos:
 
     def latest_version_matching_spec(
         self, spec, include_prereleases=True
-    ) -> T.Optional[PluginInfo]:
+    ) -> PluginInfo | None:
         return (
             PluginSpec.make_from_spec_or_string(spec)
             .filter(self)
@@ -359,20 +359,14 @@ class PluginSpec:
         else:
             variant = ""
 
-        if self.version_prefix:
-            version = f"-{self.version_prefix}"
-        else:
-            version = ""
+        version = f"-{self.version_prefix}" if self.version_prefix else ""
 
-        if self.exact_match:
-            exact = " [exact]"
-        else:
-            exact = ""
+        exact = " [exact]" if self.exact_match else ""
 
         return f"{self.name}{variant}{version}{exact}"
 
     @classmethod
-    def _split_spec_string(cls, spec_string: str) -> T.Tuple[str, T_Variant, str]:
+    def _split_spec_string(cls, spec_string: str) -> tuple[str, T_Variant, str]:
         """Split `spec_string` into components. A spec string can take three forms:
         * <plugin_name>
         * <plugin_name>-ANY  ("ANY" is case insensitive)
@@ -395,7 +389,7 @@ class PluginSpec:
 
     @classmethod
     def make_from_spec_or_string(
-        cls, spec_or_string: T.Union[str, PluginSpec]
+        cls, spec_or_string: str | PluginSpec
     ) -> PluginSpec:
         if isinstance(spec_or_string, str):
             instance = cls.make_from_string(spec_or_string)

@@ -17,7 +17,7 @@ def list_fixtures(obj):
         lib.dbctl_action(
             api,
             "list_fixtures",
-            dict(),
+            {},
             "Fetching list of fixtures",
             is_idempotent=True,
         )
@@ -32,7 +32,7 @@ def create_fixture(obj, name):
     api = lib.get_api(**obj)
     lib.log_output(
         lib.dbctl_action(
-            api, "create_fixture", dict(name=name), f"Creating fixture {name}"
+            api, "create_fixture", {"name": name}, f"Creating fixture {name}"
         )
     )
 
@@ -56,7 +56,7 @@ def use_fixture(obj, name, force, yes):
             abort=True,
         )
     api = lib.get_api(**obj)
-    poll, NoTaskResultYet = api.dbctl_action("use_fixture", dict(name=name))
+    poll, NoTaskResultYet = api.dbctl_action("use_fixture", {"name": name})
     lib.log(f"Requested change to fixture {name}.")
     lib.log("Please verify by other means (e.g. look at the logs).")
 
@@ -79,6 +79,6 @@ def delete_fixture(obj, name, force, yes):
     api = lib.get_api(**obj)
     lib.log_output(
         lib.dbctl_action(
-            api, "delete_fixture", dict(name=name), f"Deleting fixture {name}"
+            api, "delete_fixture", {"name": name}, f"Deleting fixture {name}"
         )
     )
