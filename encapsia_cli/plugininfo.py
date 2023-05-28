@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import collections
+import datetime
 import re
 import typing as T
 from dataclasses import dataclass
@@ -8,7 +9,6 @@ from functools import total_ordering
 from pathlib import Path
 from warnings import warn
 
-import arrow
 import semver
 
 from encapsia_cli import lib, s3
@@ -32,9 +32,7 @@ class InvalidSpecError(Exception):
 
 
 def _format_datetime(dt):
-    return arrow.get(dt).strftime("%a %d %b %Y %H:%M:%S")
-    # In Python 3.7 and beyond we could do the following. But we want to support Python 3.6.
-    # return datetime.datetime.fromisoformat(dt).strftime("%a %d %b %Y %H:%M:%S")
+    return datetime.datetime.fromisoformat(dt).strftime("%a %d %b %Y %H:%M:%S")
 
 
 def get_variant_from_tags(tags):
@@ -53,7 +51,8 @@ class PluginInfo:
     """Parse and use plugin information like name, variant and version."""
 
     PLUGIN_FILENAME_REGEX: T.ClassVar[re.Pattern] = re.compile(
-        rf"^.*plugin-({ALLOWED_PLUGIN_NAME})(?:-variant-({ALLOWED_VARIANT}))?-({ALLOWED_VERSION})\.tar\.gz$"
+        rf"^.*plugin-({ALLOWED_PLUGIN_NAME})"
+        rf"(?:-variant-({ALLOWED_VARIANT}))?-({ALLOWED_VERSION})\.tar\.gz$"
     )
     FOUR_DIGIT_VERSION_REGEX: T.ClassVar[re.Pattern] = re.compile(
         r"([0-9]+)\.([0-9]+)\.([0-9]+)\.([0-9]+)"
@@ -116,6 +115,7 @@ class PluginInfo:
         warn(
             "Use make_from_name_variant_version() instead.",
             category=DeprecationWarning,
+            stacklevel=1,
         )
         return cls(None, None, name, version, variant=None)
 
@@ -249,7 +249,8 @@ class PluginInfos:
             ]
             if missing_mandatory_entries:
                 lib.log_error(
-                    f"Invalid plugin info!\nMissing mandatory entries {missing_mandatory_entries} in {i}"
+                    "Invalid plugin info!\n"
+                    f"Missing mandatory entries {missing_mandatory_entries} in {i}"
                 )
                 if bad_plugins_bin is not None:
                     bad_plugins_bin.add(i.get("name"))
@@ -262,7 +263,8 @@ class PluginInfos:
             ]
             if missing_important_entries:
                 lib.log_error(
-                    f"Missing important information {missing_important_entries} for plugin {i}"
+                    f"Missing important information {missing_important_entries} "
+                    f"for plugin {i}"
                 )
                 if bad_plugins_bin is not None:
                     bad_plugins_bin.add(i.get("name"))
@@ -388,9 +390,7 @@ class PluginSpec:
         return cls(*cls._split_spec_string(spec_string), exact_match=exact_match)
 
     @classmethod
-    def make_from_spec_or_string(
-        cls, spec_or_string: str | PluginSpec
-    ) -> PluginSpec:
+    def make_from_spec_or_string(cls, spec_or_string: str | PluginSpec) -> PluginSpec:
         if isinstance(spec_or_string, str):
             instance = cls.make_from_string(spec_or_string)
         elif isinstance(spec_or_string, PluginSpec):

@@ -58,7 +58,7 @@ def get(obj, key):
 @click.argument("key")
 @click.argument("value")
 @click.pass_obj
-def set(obj, key, value):
+def set(obj, key, value):  # noqa: A001
     """Store value against given key."""
     api = lib.get_api(**obj)
     value = lib.parse(value, "json")

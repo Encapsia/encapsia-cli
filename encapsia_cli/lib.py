@@ -5,7 +5,6 @@ import json
 import pathlib
 import re
 import shutil
-import subprocess
 import tarfile
 import tempfile
 import time
@@ -140,11 +139,6 @@ def most_recently_modified(directory):
         return None
 
 
-def run(*args, **kwargs):
-    """Run external command."""
-    return subprocess.check_output(args, stderr=subprocess.STDOUT, **kwargs)
-
-
 def read_toml(filename):
     return toml.load(filename)
 
@@ -180,11 +174,11 @@ def open_targz_member(filename, member_name):
         member_path = pathlib.Path(member_name)
         for entry_name in tar.getnames():
             entry_path = pathlib.Path(entry_name)
-            # The following could be use when we target python>=3.9
-            # if (
-            #     entry_path.is_relative_to(member_path.parent)
-            #     and entry_path.name == member_path.name
-            # ):
+            # TODO: The following could be use when we target python>=3.9
+            # TODO: if (
+            # TODO:    entry_path.is_relative_to(member_path.parent)
+            # TODO:    and entry_path.name == member_path.name
+            # TODO: ):
             try:
                 rel_path = entry_path.relative_to(member_path.parent)
                 if rel_path.name == member_path.name:

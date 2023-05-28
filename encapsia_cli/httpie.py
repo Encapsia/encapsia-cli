@@ -21,4 +21,4 @@ def main(obj):
         f"Authorization: Bearer {api.token}",
         "Accept: application/json",
     ]
-    subprocess.run(argv)
+    subprocess.run(argv)  # noqa: S603

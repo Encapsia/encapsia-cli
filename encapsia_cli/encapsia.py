@@ -2,8 +2,6 @@ import pathlib
 
 import click
 
-# import click_completion
-# import encapsia_cli.completion
 import encapsia_cli.config
 import encapsia_cli.database
 import encapsia_cli.fixtures
@@ -16,10 +14,6 @@ import encapsia_cli.token
 import encapsia_cli.users
 import encapsia_cli.version
 from encapsia_cli import lib
-
-
-#: Initialise click completion.
-# click_completion.init()
 
 
 DEFAULT_CONFIG_FILE = f"""
@@ -118,13 +112,12 @@ def main(ctx, colour, host, silent):
     The tool will also abort if instructed to lookup in ~/.encapsia/credentials.toml
     but cannot find a correct entry.
 
-    """
+    """  # noqa: E501
     ctx.color = {"always": True, "never": False, "auto": None}[colour]
     ctx.obj = {"host": host, "silent": silent}
 
 
 COMMANDS = [
-    #    encapsia_cli.completion.main,
     encapsia_cli.config.main,
     encapsia_cli.database.main,
     encapsia_cli.fixtures.main,

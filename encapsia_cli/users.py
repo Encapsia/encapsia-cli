@@ -113,7 +113,8 @@ def export_users_and_roles(obj, filename, with_roles):
     with filename.open(mode="w") as f:
         lib.pretty_print(export_data, "toml", f)
         lib.log_output(
-            f"Exported {len(export_data['users'])} users and {len(export_data.get('roles', []))} roles to {filename}"
+            f"Exported {len(export_data['users'])} users and "
+            f"{len(export_data.get('roles', []))} roles to {filename}"
         )
 
 
