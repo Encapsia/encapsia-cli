@@ -40,16 +40,16 @@ def add_task(
     lib.run_plugins_task(
         api,
         "add_scheduled_task",
-        dict(
-            description=description,
-            host=task_host,
-            token=task_token,
-            namespace=namespace,
-            task=task,
-            params=params,
-            cron=cron,
-            jitter=jitter,
-        ),
+        {
+            "description": description,
+            "host": task_host,
+            "token": task_token,
+            "namespace": namespace,
+            "task": task,
+            "params": params,
+            "cron": cron,
+            "jitter": jitter,
+        },
         "Adding scheduled task",
     )
 
@@ -63,7 +63,7 @@ def remove_tasks_in_namespace(obj, namespace):
     lib.run_plugins_task(
         api,
         "remove_scheduled_tasks_in_namespace",
-        dict(namespace=namespace),
+        {"namespace": namespace},
         "Removing scheduled tasks",
     )
 
@@ -77,6 +77,6 @@ def remove_task(obj, scheduled_task_id):
     lib.run_plugins_task(
         api,
         "remove_scheduled_task",
-        dict(scheduled_task_id=scheduled_task_id),
+        {"scheduled_task_id": scheduled_task_id},
         "Removing scheduled tasks",
     )

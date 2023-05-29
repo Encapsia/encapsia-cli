@@ -23,7 +23,6 @@ from encapsia_cli.plugininfo import (
 
 
 class _PluginsTaskError(Exception):
-
     pass
 
 
@@ -58,7 +57,8 @@ def _get_available_from_local_store(local_versions: PluginInfos, pi: PluginInfo)
 def _log_message_explaining_headers():
     lib.log(
         "\n(*) Plugin variant shown in square brackets when defined."
-        "\n(**) Equivalent semver versions are shown in brackets when non-semver version is used."
+        "\n(**) Equivalent semver versions are shown in brackets when "
+        "non-semver version is used."
     )
 
 
@@ -74,7 +74,9 @@ def _add_to_local_store_from_uri(
     if not overwrite and store_filename.exists():
         lib.log(f"Found: {store_filename} (Skipping)")
     else:
-        filename, headers = urllib.request.urlretrieve(uri, tempfile.mkstemp()[1])
+        filename, headers = urllib.request.urlretrieve(  # noqa: S310
+            uri, tempfile.mkstemp()[1]
+        )
         shutil.move(filename, store_filename)
         lib.log(f"Added to local store: {store_filename}")
 
@@ -92,7 +94,8 @@ def _add_to_local_store_from_s3(
             lib.log_error(str(e))
         else:
             lib.log(
-                f"Downloaded {pi.get_s3_bucket()}/{pi.get_s3_name()} and saved to {target}"
+                f"Downloaded {pi.get_s3_bucket()}/{pi.get_s3_name()} and saved "
+                f"to {target}"
             )
 
 
@@ -168,7 +171,7 @@ def _install_plugin(api, filename: Path, print_output: bool = False):
     return lib.run_plugins_task(
         api,
         "install_plugin",
-        dict(blob_id=blob_id),
+        {"blob_id": blob_id},
         "Installing",
         print_output=print_output,
         is_idempotent=True,  # re-installing a plugin should be safe
@@ -183,9 +186,8 @@ def _download_plugins_from_s3(
             _add_to_local_store_from_s3(
                 plugin, plugins_local_dir, overwrite=plugins_force
             )
-    else:
-        if not added_from_file_or_uri:
-            lib.log("Nothing to do!")
+    elif not added_from_file_or_uri:
+        lib.log("Nothing to do!")
 
 
 @click.group("plugins")
@@ -200,8 +202,11 @@ def _download_plugins_from_s3(
     "s3_buckets",
     type=str,
     multiple=True,
-    default="ice-plugins",
-    help="Name of AWS S3 bucket (or path) containing plugins (may be provided multiple times).",
+    default=["ice-plugins"],
+    help=(
+        "Name of AWS S3 bucket (or path) containing plugins (may be provided "
+        "multiple times)."
+    ),
 )
 @click.option(
     "--force",
@@ -214,7 +219,8 @@ def main(ctx, force, s3_buckets, local_dir):
     """Install, uninstall, create, and update plugins."""
     if force:
         lib.log_error(
-            "Warning: --force option is deprecated, please use the other available options (use --help to find them)."
+            "Warning: --force option is deprecated, please use the other available "
+            "options (use --help to find them)."
         )
     ctx.obj["plugins_local_dir"] = Path(local_dir).expanduser()
     ctx.obj["plugins_local_dir"].mkdir(parents=True, exist_ok=True)
@@ -230,7 +236,7 @@ def freeze(obj):
     versions = PluginSpecs.make_from_plugininfos(
         PluginInfos.make_from_encapsia(obj["host"], bad_plugins)
     ).as_version_dict()
-    for pl_name in versions.keys():
+    for pl_name in versions:
         color = "red" if pl_name in bad_plugins else None
         lib.log_output(click.style(f"{pl_name} = {versions[pl_name]}", fg=color))
     if bad_plugins:
@@ -273,7 +279,8 @@ def logs(obj, plugins):
         lib.log("")
     if len(raw_info) == 0 and len(plugins) > 0:
         lib.log(
-            "No logs found. Note that any plugins must be exact name matches without version info."
+            "No logs found. Note that any plugins must be exact name matches "
+            "without version info."
         )
 
 
@@ -367,24 +374,34 @@ def status(obj, long_format, plugins):
     "--overwrite",
     is_flag=True,
     default=False,
-    help="Overwrite existing plugins having the same name and version in the local store.",
+    help=(
+        "Overwrite existing plugins having the same name and version "
+        "in the local store."
+    ),
 )
 @click.option(
     "--ignore-warnings",
     is_flag=True,
     default=False,
-    help="In case of warnings, try to perform the installation of plugins that are deemed to be safe (from the supplied list) - instead of aborting the operation completely.",
+    help=(
+        "In case of warnings, try to perform the installation of plugins that are "
+        "deemed to be safe (from the supplied list) - instead of aborting "
+        "the operation completely."
+    ),
 )
 @click.option(
     "--include-prereleases",
     "--pre",
     is_flag=True,
     default=False,
-    help="Include pre-release builds when looking for the latest available version in the local store.",
+    help=(
+        "Include pre-release builds when looking for the latest available version "
+        "in the local store."
+    ),
 )
 @click.argument("plugins", nargs=-1)
 @click.pass_obj
-def install(
+def install(  # noqa: C901,PLR0912 TODO: refactor
     obj,
     versions,
     show_logs,
@@ -402,7 +419,8 @@ def install(
 
     Plugins provided as files are put in the local store before being installed.
 
-    When described by name alone, the latest plugin of that name in the local store will be used.
+    When described by name alone, the latest plugin of that name in the local store will
+    be used.
 
     Plugins specified in the versions.toml file will be taken from the local store.
 
@@ -427,7 +445,8 @@ def install(
                 to_install_candidates.append(plugin_spec)
             else:
                 lib.log_error(
-                    f"The requested plugin '{plugin}', which looks like a path to a file, was not found."
+                    f"The requested plugin '{plugin}', which looks like a path "
+                    "to a file, was not found."
                 )
         else:
             # Else assume it is a spec for a plugin already in the local store.
@@ -457,12 +476,12 @@ def install(
             to_install_candidates.append(PluginSpec.make_from_plugininfo(s3_plugin))
 
     # Work out and list installation plan.
-    # to_install_candidates = sorted(PluginInfos(to_install_candidates))
     bad_plugins = set()
     installed = PluginInfos.make_from_encapsia(host, bad_plugins)
     if bad_plugins and not ignore_warnings:
         lib.log_error(
-            "There are some plugin metadata errors on the destination server. Use --ignore-warnings to install only the plugins that are not impacted.",
+            "There are some plugin metadata errors on the destination server. "
+            "Use --ignore-warnings to install only the plugins that are not impacted.",
             abort=True,
         )
     local_store = PluginInfos.make_from_local_store(plugins_local_dir)
@@ -514,7 +533,8 @@ def variant_is_installed(api, plugin_spec):
     matching_plugins = [item for item in response if item["name"] == plugin_spec.name]
     if len(matching_plugins) > 1:
         lib.log_error(
-            f"More than one plugin with the name {plugin_spec.name} and variant {plugin_spec.variant} are installed."
+            f"More than one plugin with the name {plugin_spec.name} and variant "
+            f"{plugin_spec.variant} are installed."
         )
     return len(matching_plugins) > 0
 
@@ -541,16 +561,16 @@ def uninstall(obj, show_logs, yes, namespaces):
         try:
             plugin_spec = PluginSpec.make_from_string(namespace)
             name = plugin_spec.name
-            if plugin_spec.variant:
-                if not variant_is_installed(api, plugin_spec):
-                    lib.log_output(
-                        f"Variant {plugin_spec.variant} specified for plugin {name} is not installed; skipping."
-                    )
-                    continue
+            if plugin_spec.variant and not variant_is_installed(api, plugin_spec):
+                lib.log_output(
+                    f"Variant {plugin_spec.variant} specified for plugin {name} "
+                    "is not installed; skipping."
+                )
+                continue
             lib.run_plugins_task(
                 api,
                 "uninstall_plugin",
-                dict(namespace=name),
+                {"namespace": name},
                 f"Uninstalling {name}",
                 print_output=show_logs,
             )
@@ -563,11 +583,10 @@ def uninstall(obj, show_logs, yes, namespaces):
 def dev_list(obj):
     """Print information about the namespace usage of installed plugins."""
     api = lib.get_api(**obj)
-    lib.run_plugins_task(api, "list_namespaces", dict(), "Fetching list of namespaces")
+    lib.run_plugins_task(api, "list_namespaces", {}, "Fetching list of namespaces")
 
 
 class LastUploadedVsModifiedTracker:
-
     DIRECTORIES = ["tasks", "views", "wheels", "webfiles", "schedules"]
 
     def __init__(self, directory, reset=False):
@@ -665,7 +684,7 @@ def dev_create(obj, namespace, n_task_workers):
     lib.run_plugins_task(
         api,
         "dev_create_namespace",
-        dict(namespace=namespace, n_task_workers=n_task_workers),
+        {"namespace": namespace, "n_task_workers": n_task_workers},
         "Creating namespace",
     )
 
@@ -702,7 +721,7 @@ def dev_destroy(obj, destroy_all, yes, namespaces):
             lib.run_plugins_task(
                 api,
                 "dev_destroy_namespace",
-                dict(namespace=namespace),
+                {"namespace": namespace},
                 f"Destroying namespace: {namespace}",
             )
 
@@ -712,7 +731,10 @@ def dev_destroy(obj, destroy_all, yes, namespaces):
     "--overwrite",
     is_flag=True,
     default=False,
-    help="Overwrite any existing plugin with the same name and version in the local store.",
+    help=(
+        "Overwrite any existing plugin with the same name and version "
+        "in the local store."
+    ),
 )
 @click.argument("sources", nargs=-1)
 @click.pass_obj
@@ -721,8 +743,7 @@ def dev_build(obj, overwrite, sources):
     plugins_local_dir = obj["plugins_local_dir"]
     plugins_force = obj["plugins_force"]
     for source_directory in sources:
-        source_directory = Path(source_directory)
-        manifest = lib.read_toml(source_directory / "plugin.toml")
+        manifest = lib.read_toml(Path(source_directory) / "plugin.toml")
         name = manifest["name"]
         version = manifest["version"]
         tags = manifest.get("tags", [])
@@ -822,17 +843,23 @@ def upstream(obj, plugins, all_versions):
     "--pre",
     is_flag=True,
     default=False,
-    help="Include pre-release builds when looking for the latest available version in the S3 buckets.",
+    help=(
+        "Include pre-release builds when looking for the latest available version in "
+        "the S3 buckets."
+    ),
 )
 @click.option(
     "--ignore-warnings",
     is_flag=True,
     default=False,
-    help="In case of warnings, try to add only the plugins that are found in S3 buckets - instead of aborting the operation completely.",
+    help=(
+        "In case of warnings, try to add only the plugins that are found in S3 buckets "
+        "- instead of aborting the operation completely."
+    ),
 )
 @click.argument("plugins", nargs=-1)
 @click.pass_obj
-def add(
+def add(  # noqa: C901 TODO: should refactor
     obj,
     versions,
     latest_existing,
@@ -872,7 +899,7 @@ def add(
                 overwrite,
             )
             added_from_file_or_uri = True
-        elif urllib.parse.urlparse(plugin).scheme != "":
+        elif urllib.parse.urlparse(plugin).scheme:
             _add_to_local_store_from_uri(plugins_local_dir, plugin, overwrite)
             added_from_file_or_uri = True
         else:

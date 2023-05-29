@@ -119,7 +119,10 @@ def run_job(obj, namespace, function, args, upload, save_as):
 @click.option(
     "--post",
     is_flag=True,
-    help="Use POST instead of GET (for view functions that change the database or create temp view etc)",
+    help=(
+        "Use POST instead of GET (for view functions that change the database "
+        "or create temp view etc)"
+    ),
 )
 @click.option(
     "--upload",

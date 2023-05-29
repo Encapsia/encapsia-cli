@@ -9,7 +9,8 @@ import toml
 from encapsia_cli.plugininfo import PluginInfo, PluginInfos, PluginSpec, PluginSpecs
 
 
-# Note: these need to be both extended (in coverage) and reduced (in test data duplication).
+# Note: these need to be both extended (in coverage) and reduced (in test data
+# duplication).
 
 
 @pytest.fixture(
@@ -203,7 +204,10 @@ class TestPluginInfo:
         assert comparison(pi1, pi2) is comparison(t1, t2)
 
     def test_make_from_filename(self, pi_from_filename):
-        """Quickly assert it works. Heavy lifting done in get_name_variant_version_from_filename."""
+        """Quickly assert it works.
+
+        Heavy lifting done in get_name_variant_version_from_filename.
+        """
         pi, filename, name, variant, version = pi_from_filename
         assert pi.name == name
         assert pi.variant == variant

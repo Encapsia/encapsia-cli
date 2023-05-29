@@ -1,9 +1,7 @@
 import pathlib
 
 import click
-import click_completion
 
-import encapsia_cli.completion
 import encapsia_cli.config
 import encapsia_cli.database
 import encapsia_cli.fixtures
@@ -12,15 +10,10 @@ import encapsia_cli.httpie
 import encapsia_cli.plugins
 import encapsia_cli.run
 import encapsia_cli.schedule
-import encapsia_cli.shell
 import encapsia_cli.token
 import encapsia_cli.users
 import encapsia_cli.version
 from encapsia_cli import lib
-
-
-#: Initialise click completion.
-click_completion.init()
 
 
 DEFAULT_CONFIG_FILE = f"""
@@ -58,7 +51,7 @@ def create_default_config_file_if_needed(filename):
     if not filename.exists():
         with filename.open("w") as f:
             f.write(DEFAULT_CONFIG_FILE)
-        lib.log(f"Created default user configuration file in: {str(filename)}")
+        lib.log(f"Created default user configuration file in: {filename!s}")
 
 
 def get_user_config():
@@ -74,7 +67,7 @@ def get_user_config():
     return config
 
 
-@click.group(context_settings=dict(default_map=get_user_config()))
+@click.group(context_settings={"default_map": get_user_config()})
 @click.option(
     "--colour",
     type=click.Choice(["always", "never", "auto"]),
@@ -119,13 +112,12 @@ def main(ctx, colour, host, silent):
     The tool will also abort if instructed to lookup in ~/.encapsia/credentials.toml
     but cannot find a correct entry.
 
-    """
+    """  # noqa: E501
     ctx.color = {"always": True, "never": False, "auto": None}[colour]
-    ctx.obj = dict(host=host, silent=silent)
+    ctx.obj = {"host": host, "silent": silent}
 
 
 COMMANDS = [
-    encapsia_cli.completion.main,
     encapsia_cli.config.main,
     encapsia_cli.database.main,
     encapsia_cli.fixtures.main,
@@ -134,7 +126,6 @@ COMMANDS = [
     encapsia_cli.plugins.main,
     encapsia_cli.run.main,
     encapsia_cli.schedule.main,
-    encapsia_cli.shell.main,
     encapsia_cli.token.main,
     encapsia_cli.users.main,
     encapsia_cli.version.main,

@@ -5,9 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [unreleased] -
+## [0.6.0] - ???
 
-nothing yet
+### Changed
+
+- Updated most dependencies. Notably, changing Click from 7.x to 8.1.x.
+- Dropped support for installing completions (at least temporarily), because
+  click-completions does not work anymore.
+- Dropped support for shell sub-command (click-shell is unmaintained).
+- (Internal) Replaced flake8 and isort with ruff, and added pre-commit hooks.
 
 ## [0.5.4] - 2023-04-24 
 
