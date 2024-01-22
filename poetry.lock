@@ -1252,4 +1252,4 @@ httpie-shell = ["http-prompt"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "42c805d0155d5ef6eda1a22cc8c8aedff4e6ae688e244d72675bfd3d7a0e1f2a"
+content-hash = "59ad991abe04c5f18836d516ceff5e1016368290f5fbae246f0f7a936b0f8054"
