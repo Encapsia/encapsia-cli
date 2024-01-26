@@ -5,12 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.5.8] -
+## [0.5.8] - 2024-01-26
 
-### [Changed]
+### Added
 
 - Added `version --plain` and `plugins add --disregard/heed/ignore-warnings` flags
   useful for scripting.
+  
+### Fixed
+- Updated depenencies.
 
 ## [0.5.7] - 2024-01-22
 
