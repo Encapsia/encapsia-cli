@@ -462,7 +462,9 @@ def install(
     installed = PluginInfos.make_from_encapsia(host, bad_plugins)
     if bad_plugins and not ignore_warnings:
         lib.log_error(
-            "There are some plugin metadata errors on the destination server. Use --ignore-warnings to install only the plugins that are not impacted.",
+            "There are some plugin metadata errors on the destination server. "
+            "Use --{ignore|disregard}-warnings to install only the plugins "
+            "that are not impacted.",
             abort=True,
         )
     local_store = PluginInfos.make_from_local_store(plugins_local_dir)
@@ -822,13 +824,32 @@ def upstream(obj, plugins, all_versions):
     "--pre",
     is_flag=True,
     default=False,
-    help="Include pre-release builds when looking for the latest available version in the S3 buckets.",
+    help=(
+        "Include pre-release builds when looking "
+        "for the latest available version in the S3 buckets."
+    ),
 )
 @click.option(
     "--ignore-warnings",
-    is_flag=True,
-    default=False,
-    help="In case of warnings, try to add only the plugins that are found in S3 buckets - instead of aborting the operation completely.",
+    "warnings",
+    flag_value="ignore",
+    help=(
+        "In case of warnings, try to add only the plugins that are found in S3 buckets "
+        "- instead of aborting the operation completely."
+    ),
+)
+@click.option(
+    "--disregard-warnings",
+    "warnings",
+    flag_value="disregard",
+    help="Like --ignore-warnings, but exit with an error code (useful for scripting)",
+)
+@click.option(
+    "--heed-warnings",
+    "warnings",
+    flag_value="heed",
+    default=True,
+    help="Treat warnings as errors and abort operations.",
 )
 @click.argument("plugins", nargs=-1)
 @click.pass_obj
@@ -839,7 +860,7 @@ def add(
     all_available,
     overwrite,
     include_prereleases,
-    ignore_warnings,
+    warnings,
     plugins,
 ):
     """Add plugin(s) to local store from file, URL, or S3."""
@@ -887,6 +908,7 @@ def add(
         specs_to_search_in_s3.extend(
             PluginSpecs.make_from_plugininfos(PluginInfos.make_from_encapsia(host))
         )
+    encountered_errors = False
     if specs_to_search_in_s3:
         s3_versions = PluginInfos.make_from_s3_buckets(plugins_s3_buckets)
         not_found = []
@@ -904,11 +926,15 @@ def add(
                 "Some plugins could not be found in S3: {}".format(
                     ", ".join(str(s) for s in not_found)
                 ),
-                abort=not ignore_warnings,
+                abort=(warnings == "heed"),
             )
+            if warnings == "disregard":
+                encountered_errors = True
     _download_plugins_from_s3(
         to_download_from_s3, plugins_local_dir, overwrite, added_from_file_or_uri
     )
+    if encountered_errors:
+        lib.log_error("Finished with errors, see messages above.", abort=True)
 
 
 @main.command()
