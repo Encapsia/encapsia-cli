@@ -7,9 +7,7 @@ from encapsia_cli import lib
 
 @click.command("version")
 @click.option(
-    "--plain",
-    is_flag=True,
-    help="Print just the version. Otherwise be more verbose."
+    "--plain", is_flag=True, help="Print just the version. Otherwise be more verbose."
 )
 def main(plain):
     """Print version information and exit."""
