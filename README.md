@@ -5,7 +5,7 @@
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/encapsia-cli)
 
-[![Known Vulnerabilities](https://snyk.io/test/github/encapsia/encapsia-cli/badge.svg?targetFile=pyproject.toml)](https://snyk.io/test/github/encapsia/encapsia-cli?targetFile=requirements.txt)
+[![Known Vulnerabilities](https://snyk.io/test/github/encapsia/encapsia-cli/badge.svg?targetFile=pyproject.toml)](https://snyk.io/test/github/encapsia/encapsia-cli?targetFile=pyproject.toml)
 
 This package provides command line access to Encapsia over the REST API.
 
@@ -49,5 +49,4 @@ assurance, and working documentation.
 * Run: `poetry run mypy .`
 * Ensure "tests" run ok (see above).
 * Capture test output and commit with: `poetry run bash walkthrough_tests/all.sh 2>&1 | poetry run ansi2html -f 80% >WALKTHROUGH.html`
-* Create `requirements.txt` for Snyk scanning with: `poetry export -f requirements.txt >requirements.txt`
 * Ensure git tag, package version, and `encapsia_cli.__version__` are all equal.
