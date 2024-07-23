@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "encapsia-cli"
-version = "0.5.10"
+version = "0.5.11"
 description = "Client CLI for talking to an Encapsia system."
 readme = "README.md"
 authors = ["Timothy Corbett-Clark <timothy.corbettclark@gmail.com>"]
@@ -13,7 +13,7 @@ homepage = "https://github.com/Encapsia/encapsia-cli"
 encapsia = "encapsia_cli.encapsia:encapsia"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = ">=3.8.1,<4.0"
 requests = {version = "^2.31.0", extras = ["security", "socks"]}
 click = "^7.0"
 toml = "^0.10.2"
@@ -32,15 +32,16 @@ shellingham = "^1.5.4"
 [tool.poetry.extras]
 httpie-shell = ["http-prompt"]
 
-[tool.poetry.dev-dependencies]
-isort = "^5.5"
-flake8 = "^3.7"
-ansi2html = "^1.5"
-mypy = "^0.782"
-pytest = "^6.0"
-
 [tool.poetry.group.dev.dependencies]
 black = "^21.12b0"
+mypy = "^1.11.0"
+isort = "^5.13.2"
+flake8 = "^7.1.0"
+ansi2html = "^1.5"
+pytest = "^8.3.1"
+types-tabulate = "^0.9.0.20240106"
+types-toml = "^0.10.8.20240310"
+types-click = "^7.1.8"
 
 [tool.pytest.ini_options]
 minversion = "6.0"
