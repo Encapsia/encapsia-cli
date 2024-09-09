@@ -1,2 +1,3 @@
-#: Keep in sync with git tag and package version in pyproject.toml.
-__version__ = "0.5.11"
+import importlib.metadata
+
+__version__ = importlib.metadata.version("encapsia_cli")
