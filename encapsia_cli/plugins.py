@@ -625,7 +625,10 @@ class LastUploadedVsModifiedTracker:
     default=LastUploadedVsModifiedTracker.DIRECTORIES,
     type=click.Choice(LastUploadedVsModifiedTracker.DIRECTORIES),
     multiple=True,
-    help="Parts to include (defaulting to all)."
+    help=(
+        "Parts (webfiles, tasks, views, wheels or schedules) to include "
+        "(defaulting to all)."
+    ),
 )
 @click.argument("directory", default=".")
 @click.pass_obj
