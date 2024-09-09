@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.12] - 2024-09-09
+
+### Added
+
+- `dev-update` gets a `--include` option allowing to select specific namespaces to upload
+
+### Changed
+
+- dependencies were updated
+- `version` command will read from package metadata (as a minor downside, this won't work
+  in the virtualenv until you reinstall it after you `poetry version patch` it); howver,
+  now we don't need to sync `__init__.py` and `pyproject.toml`
+
 ## [0.5.10] - 2024-06-03
 
 ### Changed

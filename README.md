@@ -47,4 +47,4 @@ assurance, and working documentation.
 * Run: `poetry run mypy .`
 * Ensure "tests" run ok (see above).
 * Capture test output and commit with: `poetry run bash walkthrough_tests/all.sh 2>&1 | poetry run ansi2html -f 80% >WALKTHROUGH.html`
-* Ensure git tag, package version, and `encapsia_cli.__version__` are all equal.
+* Ensure git tag and package version are equal.
