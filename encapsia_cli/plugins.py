@@ -28,8 +28,8 @@ class _PluginsTaskError(Exception):
 
 
 @contextmanager
-def _get_modified_plugin_directories(directory, reset=False):
-    tracker = LastUploadedVsModifiedTracker(directory, reset=reset)
+def _get_modified_plugin_directories(directory, parts, reset=False):
+    tracker = LastUploadedVsModifiedTracker(directory, parts, reset=reset)
     try:
         yield list(tracker.get_modified_directories())
     except _PluginsTaskError:
@@ -572,8 +572,9 @@ class LastUploadedVsModifiedTracker:
 
     DIRECTORIES = ["tasks", "views", "wheels", "webfiles", "schedules"]
 
-    def __init__(self, directory, reset=False):
+    def __init__(self, directory, directories=None, reset=False):
         self.directory = directory
+        self.directories = directories or LastUploadedVsModifiedTracker.DIRECTORIES
         encapsia_directory = directory / ".encapsia"
         encapsia_directory.mkdir(parents=True, exist_ok=True)
         self.filename = encapsia_directory / "last_uploaded_plugin_parts.toml"
@@ -598,7 +599,7 @@ class LastUploadedVsModifiedTracker:
             toml.dump(self.data, f)
 
     def get_modified_directories(self):
-        for name in self.DIRECTORIES:
+        for name in self.directories:
             last_modified = lib.most_recently_modified(self.directory / name)
             if last_modified is not None:
                 if name in self.data:
@@ -618,9 +619,17 @@ class LastUploadedVsModifiedTracker:
     default=False,
     help="Upload all folders, not just the new or modified ones.",
 )
+@click.option(
+    "--include",
+    "parts",
+    default=LastUploadedVsModifiedTracker.DIRECTORIES,
+    type=click.Choice(LastUploadedVsModifiedTracker.DIRECTORIES),
+    multiple=True,
+    help="Parts to include (defaulting to all)."
+)
 @click.argument("directory", default=".")
 @click.pass_obj
-def dev_update(obj, upload_all, directory):
+def dev_update(obj, upload_all, parts, directory):
     """Update plugin parts which have changed since previous update.
 
     Optionally pass in the DIRECTORY of the plugin (defaults to cwd).
@@ -632,7 +641,7 @@ def dev_update(obj, upload_all, directory):
         lib.log_error("Not in a plugin directory.", abort=True)
 
     with _get_modified_plugin_directories(
-        directory, reset=obj["plugins_force"] or upload_all
+        directory, parts, reset=obj["plugins_force"] or upload_all
     ) as modified_plugin_directories:
         if modified_plugin_directories:
             with lib.temp_directory() as temp_directory:
