@@ -14,3 +14,4 @@ pip-wheel-metadata/
 .vscode/
 .idea/
 .python-version
+.envrc
